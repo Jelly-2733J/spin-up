@@ -58,22 +58,15 @@ void goalSense() {
 	// These are currently bs values, use vcs_vision utility
   	pros::vision_signature_s_t RED_SIG = pros::Vision::signature_from_utility(1, 8973, 11143, 10058, -2119, -1053, -1586, 5.4, 0);
 	pros::vision_signature_s_t BLUE_SIG = pros::Vision::signature_from_utility(2, 8973, 11143, 10058, -2119, -1053, -1586, 5.4, 0);
-	
-	// Purple sig because tower takeover cube
-	pros::vision_signature_s_t PURPLE = pros::Vision::signature_from_utility(1, 1049, 1681, 1366, 5101, 6855, 5978, 3.600, 0);
 
 	// Set signatures on the vision sensors
-  	/* 
 	vis1.set_signature(1, &RED_SIG);
 	vis2.set_signature(1, &RED_SIG);
 	vis1.set_signature(2, &BLUE_SIG);
-	vis2.set_signature(2, &BLUE_SIG); 
-	*/
-	vis1.set_signature(1, &PURPLE);
-	vis2.set_signature(1, &PURPLE);
+	vis2.set_signature(2, &BLUE_SIG);
 
 	// Inches between the lenses of both vision sensors
-	double side_c = 10;
+	double side_c = 16;
 
 	// t is the last loop timestamp in milliseconds
 	// This is used to ensure consistent loop intervals with pros::Task::delay_until
@@ -168,6 +161,7 @@ void goalSense() {
 void initialize() {
 
 	pros::Task vision(goalSense);
+	robot_aim.set_tracking_sig(1);
 
 }
 
