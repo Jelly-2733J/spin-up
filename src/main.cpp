@@ -29,26 +29,28 @@ public:
 		return goal_distance; // Add equation here
 
 	}
+	// Set the target goal color for tracking
 	void set_tracking_sig(int new_sig) {
 		std::lock_guard<pros::Mutex> lock(goal_sig_guard);
         goal_sig = new_sig;
 	}
+	// Read the current target goal color
 	int tracking_sig() {
 		std::lock_guard<pros::Mutex> lock(goal_sig_guard);
         return goal_sig;
 	}
 };
 
+// Convert degrees to radians
 double rads(double deg) {
 	return deg * 3.14159265358979323846 / 180;
 }
 
+// Instantiate the AutoAim class
 AutoAim robot_aim;
 
 // Goal tracking
 void goalSense() {
-
-	pros::lcd::initialize();
 
 	// Define vision sensors
 	pros::Vision vis1 (11);
@@ -160,7 +162,13 @@ void goalSense() {
  */
 void initialize() {
 
+	// Initialize the LCD
+	pros::lcd::initialize();
+
+	// Create the goal tracking task
 	pros::Task vision(goalSense);
+
+	// Set tracking target to signature 1, red goal
 	robot_aim.set_tracking_sig(1);
 
 }
