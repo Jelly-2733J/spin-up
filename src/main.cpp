@@ -2,8 +2,8 @@
 #include <cmath>
 #include <mutex>
 
-// RobotPosition class holds the x, y, and heading values of the robot.
-// There are methods to read and set all positional and orientational values.
+// AutoAim class allows for interfacing with the stereo vision task and calculating flywheel RPM.
+// There are methods to read and set distances, receive RPM calculations, and set the target color.
 class AutoAim {
 	double goal_distance;
 	pros::Mutex goal_distance_guard;
