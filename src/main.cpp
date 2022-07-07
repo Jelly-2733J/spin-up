@@ -9,35 +9,34 @@ class AutoAim {
 	pros::Mutex goal_distance_guard;
 	int goal_sig;
 	pros::Mutex goal_sig_guard;
-public:
-	// Set the distance from the goal
-	void set_distance(double new_distance) {
-		std::lock_guard<pros::Mutex> lock(goal_distance_guard);
-        goal_distance = new_distance;
-	};
-	// Read the current goal distance
-	double distance() {
-		std::lock_guard<pros::Mutex> lock(goal_distance_guard);
-        return goal_distance;
-	};
-	// Calculate optimal RPM
-	double calculate_RPM() {
-		std::lock_guard<pros::Mutex> lock(goal_distance_guard);
+	public:
+		// Set the distance from the goal
+		void set_distance(double new_distance) {
+			std::lock_guard<pros::Mutex> lock(goal_distance_guard);
+			goal_distance = new_distance;
+		};
+		// Read the current goal distance
+		double distance() {
+			std::lock_guard<pros::Mutex> lock(goal_distance_guard);
+			return goal_distance;
+		};
+		// Calculate optimal RPM
+		double calculate_RPM() {
+			std::lock_guard<pros::Mutex> lock(goal_distance_guard);
 
-		// TODO: Experimentally find best fit curve for different distances
-		// Graph should be RPM (dependent) vs. Distance (independent)
-		return goal_distance; // Add equation here
-
-	}
-	// Set the target goal color for tracking
-	void set_tracking_sig(int new_sig) {
-		std::lock_guard<pros::Mutex> lock(goal_sig_guard);
-        goal_sig = new_sig;
-	}
-	// Read the current target goal color
-	int tracking_sig() {
-		std::lock_guard<pros::Mutex> lock(goal_sig_guard);
-        return goal_sig;
+			// TODO: Experimentally find best fit curve for different distances
+			// Graph should be RPM (dependent) vs. Distance (independent)
+			return goal_distance; // Add equation here
+		}
+		// Set the target goal color for tracking
+		void set_tracking_sig(int new_sig) {
+			std::lock_guard<pros::Mutex> lock(goal_sig_guard);
+			goal_sig = new_sig;
+		}
+		// Read the current target goal color
+		int tracking_sig() {
+			std::lock_guard<pros::Mutex> lock(goal_sig_guard);
+			return goal_sig;
 	}
 };
 
@@ -53,12 +52,12 @@ AutoAim robot_aim;
 void goalSense() {
 
 	// Define vision sensors
-	pros::Vision vis1 (11);
-	pros::Vision vis2 (12);
+	pros::Vision vis1 (7);
+	pros::Vision vis2 (8);
 
 	// Create color signatures for blob detection
 	// These are currently bs values, use vcs_vision utility
-  	pros::vision_signature_s_t RED_SIG = pros::Vision::signature_from_utility(1, 8973, 11143, 10058, -2119, -1053, -1586, 5.4, 0);
+  	pros::vision_signature_s_t RED_SIG = pros::Vision::signature_from_utility(1, 3011, 4059, 3535, -4753, -3913, -4333, 1.800, 0);
 	pros::vision_signature_s_t BLUE_SIG = pros::Vision::signature_from_utility(2, 8973, 11143, 10058, -2119, -1053, -1586, 5.4, 0);
 
 	// Set signatures on the vision sensors
@@ -68,7 +67,7 @@ void goalSense() {
 	vis2.set_signature(2, &BLUE_SIG);
 
 	// Inches between the lenses of both vision sensors
-	double side_c = 16;
+	double side_c = 12.5;
 
 	// t is the last loop timestamp in milliseconds
 	// This is used to ensure consistent loop intervals with pros::Task::delay_until
@@ -90,10 +89,12 @@ void goalSense() {
 		// Degrees per pixel
 		double angle_constant = 61.0 / 316.0;
 
-		double angle_a = (316 - blob1.x_middle_coord) * angle_constant;
-		double angle_b = blob2.x_middle_coord * angle_constant;
+		double angle_a = 90 - (blob1.x_middle_coord - 158) * angle_constant;
+		double angle_b = 90 + (blob2.x_middle_coord - 158) * angle_constant;
 
-		// Angles of a triangle sum to 180 degrees
+		pros::lcd::print(0, "Angle A: %.1f    Angle B: %.1f", angle_a, angle_b);
+
+		// Angles of a triangle sum to 180 degreesvb 
 		double angle_c = 180 - angle_a - angle_b;
 
 		// Find the sine ratio of the triangle
@@ -125,7 +126,7 @@ void goalSense() {
 
 		// Vision Sensor vertical pixels is 212
 		// Offsetting 0 to be in the center allows us to calculate angle of elevation
-		y_average -= 106;
+		y_average = -(y_average - 106);
 
 		// Find angle of elevation using angle constant
 		double elevation_angle = y_average * angle_constant;
