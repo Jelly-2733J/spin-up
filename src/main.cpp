@@ -26,6 +26,7 @@ void initialize() {
 
 	// Create the flywheel control task
 	pros::Task flywheel_control([&]{ flywheel.flyControl(); });
+	flywheel.set_active(false);
 
 	// Set tracking target to signature 1, red goal
 	aim.set_tracking_sig(1);
@@ -37,7 +38,9 @@ void initialize() {
  * the VEX Competition Switch, following either autonomous or opcontrol. When
  * the robot is enabled, this task will exit.
  */
-void disabled() {}
+void disabled() {
+	flywheel.set_active(false);
+}
 
 /**
  * Runs after initialize(), and before autonomous when connected to the Field
@@ -61,7 +64,9 @@ void competition_initialize() {}
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
-void autonomous() {}
+void autonomous() {
+	flywheel.set_active(true);
+}
 
 /**
  * Runs the operator control code. This function will be started in its own task
@@ -76,4 +81,6 @@ void autonomous() {}
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
-void opcontrol() {}
+void opcontrol() {
+	flywheel.set_active(true);
+}
