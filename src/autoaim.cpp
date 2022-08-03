@@ -11,23 +11,23 @@ double AutoAim::rads(double deg) {
 }
 // Set the distance from the goal
 void AutoAim::set_distance(double new_distance) {
-    std::lock_guard<pros::Mutex> lock(goal_distance_guard);
-    goal_distance = new_distance;
+	std::lock_guard<pros::Mutex> lock(goal_distance_guard);
+	goal_distance = new_distance;
 };
 // Read the current goal distance
 double AutoAim::distance() {
-    std::lock_guard<pros::Mutex> lock(goal_distance_guard);
-    return goal_distance;
+	std::lock_guard<pros::Mutex> lock(goal_distance_guard);
+	return goal_distance;
 };
 // Set the target goal color for tracking
 void AutoAim::set_tracking_sig(int new_sig) {
-    std::lock_guard<pros::Mutex> lock(goal_sig_guard);
-    goal_sig = new_sig;
+	std::lock_guard<pros::Mutex> lock(goal_sig_guard);
+	goal_sig = new_sig;
 }
 // Read the current target goal color
 int AutoAim::tracking_sig() {
-    std::lock_guard<pros::Mutex> lock(goal_sig_guard);
-    return goal_sig;
+	std::lock_guard<pros::Mutex> lock(goal_sig_guard);
+	return goal_sig;
 }
 // Goal tracking
 void AutoAim::goalSense() {
@@ -80,9 +80,9 @@ void AutoAim::goalSense() {
 		// Solve for side B using the law of sines via the calculated sine ratio
 		double side_b = sin(rads(angle_b)) * sin_ratio;
 
-        // Use law of cosines to find distance from midpoint of vision bar to goal
-        // distance = sqrt(left_side^2 + (base_side / 2)^2 − 2 * left_size * (base_side / 2) * cos(left_angle))
-        double plane_distance = pow(side_b, 2) + pow(side_c / 2, 2) - 2 * side_b * (side_c / 2) * cos(rads(angle_a));
+		// Use law of cosines to find distance from midpoint of vision bar to goal
+		// distance = sqrt(left_side^2 + (base_side / 2)^2 − 2 * left_size * (base_side / 2) * cos(left_angle))
+		double plane_distance = pow(side_b, 2) + pow(side_c / 2, 2) - 2 * side_b * (side_c / 2) * cos(rads(angle_a));
 
 		pros::lcd::print(2, "Planar: %.2f", plane_distance);
 
