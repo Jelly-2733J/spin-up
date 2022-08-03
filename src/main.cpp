@@ -1,8 +1,4 @@
 #include "main.h"
-#include <cmath>
-
-#include "autoaim.hpp"
-#include "flywheel.hpp"
 
 // Instantiate the AutoAim class
 AutoAim aim;
