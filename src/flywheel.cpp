@@ -32,7 +32,7 @@ bool FlywheelController::check_sign(double num) {
 	}
 }
 // Clip a number to a certain range
-double FlywheelController::clip(double num, double min, double max) {
+double FlywheelController::clip(double num, double max, double min) {
 	if (num < min) {
 		return min;
 	}
@@ -80,56 +80,40 @@ void FlywheelController::flyControl() {
 	// This is used to ensure consistent loop intervals with pros::Task::delay_until
 	uint32_t t = pros::millis();
 
-	double gain = 0.12;
-	double tbh = 0.0;
-	bool first_cross = false;
-	int max_rpm = 4000;
+	int previous_error = 0;
+	double integral = target_RPM() * 3;
 
-	double error;
-	double last_error;
-	double voltage = 0.0;
+	fly1.move_voltage(12000);
+	fly2.move_voltage(12000);
+
+	pros::Task::delay(target_RPM());
+
+	double kP = 0.01;
+	double kI = 0.03;
+	double kD = 0.00;
 	
 	while (true) {
 
 		if (!is_active()) {
 
-			tbh = 0.0;
-			first_cross = false;
-			error = 0.0;
-			last_error = 0.0;
-			voltage = 0.0;
+			fly1.brake();
+			fly2.brake();
 
 			pros::Task::delay_until(&t, 10);
 			continue;
 		}
-		
-		// Find RPMs
-		int target_rpm = target_RPM();
-		int rpm = RPM();
 
-		// Calculate error
-		error = target_rpm - rpm;
-
-		// Integrate
-		voltage += gain * error;
-
-		// Keep voltage within bounds
-		clip(voltage, 12000, -12000);
-
-		// TBH if there is a switch in the sign of the errors
-		if (check_sign(last_error) != check_sign(error)) {
-			if (first_cross == false) {
-				first_cross = true;
-				tbh = (target_rpm / max_rpm) * 12000;
-			}
-			
-			voltage = 0.5 * (voltage + tbh);
-			tbh = voltage;
+		double error = target_RPM() - fly1.get_actual_velocity() * 7.0;
+		integral = integral + error * 0.010;
+		double derivative = (error - previous_error) / 0.010;
+		double volt = kP * error + kI * integral + kD * derivative;
+		if (volt < 0.0) {
+			volt = 0.0;
 		}
+		set_voltage(volt);
+		previous_error = error;
 
-		last_error = error;
-		
-		set_voltage(voltage);
+		printf("RPM: %.2f TARGET: %i \n", fly1.get_actual_velocity() * 7.0, target_RPM());
 
 		// Delay next loop until 10 ms have passed from the start of this loop
 		pros::Task::delay_until(&t, 10);

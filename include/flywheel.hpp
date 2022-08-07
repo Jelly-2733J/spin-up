@@ -1,8 +1,6 @@
-#include "main.h"
+#include "api.h"
 
 #pragma once
-
-#include "autoaim.hpp"
 
 // FlywheelController class allows for automated flywheel control and RPM calculation.
 class FlywheelController {

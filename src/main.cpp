@@ -1,4 +1,5 @@
 #include "main.h"
+#include "pros/misc.hpp"
 
 // Instantiate the AutoAim class
 AutoAim aim;
@@ -16,6 +17,7 @@ void initialize() {
 
 	// Initialize the LCD
 	pros::lcd::initialize();
+	pros::Task::delay(1000);
 
 	// Create the goal tracking task
 	pros::Task goal_tracking([&]{ aim.goalSense(); });
@@ -79,4 +81,27 @@ void autonomous() {
  */
 void opcontrol() {
 	flywheel.set_active(true);
+	flywheel.set_target_RPM(2000);
+
+	bool state = false;
+
+	pros::Controller master(pros::E_CONTROLLER_MASTER);
+
+	while (true) {
+		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
+			pto.set_value(!state);
+			state = !state;
+		}
+		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {
+			shooter.set_value(true);
+			pros::Task::delay(50);
+			shooter.set_value(false);
+		}
+		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP) && flywheel.target_RPM() <= 3400) {
+			flywheel.set_target_RPM(flywheel.target_RPM() + 100);
+		}
+		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN) && flywheel.target_RPM() >= 100) {
+			flywheel.set_target_RPM(flywheel.target_RPM() - 100);
+		}
+	}
 }
