@@ -1,5 +1,6 @@
 #include "main.h"
-#include "pros/misc.hpp"
+#include "pros/misc.h"
+#include "pros/rtos.hpp"
 
 // Instantiate the AutoAim class
 AutoAim aim;
@@ -17,7 +18,11 @@ void initialize() {
 
 	// Initialize the LCD
 	pros::lcd::initialize();
-	pros::Task::delay(1000);
+	pros::delay(1000);
+
+	// Set all pneumatics to their default state
+	pto.set_value(false);
+	shooter.set_value(false);
 
 	// Create the goal tracking task
 	pros::Task goal_tracking([&]{ aim.goalSense(); });
@@ -66,6 +71,20 @@ void autonomous() {
 	flywheel.set_active(true);
 }
 
+int curve(int input) {
+	// Curve function (positive numbers only)
+	// output = 1.02 ^ (input + 122) - 11.2
+	if (input == 0) {
+		return 0;
+	}
+	else if (abs(input) == 127) {
+		return (input > 0 ? 1 : -1) * 127;
+	}
+	else {
+		return (input > 0 ? 1 : -1) * (int) (1.02 * (pow(1.02, (abs(input) + 122)) - 11.2));
+	}
+}
+
 /**
  * Runs the operator control code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
@@ -87,12 +106,18 @@ void opcontrol() {
 
 	pros::Controller master(pros::E_CONTROLLER_MASTER);
 
+	uint32_t driver_start = pros::millis();
+
+	// t is the last loop timestamp in milliseconds
+	// This is used to ensure consistent loop intervals with pros::Task::delay_until
+	uint32_t t = driver_start;
+
 	while (true) {
-		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
+		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) {
 			pto.set_value(!state);
 			state = !state;
 		}
-		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {
+		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R2)) {
 			shooter.set_value(true);
 			pros::Task::delay(50);
 			shooter.set_value(false);
@@ -103,5 +128,37 @@ void opcontrol() {
 		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN) && flywheel.target_RPM() >= 100) {
 			flywheel.set_target_RPM(flywheel.target_RPM() - 100);
 		}
+
+		// Tank drive with left and right joystick Y values
+		drivefl.move(curve(master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y)));
+		drivefr.move(curve(master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y)));
+		drivebl.move(curve(master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y)));
+		drivebr.move(curve(master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y)));
+		if (state) {
+			ptol.move(curve(master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y)));
+			ptor.move(curve(master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y)));
+		}
+		// Intake forward
+		else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
+			ptol.move(127);
+			ptor.move(127);
+		}
+		// Intake backward
+		else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) {
+			ptol.move(-127);
+			ptor.move(-127);
+		}
+		else {
+			ptol.move(0);
+			ptor.move(0);
+		}
+
+		// Endgame
+		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT) && t - driver_start > 95000) {
+			// Do endgame stuff here
+		}
+
+		// Delay next loop until 10 ms have passed from the start of this loop
+		pros::Task::delay_until(&t, 2);
 	}
 }
