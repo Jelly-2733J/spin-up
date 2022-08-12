@@ -12,6 +12,9 @@ extern pros::Motor fly1;				// 7
 extern pros::Motor fly2;				// 8
 extern pros::Vision vis1;				// 9
 extern pros::Vision vis2; 				// 10
-extern pros::Optical rollopt;			// 11
+extern pros::Optical optical;			// 11
 extern pros::ADIDigitalOut pto;			// A
 extern pros::ADIDigitalOut shooter;		// B
+
+// Controller
+extern pros::Controller master;

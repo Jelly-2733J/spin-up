@@ -113,7 +113,7 @@ void FlywheelController::flyControl() {
 		set_voltage(volt);
 		previous_error = error;
 
-		printf("RPM: %.2f TARGET: %i \n", fly1.get_actual_velocity() * 7.0, target_RPM());
+		// printf("RPM: %.2f TARGET: %i \n", fly1.get_actual_velocity() * 7.0, target_RPM());
 
 		// Delay next loop until 10 ms have passed from the start of this loop
 		pros::Task::delay_until(&t, 10);

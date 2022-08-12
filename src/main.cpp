@@ -1,12 +1,13 @@
 #include "main.h"
-#include "pros/misc.h"
-#include "pros/rtos.hpp"
 
 // Instantiate the AutoAim class
 AutoAim aim;
 
 // Instantiate the FlywheelController class
 FlywheelController flywheel;
+
+// Instantiate the AutoRoller class
+AutoRoller roller;
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -30,6 +31,8 @@ void initialize() {
 	// Create the flywheel control task
 	pros::Task flywheel_control([&]{ flywheel.flyControl(); });
 	flywheel.set_active(false);
+
+	roller.set_alliance(1);
 
 	// Set tracking target to signature 1, red goal
 	aim.set_tracking_sig(1);
@@ -104,8 +107,6 @@ void opcontrol() {
 
 	bool state = false;
 
-	pros::Controller master(pros::E_CONTROLLER_MASTER);
-
 	uint32_t driver_start = pros::millis();
 
 	// t is the last loop timestamp in milliseconds
@@ -148,17 +149,15 @@ void opcontrol() {
 			ptol.move(-127);
 			ptor.move(-127);
 		}
-		else {
-			ptol.move(0);
-			ptor.move(0);
-		}
-
 		// Endgame
 		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT) && t - driver_start > 95000) {
 			// Do endgame stuff here
 		}
+		if (roller.at_roller()) {
+            roller.solve_roller();
+        }
 
-		// Delay next loop until 10 ms have passed from the start of this loop
+		// Delay next loop until 2 ms have passed from the start of this loop
 		pros::Task::delay_until(&t, 2);
 	}
 }
