@@ -16,12 +16,6 @@ int FlywheelController::calculate_RPM(double distance) {
 	// Graph should be RPM (dependent) vs. Distance (independent)
 	return distance; // Add equation here
 }
-// Set voltage of flywheel motors
-void FlywheelController::set_voltage(double voltage) {
-	// Set motor voltages
-	fly1 = voltage;
-	fly2 = voltage;
-}
 // Check the sign of a number
 bool FlywheelController::check_sign(double num) {
 	if (num > 0) {
@@ -83,11 +77,6 @@ void FlywheelController::flyControl() {
 	int previous_error = 0;
 	double integral = target_RPM() * 3;
 
-	fly1.move_voltage(12000);
-	fly2.move_voltage(12000);
-
-	pros::Task::delay(target_RPM());
-
 	double kP = 0.01;
 	double kI = 0.03;
 	double kD = 0.00;
@@ -96,24 +85,26 @@ void FlywheelController::flyControl() {
 
 		if (!is_active()) {
 
-			fly1.brake();
-			fly2.brake();
+			fly.brake();
 
 			pros::Task::delay_until(&t, 10);
 			continue;
 		}
 
-		double error = target_RPM() - fly1.get_actual_velocity() * 7.0;
-		integral = integral + error * 0.010;
+		set_RPM((int) (fly.get_actual_velocity() * 6.0));
+
+		double error = target_RPM() - RPM();
+		integral = integral + error;
+		integral = clip(integral, 400000, -400000);
 		double derivative = (error - previous_error) / 0.010;
 		double volt = kP * error + kI * integral + kD * derivative;
 		if (volt < 0.0) {
 			volt = 0.0;
 		}
-		set_voltage(volt);
+		volt = clip(volt, 12000, 0);
+		printf("%.2f %d %d\n", volt, RPM(), target_RPM());
+		fly.move_voltage(volt);
 		previous_error = error;
-
-		// printf("RPM: %.2f TARGET: %i \n", fly1.get_actual_velocity() * 7.0, target_RPM());
 
 		// Delay next loop until 10 ms have passed from the start of this loop
 		pros::Task::delay_until(&t, 10);

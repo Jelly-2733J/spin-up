@@ -9,7 +9,7 @@ class FlywheelController {
 		pros::Mutex flywheel_RPM_guard;
 		int flywheel_target_RPM;
 		pros::Mutex flywheel_target_RPM_guard;
-		bool active;
+		bool active = false;
 		pros::Mutex active_guard;
 		// Convert degrees to radians
 		static double rads(double deg);
@@ -17,8 +17,6 @@ class FlywheelController {
 		void set_RPM(int rpm);
 		// Calculate optimal RPM
 		int calculate_RPM(double distance);
-		// Set voltage of flywheel motors
-		void set_voltage(double voltage);
 		// Check the sign of a number
 		bool check_sign(double num);
 		// Clip a number to a certain range

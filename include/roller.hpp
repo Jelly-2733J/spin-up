@@ -8,17 +8,17 @@ class AutoRoller {
 	private:
 		int color;
 		pros::Mutex color_guard;
-        // Read color from optical sensor
-        int read_color();
-        // Move motors
-        void move_roller(int speed);
-        // Get alliance color
-        int get_alliance();
+		int solved = false;
+		pros::Mutex solved_guard;
+		// Read color from optical sensor
+		int read_color();
+		// Get alliance color
+		int get_alliance();
 	public:
-        // Set alliance color
-        void set_alliance(int side);
-        // Check if roller is in range
-        bool at_roller();
-        // Solve a roller in range
-        void solve_roller();
+		// Set alliance color
+		void set_alliance(int side);
+		// Check if roller is in range
+		bool at_roller();
+		// Solve a roller in range
+		void solve_roller();
 };
