@@ -37,11 +37,6 @@ double FlywheelController::clip(double num, double max, double min) {
 		return num;
 	}
 }
-// Set the distance from the goal
-void FlywheelController::set_RPM(int rpm) {
-	std::lock_guard<pros::Mutex> lock(flywheel_RPM_guard);
-	flywheel_RPM = rpm;
-};
 // Set target RPM
 void FlywheelController::set_target_RPM(int rpm) {
 	std::lock_guard<pros::Mutex> lock(flywheel_target_RPM_guard);
@@ -49,8 +44,7 @@ void FlywheelController::set_target_RPM(int rpm) {
 };
 // Read the current RPM
 int FlywheelController::RPM() {
-	std::lock_guard<pros::Mutex> lock(flywheel_RPM_guard);
-	return flywheel_RPM;
+	return (int) (fly.get_actual_velocity() * 6.0);
 };
 // Read the current RPM
 int FlywheelController::target_RPM() {
@@ -74,15 +68,20 @@ void FlywheelController::flyControl() {
 	// This is used to ensure consistent loop intervals with pros::Task::delay_until
 	uint32_t t = pros::millis();
 
+	// Variable to hold previous loop's error
 	int previous_error = 0;
+
+	// Start integral at a calculated value to reduce spin up time
 	double integral = target_RPM() * 3;
 
+	// PID constants
 	double kP = 0.01;
 	double kI = 0.03;
 	double kD = 0.00;
 	
 	while (true) {
 
+		// Stop flywheel if not active
 		if (!is_active()) {
 
 			fly.brake();
@@ -91,19 +90,35 @@ void FlywheelController::flyControl() {
 			continue;
 		}
 
-		set_RPM((int) (fly.get_actual_velocity() * 6.0));
-
+		// Calculate error
 		double error = target_RPM() - RPM();
+
+		// Calculate integral
 		integral = integral + error;
+
+		// Keep integral in sane range
 		integral = clip(integral, 400000, -400000);
+
+		// Calculate derivative
 		double derivative = (error - previous_error) / 0.010;
+
+		// Calculate output of PID controller
 		double volt = kP * error + kI * integral + kD * derivative;
+
+		// We're not going backwards!
 		if (volt < 0.0) {
 			volt = 0.0;
 		}
+
+		// Clip voltage to motor limits
 		volt = clip(volt, 12000, 0);
+
 		printf("%.2f %d %d\n", volt, RPM(), target_RPM());
+
+		// Set motor voltage
 		fly.move_voltage(volt);
+
+		// Update previous error
 		previous_error = error;
 
 		// Delay next loop until 10 ms have passed from the start of this loop

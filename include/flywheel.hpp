@@ -5,16 +5,12 @@
 // FlywheelController class allows for automated flywheel control and RPM calculation.
 class FlywheelController {
 	private:
-		int flywheel_RPM;
-		pros::Mutex flywheel_RPM_guard;
 		int flywheel_target_RPM;
 		pros::Mutex flywheel_target_RPM_guard;
 		bool active = false;
 		pros::Mutex active_guard;
 		// Convert degrees to radians
 		static double rads(double deg);
-		// Set the flywheel to a certain RPM
-		void set_RPM(int rpm);
 		// Calculate optimal RPM
 		int calculate_RPM(double distance);
 		// Check the sign of a number
