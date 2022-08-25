@@ -17,7 +17,7 @@ Drive chassis (
 
 	// Right Chassis Ports (negative port will reverse it!)
 	//   the first port is the sensored port (when trackers are not used!)
-	,{11, 12, 13}
+	,{8, 9, 10}
 
 	// IMU Port
 	,18
@@ -91,9 +91,6 @@ void initialize() {
 	chassis.initialize();
 	ez::as::initialize();
 
-	// Set all pneumatics to their default state
-	shooter.set_value(false);
-
 	// Create the goal tracking task
 	pros::Task goal_tracking([&]{ aim.goalSense(); });
 
@@ -163,7 +160,7 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	flywheel.set_active(true);
+	flywheel.set_active(false);
 	flywheel.set_target_RPM(2000);
 
 	uint32_t driver_start = pros::millis();
@@ -171,13 +168,6 @@ void opcontrol() {
 	while (true) {
 
 		chassis.tank(); // Tank control
-
-		// Shoot (R2)
-		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R2)) {
-			shooter.set_value(true);
-			pros::Task::delay(50);
-			shooter.set_value(false);
-		}
 
 		// Adjust flywheel RPM (up & down)
 		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP) && flywheel.target_RPM() <= 3400) {
@@ -187,15 +177,20 @@ void opcontrol() {
 			flywheel.set_target_RPM(flywheel.target_RPM() - 100);
 		}
 
-		// Intake controls (R1 + scuff Y)
+		// Intake controls (R1 + R2)
 		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
 			intake = 100;
 		}
-		else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) {
+		else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
 			intake = -100;
 		}
 		else {
 			intake = 0;
+		}
+
+		// Toggle flywheel (Up)
+		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)) {
+			flywheel.set_active(!flywheel.is_active());
 		}
 
 		// Endgame
