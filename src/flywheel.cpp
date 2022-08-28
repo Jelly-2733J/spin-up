@@ -68,58 +68,57 @@ void FlywheelController::flyControl() {
 	// This is used to ensure consistent loop intervals with pros::Task::delay_until
 	uint32_t t = pros::millis();
 
-	// Variable to hold previous loop's error
-	int previous_error = 0;
+	double gain = 0.12;
+	double tbh = 0.0;
+	bool first_cross = false;
+	int max_rpm = 4000;
 
-	// Start integral at a calculated value to reduce spin up time
-	double integral = target_RPM() * 3;
-
-	// PID constants
-	double kP = 0.01;
-	double kI = 0.03;
-	double kD = 0.00;
+	double error;
+	double last_error;
+	double voltage = 0.0;
 	
 	while (true) {
 
-		// Stop flywheel if not active
 		if (!is_active()) {
 
 			fly.brake();
+
+			tbh = 0.0;
+			first_cross = false;
+			error = 0.0;
+			last_error = 0.0;
+			voltage = 0.0;
 
 			pros::Task::delay_until(&t, 10);
 			continue;
 		}
 
 		// Calculate error
-		double error = target_RPM() - RPM();
+		error = target_RPM() - RPM();
 
-		// Calculate integral
-		integral = integral + error;
+		// Integrate
+		voltage += gain * error;
 
-		// Keep integral in sane range
-		integral = clip(integral, 400000, -400000);
+		// Keep voltage within bounds
+		voltage = clip(voltage, 12000, -12000);
 
-		// Calculate derivative
-		double derivative = (error - previous_error) / 0.010;
-
-		// Calculate output of PID controller
-		double volt = kP * error + kI * integral + kD * derivative;
-
-		// We're not going backwards!
-		if (volt < 0.0) {
-			volt = 0.0;
+		// TBH if there is a switch in the sign of the errors
+		if (check_sign(last_error) != check_sign(error)) {
+			if (first_cross == false) {
+				first_cross = true;
+				tbh = (target_RPM() / max_rpm) * 12000;
+			}
+			
+			voltage = clip(0.5 * (voltage + tbh), 12000, -12000);
+			tbh = voltage;
+			printf("     TBH     \n");
 		}
 
-		// Clip voltage to motor limits
-		volt = clip(volt, 12000, 0);
+		last_error = error;
+		
+		fly.move_voltage(voltage);
 
-		printf("%.2f %d %d\n", volt, RPM(), target_RPM());
-
-		// Set motor voltage
-		fly.move_voltage(volt);
-
-		// Update previous error
-		previous_error = error;
+		printf("%.2f %d %d\n", voltage, RPM(), target_RPM());
 
 		// Delay next loop until 10 ms have passed from the start of this loop
 		pros::Task::delay_until(&t, 10);
