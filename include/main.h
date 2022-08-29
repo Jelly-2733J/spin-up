@@ -47,7 +47,7 @@
 #include "autoaim.hpp"
 #include "flywheel.hpp"
 #include "roller.hpp"
-#include "ports.hpp"
+#include "globals.hpp"
 
 // More includes here...
 //

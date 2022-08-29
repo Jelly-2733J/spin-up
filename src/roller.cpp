@@ -2,7 +2,7 @@
 #include <cmath>
 #include <mutex>
 
-#include "ports.hpp"
+#include "globals.hpp"
 #include "roller.hpp"
 
 // Read color from optical sensor

@@ -2,7 +2,7 @@
 #include <cmath>
 #include <mutex>
 
-#include "ports.hpp"
+#include "globals.hpp"
 #include "autoaim.hpp"
 
 // Convert degrees to radians

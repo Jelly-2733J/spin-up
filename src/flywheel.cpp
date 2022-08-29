@@ -2,7 +2,7 @@
 #include <cmath>
 #include <mutex>
 
-#include "ports.hpp"
+#include "globals.hpp"
 #include "flywheel.hpp"
 
 // Convert degrees to radians
@@ -79,17 +79,23 @@ void FlywheelController::flyControl() {
 	
 	while (true) {
 
+		// Check if the flywheel control task is active with is_active()
 		if (!is_active()) {
 
+			// If not active, flywheel should stop
 			fly.brake();
 
+			// Reset all control variables
 			tbh = 0.0;
 			first_cross = false;
 			error = 0.0;
 			last_error = 0.0;
 			voltage = 0.0;
 
+			// Delay next loop until 10 ms have passed from the start of this loop
 			pros::Task::delay_until(&t, 10);
+
+			// Continue to next loop, skipping tbh calculation and voltage control
 			continue;
 		}
 
@@ -104,18 +110,25 @@ void FlywheelController::flyControl() {
 
 		// TBH if there is a switch in the sign of the errors
 		if (check_sign(last_error) != check_sign(error)) {
+			// On first error cross, set tbh to theoretical RPM estimate to reach a quicker stable state
 			if (first_cross == false) {
 				first_cross = true;
 				tbh = (target_RPM() / max_rpm) * 12000;
 			}
 			
+			// Perform TBH calculation and clip voltage to bounds
 			voltage = clip(0.5 * (voltage + tbh), 12000, -12000);
+
+			// Set tbh to new voltage
 			tbh = voltage;
+			
 			printf("     TBH     \n");
 		}
 
+		// Set last_error to current error for next loop
 		last_error = error;
 		
+		// Set flywheel voltage
 		fly.move_voltage(voltage);
 
 		printf("%.2f %d %d\n", voltage, RPM(), target_RPM());
