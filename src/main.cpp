@@ -161,7 +161,7 @@ void autonomous() {
  */
 void opcontrol() {
 	flywheel.set_active(false);
-	flywheel.set_target_RPM(2000);
+	flywheel.set_target_RPM(2150);
 
 	uint32_t driver_start = pros::millis();
 
@@ -171,10 +171,10 @@ void opcontrol() {
 
 		// Adjust flywheel RPM (up & down)
 		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP) && flywheel.target_RPM() <= 3400) {
-			flywheel.set_target_RPM(flywheel.target_RPM() + 100);
+			flywheel.set_target_RPM(flywheel.target_RPM() + 50);
 		}
 		else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN) && flywheel.target_RPM() >= 100) {
-			flywheel.set_target_RPM(flywheel.target_RPM() - 100);
+			flywheel.set_target_RPM(flywheel.target_RPM() - 50);
 		}
 
 		// Intake controls (R1 + R2)
