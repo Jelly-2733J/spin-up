@@ -66,7 +66,7 @@ void initialize() {
 	pros::delay(500); // Stop the user from doing anything while legacy ports configure.
 
 	// Configure your chassis controls
-	// chassis.toggle_modify_curve_with_controller(true); // Enables modifying the controller curve with buttons on the joysticks
+	chassis.toggle_modify_curve_with_controller(false); // Enables modifying the controller curve with buttons on the joysticks
 	chassis.set_active_brake(0.1); // Sets the active brake kP. We recommend 0.1.
 	chassis.set_curve_default(0, 0); // Defaults for curve. If using tank, only the first parameter is used. (Comment this line out if you have an SD card!)  
 	default_constants(); // Set the drive to your own constants from autons.cpp!
@@ -137,7 +137,6 @@ void competition_initialize() {}
  * from where it left off.
  */
 void autonomous() {
-	// flywheel.set_active(true);
 	chassis.reset_pid_targets(); // Resets PID targets to 0
 	chassis.reset_gyro(); // Reset gyro position to 0
 	chassis.reset_drive_sensor(); // Reset drive sensors to 0
@@ -161,7 +160,7 @@ void autonomous() {
  */
 void opcontrol() {
 	flywheel.set_active(false);
-	flywheel.set_target_RPM(2150);
+	flywheel.set_target_RPM(2000);
 
 	uint32_t driver_start = pros::millis();
 
@@ -171,10 +170,10 @@ void opcontrol() {
 
 		// Adjust flywheel RPM (up & down)
 		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP) && flywheel.target_RPM() <= 3400) {
-			flywheel.set_target_RPM(flywheel.target_RPM() + 50);
+			flywheel.set_target_RPM(flywheel.target_RPM() + 100);
 		}
 		else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN) && flywheel.target_RPM() >= 100) {
-			flywheel.set_target_RPM(flywheel.target_RPM() - 50);
+			flywheel.set_target_RPM(flywheel.target_RPM() - 100);
 		}
 
 		// Intake controls (R1 + R2)
