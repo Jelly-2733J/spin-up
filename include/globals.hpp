@@ -2,11 +2,6 @@
 
 #pragma once
 
-// Auton Variables
-extern int alliance; // 0 is unspecified, 1 is red, 2 is blue
-extern int position; // 0 is unspecified, 1 is left, 2 is right
-extern int auton; // 1 is skills, 2 is half winpoint, 3 is full winpoint
-
 // Ports
 extern pros::Motor drivefl;				// 1
 extern pros::Motor drivefr;				// 11

@@ -1,11 +1,6 @@
 #include "api.h"
 #include "globals.hpp"
 
-// Auton Variables
-int alliance = 0; // 0 is unspecified, 1 is red, 2 is blue
-int position = 0; // 0 is unspecified, 1 is left, 2 is right
-int auton = 0; // 1 is skills, 2 is half winpoint, 3 is full winpoint
-
 // Ports
 pros::Motor drivefl (1, pros::E_MOTOR_GEARSET_06, true, pros::E_MOTOR_ENCODER_DEGREES);
 pros::Motor drivefr (8, pros::E_MOTOR_GEARSET_06, false, pros::E_MOTOR_ENCODER_DEGREES);

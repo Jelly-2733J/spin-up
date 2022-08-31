@@ -9,6 +9,9 @@ FlywheelController flywheel;
 // Instantiate the AutoRoller class
 AutoRoller roller;
 
+// Instantiate the AutonSelector class
+LVGLAutonSelector selector;
+
 // Chassis constructor
 Drive chassis (
 	// Left Chassis Ports (negative port will reverse it!)
@@ -62,8 +65,14 @@ void initialize() {
 
 	// Print our branding over your terminal :D
 	ez::print_ez_template();
-	
+
 	pros::delay(500); // Stop the user from doing anything while legacy ports configure.
+	
+	flywheel.set_active(false);
+
+	// Set roller and vision tracking target to signature 1, red goal
+	roller.set_alliance(1);
+	aim.set_tracking_sig(1);
 
 	// Configure your chassis controls
 	chassis.toggle_modify_curve_with_controller(false); // Enables modifying the controller curve with buttons on the joysticks
@@ -91,17 +100,21 @@ void initialize() {
 	chassis.initialize();
 	ez::as::initialize();
 
+	// Clear the LCD for the auton selector
+	pros::screen::erase();
+
+	// Start the auton selector
+	selector.create();
+
 	// Create the goal tracking task
-	pros::Task goal_tracking([&]{ aim.goalSense(); });
+	// pros::Task goal_tracking([&]{ aim.goalSense(); });
 
 	// Create the flywheel control task
 	pros::Task flywheel_control([&]{ flywheel.flyControl(); });
-	flywheel.set_active(false);
 
-	roller.set_alliance(1);
+	pros::delay(5000);
 
-	// Set tracking target to signature 1, red goal
-	aim.set_tracking_sig(1);
+	autonomous();
 
 }
 
@@ -142,7 +155,7 @@ void autonomous() {
 	chassis.reset_drive_sensor(); // Reset drive sensors to 0
 	chassis.set_drive_brake(MOTOR_BRAKE_HOLD); // Set motors to hold.  This helps autonomous consistency.
 
-	ez::as::auton_selector.call_selected_auton(); // Calls selected auton from autonomous selector.
+	ez::as::auton_selector.call_auton(selector.selectedAuton()); // Calls selected auton from autonomous selector.
 }
 
 /**

@@ -69,7 +69,7 @@ void AutoAim::goalSense() {
 		double angle_a = 90 - (blob1.x_middle_coord - 158) * angle_constant;
 		double angle_b = 90 + (blob2.x_middle_coord - 158) * angle_constant;
 
-		pros::lcd::print(0, "Angle A: %.1f    Angle B: %.1f", angle_a, angle_b);
+		// pros::lcd::print(0, "Angle A: %.1f    Angle B: %.1f", angle_a, angle_b);
 
 		// Angles of a triangle sum to 180 degrees
 		double angle_c = 180 - angle_a - angle_b;
@@ -84,7 +84,7 @@ void AutoAim::goalSense() {
 		// distance = sqrt(left_side^2 + (base_side / 2)^2 − 2 * left_size * (base_side / 2) * cos(left_angle))
 		double plane_distance = pow(side_b, 2) + pow(side_c / 2, 2) - 2 * side_b * (side_c / 2) * cos(rads(angle_a));
 
-		pros::lcd::print(2, "Planar: %.2f", plane_distance);
+		// pros::lcd::print(2, "Planar: %.2f", plane_distance);
 
 		/* ------------------------------------------------------------------------------------------
 		| plane_distance is along the plane containing the sensors and the center of the goal blob. |
@@ -119,7 +119,7 @@ void AutoAim::goalSense() {
 		// Set the AutoAim distance to the calculated distance
 		set_distance(calculated_distance);
 
-		pros::lcd::print(3, "Level: %.2f in", distance());
+		// pros::lcd::print(3, "Level: %.2f in", distance());
 
 		// Delay next loop until 10 ms have passed from the start of this loop
 		pros::Task::delay_until(&t, 10);

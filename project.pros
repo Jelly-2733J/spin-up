@@ -5,7 +5,7 @@
     "target": "v5",
     "templates": {
       "EZ-Template": {
-        "location": "C:\\Users\\union\\AppData\\Roaming\\PROS\\templates\\EZ-Template@2.1.1",
+        "location": "C:\\Users\\willi\\AppData\\Roaming\\PROS\\templates\\EZ-Template@2.1.1",
         "metadata": {
           "origin": "local"
         },
@@ -13,14 +13,14 @@
         "py/object": "pros.conductor.templates.local_template.LocalTemplate",
         "supported_kernels": "^3.5.4",
         "system_files": [
-          "firmware\\EZ-Template.a",
-          "include\\EZ-Template\\util.hpp",
-          "include\\EZ-Template\\auton_selector.hpp",
-          "include\\EZ-Template\\api.hpp",
-          "include\\EZ-Template\\PID.hpp",
           "include\\EZ-Template\\auton.hpp",
-          "include\\EZ-Template\\sdcard.hpp",
-          "include\\EZ-Template\\drive\\drive.hpp"
+          "include\\EZ-Template\\util.hpp",
+          "include\\EZ-Template\\PID.hpp",
+          "include\\EZ-Template\\drive\\drive.hpp",
+          "include\\EZ-Template\\api.hpp",
+          "include\\EZ-Template\\auton_selector.hpp",
+          "firmware\\EZ-Template.a",
+          "include\\EZ-Template\\sdcard.hpp"
         ],
         "target": "v5",
         "user_files": [],
@@ -187,7 +187,8 @@
       }
     },
     "upload_options": {
-      "description": "L + bozo + skill issue + no auton + ratio"
+      "description": "L + bozo + skill issue + no auton + ratio",
+      "icon": "pros"
     }
   }
 }

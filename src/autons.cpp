@@ -2,7 +2,7 @@
 
 
 /////
-// For instalattion, upgrading, documentations and tutorials, check out website!
+// For installation, upgrading, documentation, and tutorials, check out website!
 // https://ez-robotics.github.io/EZ-Template/
 /////
 
@@ -217,13 +217,13 @@ void tug (int attempts) {
 
 		// If failsafed...
 		if (chassis.interfered) {
-		chassis.reset_drive_sensor();
-		chassis.set_drive_pid(-2, 20);
-		pros::delay(1000);
+			chassis.reset_drive_sensor();
+			chassis.set_drive_pid(-2, 20);
+			pros::delay(1000);
 		}
 		// If robot successfully drove back, return
 		else {
-		return;
+			return;
 		}
 	}
 }
