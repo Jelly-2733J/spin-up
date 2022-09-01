@@ -271,7 +271,7 @@ void Drive::imu_loading_display(int iter) {
   // While IMU is loading
   if (iter < 2000) {
     static int last_x1 = boarder;
-    pros::screen::set_pen(0x00FF6EC7);  // EZ Pink
+    pros::screen::set_pen(0x00ED1C24);  // Blackout Red
     int x1 = (iter * ((480 - (boarder * 2)) / 2000.0)) + boarder;
     pros::screen::fill_rect(last_x1, boarder, x1, 240 - boarder);
     last_x1 = x1;
@@ -279,7 +279,7 @@ void Drive::imu_loading_display(int iter) {
   // Failsafe time
   else {
     static int last_x1 = boarder;
-    pros::screen::set_pen(COLOR_RED);
+    pros::screen::set_pen(0x00ED1C24); // Blackout Red
     int x1 = ((iter - 2000) * ((480 - (boarder * 2)) / 1000.0)) + boarder;
     pros::screen::fill_rect(last_x1, boarder, x1, 240 - boarder);
     last_x1 = x1;

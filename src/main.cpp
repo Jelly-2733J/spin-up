@@ -111,11 +111,6 @@ void initialize() {
 
 	// Create the flywheel control task
 	pros::Task flywheel_control([&]{ flywheel.flyControl(); });
-
-	pros::delay(5000);
-
-	autonomous();
-
 }
 
 /**
