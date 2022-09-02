@@ -4,6 +4,7 @@
 
 extern Drive chassis;
 
+void no_auton();
 void drive_example();
 void turn_example();
 void drive_and_turn();

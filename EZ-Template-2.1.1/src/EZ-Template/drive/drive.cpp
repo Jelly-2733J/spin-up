@@ -323,7 +323,7 @@ void Drive::set_drive_brake(pros::motor_brake_mode_e_t brake_type) {
 
 void Drive::initialize() {
   init_curve_sd();
-  imu_calibrate();
+  imu_calibrate(false); // false because we don't want to run the loading animation
   reset_drive_sensor();
 }
 
