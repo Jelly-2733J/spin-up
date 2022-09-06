@@ -11,23 +11,29 @@ double AutoAim::rads(double deg) {
 }
 // Set the distance from the goal
 void AutoAim::set_distance(double new_distance) {
-	std::lock_guard<pros::Mutex> lock(goal_distance_guard);
+	goal_distance_guard.take();
 	goal_distance = new_distance;
+	goal_distance_guard.give();
 };
 // Read the current goal distance
 double AutoAim::distance() {
-	std::lock_guard<pros::Mutex> lock(goal_distance_guard);
-	return goal_distance;
+	goal_distance_guard.take();
+	double to_return = goal_distance;
+	goal_distance_guard.give();
+	return to_return;
 };
 // Set the target goal color for tracking
 void AutoAim::set_tracking_sig(int new_sig) {
-	std::lock_guard<pros::Mutex> lock(goal_sig_guard);
+	goal_sig_guard.take();
 	goal_sig = new_sig;
+	goal_sig_guard.give();
 }
 // Read the current target goal color
 int AutoAim::tracking_sig() {
-	std::lock_guard<pros::Mutex> lock(goal_sig_guard);
-	return goal_sig;
+	goal_sig_guard.take();
+	int to_return = goal_sig;
+	goal_sig_guard.give();
+	return to_return;
 }
 // Goal tracking
 void AutoAim::goalSense() {

@@ -21,21 +21,21 @@ SECTIONS
    *(.gnu.linkonce.t.*)
    *(.plt)
    *(.gnu_warning)
-   *(.gcc_except_table)
+   *(.gcc_execpt_table)
    *(.glue_7)
    *(.glue_7t)
    *(.vfp11_veneer)
    *(.ARM.extab)
    *(.gnu.linkonce.armextab.*)
-} > RAM
+} > MEMORY
 
 .init : {
    KEEP (*(.init))
-} > RAM
+} > MEMORY
 
 .fini : {
    KEEP (*(.fini))
-} > RAM
+} > MEMORY
 
 .rodata : {
    __rodata_start = .;
@@ -43,14 +43,14 @@ SECTIONS
    *(.rodata.*)
    *(.gnu.linkonce.r.*)
    __rodata_end = .;
-} > RAM
+} > MEMORY
 
 .rodata1 : {
    __rodata1_start = .;
    *(.rodata1)
    *(.rodata1.*)
    __rodata1_end = .;
-} > RAM
+} > MEMORY
 
 .sdata2 : {
    __sdata2_start = .;
@@ -58,7 +58,7 @@ SECTIONS
    *(.sdata2.*)
    *(.gnu.linkonce.s2.*)
    __sdata2_end = .;
-} > RAM
+} > MEMORY
 
 .sbss2 : {
    __sbss2_start = .;
@@ -66,7 +66,7 @@ SECTIONS
    *(.sbss2.*)
    *(.gnu.linkonce.sb2.*)
    __sbss2_end = .;
-} > RAM
+} > MEMORY
 
 .data : {
    __data_start = .;
@@ -77,18 +77,18 @@ SECTIONS
    *(.got)
    *(.got.plt)
    __data_end = .;
-} > RAM
+} > MEMORY
 
 .data1 : {
    __data1_start = .;
    *(.data1)
    *(.data1.*)
    __data1_end = .;
-} > RAM
+} > MEMORY
 
 .got : {
    *(.got)
-} > RAM
+} > MEMORY
 
 .ctors : {
    __CTOR_LIST__ = .;
@@ -99,7 +99,7 @@ SECTIONS
    KEEP (*(.ctors))
    __CTOR_END__ = .;
    ___CTORS_END___ = .;
-} > RAM
+} > MEMORY
 
 .dtors : {
    __DTOR_LIST__ = .;
@@ -110,67 +110,67 @@ SECTIONS
    KEEP (*(.dtors))
    __DTOR_END__ = .;
    ___DTORS_END___ = .;
-} > RAM
+} > MEMORY
 
 .fixup : {
    __fixup_start = .;
    *(.fixup)
    __fixup_end = .;
-} > RAM
+} > MEMORY
 
 .eh_frame : {
    *(.eh_frame)
-} > RAM
+} > MEMORY
 
 .eh_framehdr : {
    __eh_framehdr_start = .;
    *(.eh_framehdr)
    __eh_framehdr_end = .;
-} > RAM
+} > MEMORY
 
 .gcc_except_table : {
    *(.gcc_except_table)
-} > RAM
+} > MEMORY
 
 .mmu_tbl (ALIGN(16384)) : {
    __mmu_tbl_start = .;
    *(.mmu_tbl)
    __mmu_tbl_end = .;
-} > RAM
+} > MEMORY
 
 .ARM.exidx : {
    __exidx_start = .;
    *(.ARM.exidx*)
    *(.gnu.linkonce.armexidix.*.*)
    __exidx_end = .;
-} > RAM
+} > MEMORY
 
 .preinit_array : {
    __preinit_array_start = .;
    KEEP (*(SORT(.preinit_array.*)))
    KEEP (*(.preinit_array))
    __preinit_array_end = .;
-} > RAM
+} > MEMORY
 
 .init_array : {
    __init_array_start = .;
    KEEP (*(SORT(.init_array.*)))
    KEEP (*(.init_array))
    __init_array_end = .;
-} > RAM
+} > MEMORY
 
 .fini_array : {
    __fini_array_start = .;
    KEEP (*(SORT(.fini_array.*)))
    KEEP (*(.fini_array))
    __fini_array_end = .;
-} > RAM
+} > MEMORY
 
 .ARM.attributes : {
    __ARM.attributes_start = .;
    *(.ARM.attributes)
    __ARM.attributes_end = .;
-} > RAM
+} > MEMORY
 
 .sdata : {
    __sdata_start = .;
@@ -178,7 +178,7 @@ SECTIONS
    *(.sdata.*)
    *(.gnu.linkonce.s.*)
    __sdata_end = .;
-} > RAM
+} > MEMORY
 
 .sbss (NOLOAD) : {
    __sbss_start = .;
@@ -186,7 +186,7 @@ SECTIONS
    *(.sbss.*)
    *(.gnu.linkonce.sb.*)
    __sbss_end = .;
-} > RAM
+} > MEMORY
 
 .tdata : {
    __tdata_start = .;
@@ -194,7 +194,7 @@ SECTIONS
    *(.tdata.*)
    *(.gnu.linkonce.td.*)
    __tdata_end = .;
-} > RAM
+} > MEMORY
 
 .tbss : {
    __tbss_start = .;
@@ -202,7 +202,7 @@ SECTIONS
    *(.tbss.*)
    *(.gnu.linkonce.tb.*)
    __tbss_end = .;
-} > RAM
+} > MEMORY
 
 .bss (NOLOAD) : {
    __bss_start = .;
@@ -211,7 +211,7 @@ SECTIONS
    *(.gnu.linkonce.b.*)
    *(COMMON)
    __bss_end = .;
-} > RAM
+} > MEMORY
 
 _SDA_BASE_ = __sdata_start + ((__sbss_end - __sdata_start) / 2 );
 

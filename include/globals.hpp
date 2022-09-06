@@ -1,14 +1,26 @@
 #include "api.h"
+#include "autoaim.hpp"
+#include "flywheel.hpp"
+#include "roller.hpp"
+#include "lvglautonselector.hpp"
 
 #pragma once
 
+// Classes
+
+// Instantiate the AutoAim class
+extern AutoAim aim;
+
+// Instantiate the FlywheelController class
+extern FlywheelController flywheel;
+
+// Instantiate the AutoRoller class
+extern AutoRoller roller;
+
+// Instantiate the AutonSelector class
+extern LVGLAutonSelector selector;
+
 // Ports
-extern pros::Motor drivefl;				// 1
-extern pros::Motor drivefr;				// 11
-extern pros::Motor driveml;				// 2
-extern pros::Motor drivemr;				// 12
-extern pros::Motor drivebl;				// 3
-extern pros::Motor drivebr;				// 13
 extern pros::Motor intake;				// 9
 extern pros::Motor fly;				    // 10
 extern pros::Vision vis1;				// 16

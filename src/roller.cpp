@@ -15,23 +15,29 @@ int AutoRoller::read_color() {
 }
 // Set alliance color
 void AutoRoller::set_alliance(int side) {
-    std::lock_guard<pros::Mutex> lock(color_guard);
+    color_guard.take();
 	color = side;
+    color_guard.give();
 }
 // Get alliance color
 int AutoRoller::get_alliance() {
-    std::lock_guard<pros::Mutex> lock(color_guard);
-	return color;
+    color_guard.take();
+    int to_return = color;
+    color_guard.give();
+    return to_return;
 }
 // Check if roller is in range
 bool AutoRoller::at_roller() {
     if (optical.get_proximity() > 200) {
-        std::lock_guard<pros::Mutex> lock(solved_guard);
-        return !solved;
+        solved_guard.take();
+        bool to_return = solved;
+        solved_guard.give();
+        return !to_return;
     }
     else {
-        std::lock_guard<pros::Mutex> lock(solved_guard);
+        solved_guard.take();
         solved = false;
+        solved_guard.give();
         return false;
     }
     return optical.get_proximity() > 200;
@@ -52,9 +58,10 @@ void AutoRoller::solve_roller() {
         }
         int color = read_color();
         if (last_color != color && color != get_alliance()) {
-            std::lock_guard<pros::Mutex> lock(solved_guard);
+            solved_guard.take();
             intake = 0;
             solved = true;
+            solved_guard.give();
             break;
         }
         last_color = color;

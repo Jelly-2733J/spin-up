@@ -27,14 +27,17 @@ int autonomousMode = -1;
 
 // Select an auton (0-5)
 void LVGLAutonSelector::selectAuton(int auton_number) {
-    std::lock_guard<pros::Mutex> lock(selected_auton_guard);
+    selected_auton_guard.take();
 	selected_auton = auton_number;
+    selected_auton_guard.give();
 }
 
 // Get the user selected auton number
 int LVGLAutonSelector::selectedAuton() {
-    std::lock_guard<pros::Mutex> lock(selected_auton_guard);
-    return selected_auton;
+    selected_auton_guard.take();
+    int to_return = selected_auton;
+    selected_auton_guard.give();
+    return to_return;
 }
 
 lv_res_t btn_click_action(lv_obj_t * btn) {

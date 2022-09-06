@@ -1,13 +1,21 @@
 #include "api.h"
 #include "globals.hpp"
 
+// Classes
+
+// Instantiate the AutoAim class
+AutoAim aim;
+
+// Instantiate the FlywheelController class
+FlywheelController flywheel;
+
+// Instantiate the AutoRoller class
+AutoRoller roller;
+
+// Instantiate the AutonSelector class
+LVGLAutonSelector selector;
+
 // Ports
-pros::Motor drivefl (1, pros::E_MOTOR_GEARSET_06, true, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor drivefr (8, pros::E_MOTOR_GEARSET_06, false, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor driveml (2, pros::E_MOTOR_GEARSET_06, true, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor drivemr (9, pros::E_MOTOR_GEARSET_06, false, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor drivebl (3, pros::E_MOTOR_GEARSET_06, true, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor drivebr (10, pros::E_MOTOR_GEARSET_06, false, pros::E_MOTOR_ENCODER_DEGREES);
 pros::Motor intake (19, pros::E_MOTOR_GEARSET_06, false, pros::E_MOTOR_ENCODER_DEGREES);
 pros::Motor fly (20, pros::E_MOTOR_GEARSET_06, true, pros::E_MOTOR_ENCODER_DEGREES);
 pros::Vision vis1 (16);

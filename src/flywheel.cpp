@@ -39,8 +39,9 @@ double FlywheelController::clip(double num, double max, double min) {
 }
 // Set target RPM
 void FlywheelController::set_target_RPM(int rpm) {
-	std::lock_guard<pros::Mutex> lock(flywheel_target_RPM_guard);
+	flywheel_target_RPM_guard.take();
 	flywheel_target_RPM = rpm;
+	flywheel_target_RPM_guard.give();
 };
 // Read the current RPM
 int FlywheelController::RPM() {
@@ -48,18 +49,23 @@ int FlywheelController::RPM() {
 };
 // Read the current RPM
 int FlywheelController::target_RPM() {
-	std::lock_guard<pros::Mutex> lock(flywheel_target_RPM_guard);
-	return flywheel_target_RPM;
+	flywheel_target_RPM_guard.take();
+	int to_return = flywheel_target_RPM;
+	flywheel_target_RPM_guard.give();
+	return to_return;
 };
 // Activate or deactivate the flywheel control task
 void FlywheelController::set_active(bool state) {
-	std::lock_guard<pros::Mutex> lock(active_guard);
+	active_guard.take();
 	active = state;
+	active_guard.give();
 };
 // Check if the flywheel control task is active
 bool FlywheelController::is_active() {
-	std::lock_guard<pros::Mutex> lock(active_guard);
-	return active;
+	active_guard.take();
+	bool to_return = active;
+	active_guard.give();
+	return to_return;
 };
 // Flywheel task
 void FlywheelController::flyControl() {
@@ -76,6 +82,8 @@ void FlywheelController::flyControl() {
 	double error;
 	double last_error;
 	double voltage = 0.0;
+
+	int count = 0;
 	
 	while (true) {
 
@@ -83,7 +91,7 @@ void FlywheelController::flyControl() {
 		if (!is_active()) {
 
 			// If not active, flywheel should stop
-			fly.brake();
+			fly = 0;
 
 			// Reset all control variables
 			tbh = 0.0;
@@ -132,6 +140,12 @@ void FlywheelController::flyControl() {
 		fly.move_voltage(voltage);
 
 		printf("%.2f %d %d\n", voltage, RPM(), target_RPM());
+
+		if (!(count % 500)) {
+			master.print(0, 0, "TGT: %d RPM: %d", target_RPM(), RPM());
+		}
+		
+		count += 10;
 
 		// Delay next loop until 10 ms have passed from the start of this loop
 		pros::Task::delay_until(&t, 10);

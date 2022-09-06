@@ -1,17 +1,5 @@
 #include "main.h"
 
-// Instantiate the AutoAim class
-AutoAim aim;
-
-// Instantiate the FlywheelController class
-FlywheelController flywheel;
-
-// Instantiate the AutoRoller class
-AutoRoller roller;
-
-// Instantiate the AutonSelector class
-LVGLAutonSelector selector;
-
 // Chassis constructor
 Drive chassis (
 	// Left Chassis Ports (negative port will reverse it!)
@@ -37,7 +25,7 @@ Drive chassis (
 	//    (or gear ratio of tracking wheel)
 	// eg. if your drive is 84:36 where the 36t is powered, your RATIO would be 2.333.
 	// eg. if your drive is 36:60 where the 60t is powered, your RATIO would be 0.6.
-	,0.6
+	,1.667
 
 	// Uncomment if using tracking wheels
 	/*
@@ -87,10 +75,10 @@ void initialize() {
 
 	// Autonomous Selector using LLEMU
 	ez::as::auton_selector.add_autons({
+		Auton("Drive and Turn\n\nDrive forward, turn, come back. ", drive_and_turn),
 		Auton("No Auton", no_auton),
 		Auton("Example Drive\n\nDrive forward and come back.", drive_example),
 		Auton("Example Turn\n\nTurn 3 times.", turn_example),
-		Auton("Drive and Turn\n\nDrive forward, turn, come back. ", drive_and_turn),
 		Auton("Drive and Turn\n\nSlow down during drive.", wait_until_change_speed),
 		Auton("Swing Example\n\nSwing, drive, swing.", swing_example),
 		Auton("Combine all 3 movements", combining_movements),
@@ -107,11 +95,14 @@ void initialize() {
 	// Start the auton selector
 	selector.create();
 
-	// Create the goal tracking task
-	// pros::Task goal_tracking([&]{ aim.goalSense(); });
+	pros::delay(250); // Wait for auton selector to finish
 
 	// Create the flywheel control task
 	pros::Task flywheel_control([&]{ flywheel.flyControl(); });
+
+	// Create the goal tracking task
+	pros::Task goal_tracking([&]{ aim.goalSense(); });
+
 }
 
 /**
@@ -168,21 +159,22 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
+
 	flywheel.set_active(false);
-	flywheel.set_target_RPM(2000);
+	flywheel.set_target_RPM(2050);
 
 	uint32_t driver_start = pros::millis();
 
 	while (true) {
 
-		chassis.tank(); // Tank control
+		chassis.arcade_standard(ez::SPLIT); // Split arcade drive
 
 		// Adjust flywheel RPM (up & down)
-		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP) && flywheel.target_RPM() <= 3400) {
-			flywheel.set_target_RPM(flywheel.target_RPM() + 100);
+		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP) && flywheel.target_RPM() <= 2450) {
+			flywheel.set_target_RPM(flywheel.target_RPM() + 50);
 		}
 		else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN) && flywheel.target_RPM() >= 100) {
-			flywheel.set_target_RPM(flywheel.target_RPM() - 100);
+			flywheel.set_target_RPM(flywheel.target_RPM() - 50);
 		}
 
 		// Intake controls (R1 + R2)
@@ -196,9 +188,10 @@ void opcontrol() {
 			intake = 0;
 		}
 
-		// Toggle flywheel (Up)
+		// Toggle flywheel (Left)
 		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)) {
 			flywheel.set_active(!flywheel.is_active());
+			master.clear();
 		}
 
 		// Endgame

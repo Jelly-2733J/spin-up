@@ -65,6 +65,10 @@ void modified_exit_condition() {
 	chassis.set_exit_condition(chassis.drive_exit, 80, 50, 300, 150, 500, 500);
 }
 
+
+///
+// No Auton
+///
 void no_auton() {
 	// Do nothing.
 }
