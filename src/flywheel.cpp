@@ -100,6 +100,8 @@ void FlywheelController::flyControl() {
 			last_error = 0.0;
 			voltage = 0.0;
 
+			master.clear();
+
 			// Delay next loop until 10 ms have passed from the start of this loop
 			pros::Task::delay_until(&t, 10);
 
@@ -141,8 +143,13 @@ void FlywheelController::flyControl() {
 
 		printf("%.2f %d %d\n", voltage, RPM(), target_RPM());
 
-		if (!(count % 500)) {
-			master.print(0, 0, "TGT: %d RPM: %d", target_RPM(), RPM());
+		if (count == 300) {
+			master.print(2, 0, "TEMP: %d C", (int) fly.get_temperature());
+			count=0;
+		} else if (count == 200) {
+			master.print(1, 0, "TGT: %d", target_RPM());
+		} else if (count == 100) {
+			master.print(0, 0, "RPM: %d", RPM());
 		}
 		
 		count += 10;
