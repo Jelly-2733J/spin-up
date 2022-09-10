@@ -5,9 +5,9 @@
 extern Drive chassis;
 
 void no_auton();
-void drive_example();
-void turn_example();
-void drive_and_turn();
+void right_winpoint();
+void left_winpoint();
+void skills();
 void wait_until_change_speed();
 void swing_example();
 void combining_movements();

@@ -75,11 +75,10 @@ void initialize() {
 
 	// Autonomous Selector using LLEMU
 	ez::as::auton_selector.add_autons({
-		Auton("Drive and Turn\n\nDrive forward, turn, come back. ", drive_and_turn),
 		Auton("No Auton", no_auton),
-		Auton("Example Drive\n\nDrive forward and come back.", drive_example),
-		Auton("Example Turn\n\nTurn 3 times.", turn_example),
-		Auton("Drive and Turn\n\nSlow down during drive.", wait_until_change_speed),
+		Auton("Right Winpoint", right_winpoint),
+		Auton("Left Winpoint", left_winpoint),
+		Auton("Skills", skills),
 		Auton("Swing Example\n\nSwing, drive, swing.", swing_example),
 		Auton("Combine all 3 movements", combining_movements),
 		Auton("Interference\n\nAfter driving forward, robot performs differently if interfered or not.", interfered_example),
@@ -89,11 +88,13 @@ void initialize() {
 	chassis.initialize();
 	ez::as::initialize();
 
+	intake.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+
 	// Clear the LCD for the auton selector
 	pros::screen::erase();
 
 	// Start the auton selector
-	selector.create();
+	// selector.create();
 
 	pros::delay(250); // Wait for auton selector to finish
 
@@ -142,7 +143,8 @@ void autonomous() {
 	chassis.reset_drive_sensor(); // Reset drive sensors to 0
 	chassis.set_drive_brake(MOTOR_BRAKE_HOLD); // Set motors to hold.  This helps autonomous consistency.
 
-	ez::as::auton_selector.call_auton(selector.selectedAuton()); // Calls selected auton from autonomous selector.
+	// ez::as::auton_selector.call_auton(selector.selectedAuton()); // Calls selected auton from autonomous selector.
+	ez::as::auton_selector.call_auton(3);
 }
 
 /**
@@ -161,16 +163,16 @@ void autonomous() {
 void opcontrol() {
 
 	flywheel.set_active(false);
-	flywheel.set_target_RPM(2050);
+	flywheel.set_target_RPM(2700);
 
 	uint32_t driver_start = pros::millis();
 
 	while (true) {
-
-		chassis.arcade_standard(ez::SPLIT); // Split arcade drive
+		
+		chassis.tank();
 
 		// Adjust flywheel RPM (up & down)
-		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP) && flywheel.target_RPM() <= 2450) {
+		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP) && flywheel.target_RPM() <= 2950) {
 			flywheel.set_target_RPM(flywheel.target_RPM() + 50);
 		}
 		else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN) && flywheel.target_RPM() >= 100) {
@@ -182,7 +184,7 @@ void opcontrol() {
 			intake = 100;
 		}
 		else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
-			intake = -100;
+			intake = -80;
 		}
 		else {
 			intake = 0;

@@ -28,6 +28,10 @@ class FlywheelController {
 		void set_active(bool state);
 		// Check if the flywheel control task is active
 		bool is_active();
+		// Shoot a number of discs
+		void shoot(int num_discs, int timeout);
+		// Ripple discs
+		void ripple(int num_discs, int timeout);
 		// Flywheel task
 		void flyControl();
 };

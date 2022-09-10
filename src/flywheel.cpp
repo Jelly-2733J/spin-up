@@ -67,6 +67,47 @@ bool FlywheelController::is_active() {
 	active_guard.give();
 	return to_return;
 };
+// Shoot a number of discs
+void FlywheelController::shoot(int num_discs, int timeout) {
+	int count = 0;
+	for (int i = 0; i < num_discs; i++) {
+		while (flywheel.RPM() < flywheel.target_RPM() - 80) {
+			if (count >= timeout) {
+				break;
+			}
+			count += 10;
+			pros::delay(10);
+		}
+
+		intake = -80;
+
+		while (flywheel.RPM() > flywheel.target_RPM() - 300) {
+			if (count >= timeout) {
+				break;
+			}
+			count += 10;
+			pros::delay(10);
+		}
+
+		intake = 100;
+	}
+}
+// Ripple discs
+void FlywheelController::ripple(int num_discs, int timeout) {
+	int count = 0;
+	for (int i = 0; i < num_discs; i++) {
+
+		intake = -80;
+
+		while (flywheel.RPM() > flywheel.target_RPM() - 300) {
+			if (count >= timeout) {
+				break;
+			}
+			count += 10;
+			pros::delay(10);
+		}
+	}
+}
 // Flywheel task
 void FlywheelController::flyControl() {
 
@@ -74,10 +115,10 @@ void FlywheelController::flyControl() {
 	// This is used to ensure consistent loop intervals with pros::Task::delay_until
 	uint32_t t = pros::millis();
 
-	double gain = 0.12;
+	double gain = 0.08;
 	double tbh = 0.0;
 	bool first_cross = false;
-	int max_rpm = 4000;
+	int max_rpm = 3000;
 
 	double error;
 	double last_error;
@@ -123,11 +164,11 @@ void FlywheelController::flyControl() {
 			// On first error cross, set tbh to theoretical RPM estimate to reach a quicker stable state
 			if (first_cross == false) {
 				first_cross = true;
-				tbh = (target_RPM() / max_rpm) * 12000;
+				tbh = ((double) target_RPM() / max_rpm) * 12000;
 			}
 			
 			// Perform TBH calculation and clip voltage to bounds
-			voltage = clip(0.5 * (voltage + tbh), 12000, -12000);
+			voltage = clip(0.7 * (voltage + tbh), 12000, -12000);
 
 			// Set tbh to new voltage
 			tbh = voltage;
