@@ -46,7 +46,6 @@
 #include "autons.hpp"
 #include "autoaim.hpp"
 #include "flywheel.hpp"
-#include "roller.hpp"
 #include "lvglautonselector.hpp"
 #include "globals.hpp"
 

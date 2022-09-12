@@ -56,10 +56,10 @@ void initialize() {
 
 	pros::delay(500); // Stop the user from doing anything while legacy ports configure.
 	
+	// Flywheel is inactive for initialization
 	flywheel.set_active(false);
 
-	// Set roller and vision tracking target to signature 1, red goal
-	roller.set_alliance(1);
+	// Set vision tracking target to signature 1, red goal
 	aim.set_tracking_sig(1);
 
 	// Configure your chassis controls
@@ -88,12 +88,14 @@ void initialize() {
 	chassis.initialize();
 	ez::as::initialize();
 
+	// Set intake brake mode to hold to improve roller consistency
 	intake.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 
 	// Clear the LCD for the auton selector
 	pros::screen::erase();
 
 	// Start the auton selector
+	// This task is blocking and will not return until the user selects an auton
 	// selector.create();
 
 	pros::delay(250); // Wait for auton selector to finish
@@ -112,6 +114,7 @@ void initialize() {
  * the robot is enabled, this task will exit.
  */
 void disabled() {
+	// Set flywheel to inactive to prevent the code from attempting to control a disabled motor
 	flywheel.set_active(false);
 }
 
@@ -162,14 +165,19 @@ void autonomous() {
  */
 void opcontrol() {
 
+	// For testing, flywheel will be off by default in teleop
 	flywheel.set_active(false);
+
+	// 2700 RPM is the default flywheel speed
+	// It is optimal for ripple shots right at the goal
 	flywheel.set_target_RPM(2700);
 
+	// Keep track of when teleop starts to prevent early expansion
 	uint32_t driver_start = pros::millis();
 
 	while (true) {
 		
-		chassis.tank();
+		chassis.tank(); // Tank drive (left joystick controls left side, right joystick controls right side)
 
 		// Adjust flywheel RPM (up & down)
 		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP) && flywheel.target_RPM() <= 2950) {
@@ -180,11 +188,12 @@ void opcontrol() {
 		}
 
 		// Intake controls (R1 + R2)
+		// R1 is intake, R2 is outtake
 		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
-			intake = 100;
+			intake = 100; // Intake at full speed
 		}
 		else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
-			intake = -80;
+			intake = -80; // Outtake at 80% speed for better shot consistency
 		}
 		else {
 			intake = 0;
@@ -200,11 +209,8 @@ void opcontrol() {
 		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT) && pros::millis() - driver_start > 95000) {
 			// Do endgame stuff here
 		}
-		/* if (roller.at_roller()) {
-			roller.solve_roller();
-		} */
 
-		pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
+		pros::delay(ez::util::DELAY_TIME); // Used for timing calculations and reasonable loop speeds
 
 	}
 }
