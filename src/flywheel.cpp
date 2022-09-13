@@ -161,7 +161,7 @@ void FlywheelController::flyControl() {
 
 		// TBH if there is a switch in the sign of the errors
 		if (check_sign(last_error) != check_sign(error)) {
-			// On first error cross, set tbh to theoretical RPM estimate to reach a quicker stable state
+			// On first error cross, set tbh to theoretical voltage estimate to reach a quicker stable state
 			if (first_cross == false) {
 				first_cross = true;
 				tbh = ((double) target_RPM() / max_rpm) * 12000;
@@ -186,7 +186,7 @@ void FlywheelController::flyControl() {
 
 		if (count == 300) {
 			master.print(2, 0, "TEMP: %d C", (int) fly.get_temperature());
-			count=0;
+			count = 0;
 		} else if (count == 200) {
 			master.print(1, 0, "TGT: %d", target_RPM());
 		} else if (count == 100) {
