@@ -88,7 +88,7 @@ void AutoAim::goalSense() {
 
 		// Use law of cosines to find distance from midpoint of vision bar to goal
 		// distance = sqrt(left_side^2 + (base_side / 2)^2 − 2 * left_size * (base_side / 2) * cos(left_angle))
-		double plane_distance = pow(side_b, 2) + pow(side_c / 2, 2) - 2 * side_b * (side_c / 2) * cos(rads(angle_a));
+		double plane_distance = sqrt(pow(side_b, 2) + pow(side_c / 2, 2) - 2 * side_b * (side_c / 2) * cos(rads(angle_a)));
 
 		// pros::lcd::print(2, "Planar: %.2f", plane_distance);
 
@@ -119,7 +119,7 @@ void AutoAim::goalSense() {
 		double goal_depression_angle = 90 - elevation_angle;
 		
 		// Using all of these calculated values and the law of sines again, we can find true goal distance
-		// As we know that sin(90) = 1, we can ommit the sine calculation and division as dividing by one does not affect our result
+		// As we know that sin(90) = 1, we can omit the sine calculation and division as dividing by one does not affect our result
 		double calculated_distance = plane_distance * sin(rads(goal_depression_angle));
 
 		// Set the AutoAim distance to the calculated distance
@@ -131,5 +131,4 @@ void AutoAim::goalSense() {
 		pros::Task::delay_until(&t, 10);
 
 	}
-
 }
