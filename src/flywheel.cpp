@@ -73,7 +73,7 @@ void FlywheelController::shoot(int num_discs, int timeout) {
 	for (int i = 0; i < num_discs; i++) {
 		while (flywheel.RPM() < flywheel.target_RPM() - 80) {
 			if (count >= timeout) {
-				break;
+				return;
 			}
 			count += 10;
 			pros::delay(10);
@@ -83,7 +83,7 @@ void FlywheelController::shoot(int num_discs, int timeout) {
 
 		while (flywheel.RPM() > flywheel.target_RPM() - 300) {
 			if (count >= timeout) {
-				break;
+				return;
 			}
 			count += 10;
 			pros::delay(10);
@@ -94,16 +94,34 @@ void FlywheelController::shoot(int num_discs, int timeout) {
 }
 // Ripple discs
 void FlywheelController::ripple(int num_discs, int timeout) {
+
+	// Needs work
+
 	int count = 0;
+
+	while (flywheel.RPM() < flywheel.target_RPM() - 80) {
+		if (count >= timeout) {
+			return;
+		}
+		count += 10;
+		pros::delay(10);
+	}
+
+	intake = -80;
+
 	for (int i = 0; i < num_discs; i++) {
 
-		intake = -80;
+		int previous_rpm = flywheel.RPM();
 
-		while (flywheel.RPM() > flywheel.target_RPM() - 300) {
-			if (count >= timeout) {
+		while (true) {
+			if (flywheel.RPM() < previous_rpm - 200) {
 				break;
 			}
+			else if (count >= timeout) {
+				return;
+			}
 			count += 10;
+			previous_rpm = flywheel.RPM();
 			pros::delay(10);
 		}
 	}
