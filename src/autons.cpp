@@ -222,7 +222,7 @@ void left_winpoint() {
 void skills() {
 	
 	flywheel.set_active(true);
-	flywheel.set_target_RPM(2620);
+	flywheel.set_target_RPM(2650);
 
 	chassis.set_drive_pid(-2, DRIVE_SPEED);
 	chassis.wait_drive();
@@ -257,10 +257,12 @@ void skills() {
 	chassis.set_drive_pid(4, DRIVE_SPEED);
 	chassis.wait_drive();
 
+	intake = 100;
+
 	chassis.set_turn_pid(0, TURN_SPEED);
 	chassis.wait_drive();
 
-	chassis.set_drive_pid(55, DRIVE_SPEED, true);
+	chassis.set_drive_pid(51, DRIVE_SPEED, true);
 	chassis.wait_drive();
 	
 	intake = -80;
@@ -271,7 +273,7 @@ void skills() {
 
 	flywheel.set_target_RPM(2470);
 
-	chassis.set_drive_pid(-49, DRIVE_SPEED, true);
+	chassis.set_drive_pid(-45, DRIVE_SPEED, true);
 	chassis.wait_drive();
 
 	chassis.set_turn_pid(45, TURN_SPEED);
@@ -279,7 +281,7 @@ void skills() {
 
 	chassis.set_drive_pid(70, DRIVE_SPEED, true);
 	chassis.wait_until(10);
-	chassis.set_max_speed(40);
+	chassis.set_max_speed(35);
 	chassis.wait_drive();
 
 	chassis.set_drive_pid(-2, DRIVE_SPEED);
@@ -293,13 +295,37 @@ void skills() {
 
 	pros::delay(300);
 
-	flywheel.shoot(3, 3000);
+	flywheel.shoot(3, 4000);
 
 	pros::delay(300);
 
-	flywheel.set_target_RPM(2620);
+	chassis.set_drive_pid(-25, DRIVE_SPEED);
+	chassis.wait_drive();
 
-	chassis.set_drive_pid(-6, DRIVE_SPEED);
+	chassis.set_turn_pid(45, TURN_SPEED);
+	chassis.wait_drive();
+
+	intake = 100;
+
+	chassis.set_drive_pid(36, 35);
+	chassis.wait_drive();
+
+	chassis.set_turn_pid(0, TURN_SPEED);
+	chassis.wait_drive();
+
+	chassis.set_drive_pid(30, DRIVE_SPEED);
+	chassis.wait_drive();
+
+	chassis.set_turn_pid(-90, TURN_SPEED);
+	chassis.wait_drive();
+
+	chassis.set_drive_pid(-13, DRIVE_SPEED);
+	chassis.wait_drive();
+
+	chassis.set_turn_pid(-180, TURN_SPEED);
+	chassis.wait_drive();
+
+	chassis.set_drive_pid(-18, DRIVE_SPEED);
 	chassis.wait_drive();
 	
 }

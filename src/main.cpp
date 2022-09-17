@@ -1,4 +1,5 @@
 #include "main.h"
+#include "pros/motors.h"
 
 // Chassis constructor
 Drive chassis (
@@ -171,6 +172,8 @@ void opcontrol() {
 	// 2700 RPM is the default flywheel speed
 	// It is optimal for ripple shots right at the goal
 	flywheel.set_target_RPM(2700);
+
+	chassis.set_drive_brake(MOTOR_BRAKE_COAST);
 
 	// Keep track of when teleop starts to prevent early expansion
 	uint32_t driver_start = pros::millis();
