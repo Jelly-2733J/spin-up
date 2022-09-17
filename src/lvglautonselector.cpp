@@ -9,7 +9,6 @@ lv_obj_t * icon;
 lv_obj_t * large_icon;
 lv_obj_t * skills;
 lv_obj_t * confirm;
-lv_obj_t * allianceDD;
 lv_obj_t * sideDD;
 lv_obj_t * skillsLabel;
 lv_obj_t * confirmLabel;
@@ -41,44 +40,31 @@ int LVGLAutonSelector::selectedAuton() {
 }
 
 lv_res_t btn_click_action(lv_obj_t * btn) {
-    char selected_alliance[32];
     char selected_side[32];
-    lv_ddlist_get_selected_str(allianceDD, selected_alliance);
     lv_ddlist_get_selected_str(sideDD, selected_side);
 
     uint8_t id = lv_obj_get_free_num(btn);
 
     if (id == 0) {
-        if (strcmp(selected_alliance, "         Red") == 0) {
-            if (strcmp(selected_side, "         Left") == 0) {
-                autonomousMode = 1;
-            }
-            else if (strcmp(selected_side, "         Right") == 0) {
-                autonomousMode = 2;
-            }
-        }
-        else if (strcmp(selected_alliance, "         Blue") == 0) {
-            if (strcmp(selected_side, "         Left") == 0) {
-                autonomousMode = 3;
-            }
-            else if (strcmp(selected_side, "         Right") == 0) {
-                autonomousMode = 4;
-            }
-        }
-        else if (strcmp(selected_alliance, "  Choose Alliance   ") == 0 && strcmp(selected_side, "    Choose Side     ") == 0) {
+        if (strcmp(selected_side, "    Choose Side     ") == 0){
             autonomousMode = 0;
+        }
+        else if (strcmp(selected_side, "         Right") == 0) {
+            autonomousMode = 1;
+        }
+        else if (strcmp(selected_side, "         Left") == 0) {
+            autonomousMode = 2;
         }
         else {
             return LV_RES_OK;
         }
     }
     else if (id == 1) {
-        autonomousMode = 5;
+        autonomousMode = 3;
     }
 
-    printf("Auton: %s %s\n", selected_alliance, selected_side);
+    printf("Auton: %s\n", selected_side);
 
-    lv_obj_set_hidden(allianceDD, true);
     lv_obj_set_hidden(sideDD, true);
     lv_obj_set_hidden(skills, true);
     lv_obj_set_hidden(confirm, true);
@@ -169,20 +155,10 @@ void LVGLAutonSelector::create() {
     lv_ddlist_set_options(sideDD, "    Choose Side     \n"
                                 "         Left\n"
                                 "         Right");
-    lv_obj_align(sideDD, NULL, LV_ALIGN_IN_RIGHT_MID, -10, 7);
+    lv_obj_align(sideDD, NULL, LV_ALIGN_IN_RIGHT_MID, -10, -38);
     lv_obj_set_free_num(sideDD, 3);
     lv_ddlist_set_action(sideDD, ddlist_action);
     lv_ddlist_set_style(sideDD, LV_DDLIST_STYLE_SEL, &styleDD);
-
-    // Alliance Dropdown
-    allianceDD = lv_ddlist_create(lv_scr_act(), NULL);
-    lv_ddlist_set_options(allianceDD, "  Choose Alliance   \n"
-                                "         Red\n"
-                                "         Blue");
-    lv_obj_align(allianceDD, NULL, LV_ALIGN_IN_RIGHT_MID, -12, -70);
-    lv_obj_set_free_num(allianceDD, 2);
-    lv_ddlist_set_action(allianceDD, ddlist_action);
-    lv_ddlist_set_style(allianceDD, LV_DDLIST_STYLE_SEL, &styleDD);
 
     skillsLabel = lv_label_create(skills, NULL);
     lv_label_set_text(skillsLabel, "Run Skills");
@@ -207,7 +183,6 @@ void LVGLAutonSelector::end() {
     lv_obj_set_hidden(skills, true);
     lv_obj_set_hidden(confirm, true);
     lv_obj_set_hidden(sideDD, true);
-    lv_obj_set_hidden(allianceDD, true);
     lv_obj_set_hidden(skillsLabel, true);
     lv_obj_set_hidden(confirmLabel, true);
 

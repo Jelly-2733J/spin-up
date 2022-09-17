@@ -80,9 +80,6 @@ void initialize() {
 		Auton("Right Winpoint", right_winpoint),
 		Auton("Left Winpoint", left_winpoint),
 		Auton("Skills", skills),
-		Auton("Swing Example\n\nSwing, drive, swing.", swing_example),
-		Auton("Combine all 3 movements", combining_movements),
-		Auton("Interference\n\nAfter driving forward, robot performs differently if interfered or not.", interfered_example),
 	});
 
 	// Initialize chassis and auton selector
