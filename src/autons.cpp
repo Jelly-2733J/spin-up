@@ -211,7 +211,12 @@ void left_winpoint() {
 
 }
 
-
+///
+// Solo Winpoint
+///
+void solo_winpoint() {
+	// make this mattias
+}
 
 ///
 // Skills

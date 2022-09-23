@@ -55,12 +55,15 @@ lv_res_t btn_click_action(lv_obj_t * btn) {
         else if (strcmp(selected_side, "         Left") == 0) {
             autonomousMode = 2;
         }
+        else if (strcmp(selected_side, "         Solo") == 0) {
+            autonomousMode = 3;
+        }
         else {
             return LV_RES_OK;
         }
     }
     else if (id == 1) {
-        autonomousMode = 3;
+        autonomousMode = 4;
     }
 
     printf("Auton: %s\n", selected_side);
@@ -154,7 +157,8 @@ void LVGLAutonSelector::create() {
     sideDD = lv_ddlist_create(lv_scr_act(), NULL);
     lv_ddlist_set_options(sideDD, "    Choose Side     \n"
                                 "         Left\n"
-                                "         Right");
+                                "         Right\n"
+                                "         Solo");
     lv_obj_align(sideDD, NULL, LV_ALIGN_IN_RIGHT_MID, -10, -38);
     lv_obj_set_free_num(sideDD, 3);
     lv_ddlist_set_action(sideDD, ddlist_action);
