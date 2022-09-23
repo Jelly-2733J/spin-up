@@ -67,64 +67,53 @@ bool FlywheelController::is_active() {
 	active_guard.give();
 	return to_return;
 };
+// Toggle going full voltage on the flywheel
+void FlywheelController::full_voltage(bool state) {
+	full_guard.take();
+	full = state;
+	full_guard.give();
+};
+// Check if set to full voltage
+bool FlywheelController::is_full() {
+	full_guard.take();
+	bool to_return = full;
+	full_guard.give();
+	return to_return;
+};
 // Shoot a number of discs
-void FlywheelController::shoot(int num_discs, int timeout) {
+void FlywheelController::shoot(int num_discs, int timeout, int rpm_accuracy, int mode) {
 	int count = 0;
 	for (int i = 0; i < num_discs; i++) {
-		while (flywheel.RPM() < flywheel.target_RPM() - 80) {
-			if (count >= timeout) {
+		while (abs(flywheel.target_RPM() - flywheel.RPM()) > rpm_accuracy) {
+			if (count >= timeout || (mode == 0 && !master.get_digital(pros::E_CONTROLLER_DIGITAL_L2))) {
+				intake = 100;
+				full_voltage(false);
 				return;
 			}
 			count += 10;
 			pros::delay(10);
 		}
 
-		intake = -80;
+		intake = -100;
 
 		while (flywheel.RPM() > flywheel.target_RPM() - 300) {
-			if (count >= timeout) {
+			if (mode == 0) {
+				chassis.tank();
+			}
+			if (count >= timeout || (mode == 0 && !master.get_digital(pros::E_CONTROLLER_DIGITAL_L2))) {
+				intake = 100;
+				full_voltage(false);
 				return;
 			}
 			count += 10;
 			pros::delay(10);
 		}
 
+		full_voltage(true);
 		intake = 100;
+		pros::delay(300);
 	}
-}
-// Ripple discs
-void FlywheelController::ripple(int num_discs, int timeout) {
-
-	// Needs work
-
-	int count = 0;
-
-	while (flywheel.RPM() < flywheel.target_RPM() - 80) {
-		if (count >= timeout) {
-			return;
-		}
-		count += 10;
-		pros::delay(10);
-	}
-
-	intake = -80;
-
-	for (int i = 0; i < num_discs; i++) {
-
-		int previous_rpm = flywheel.RPM();
-
-		while (true) {
-			if (flywheel.RPM() < previous_rpm - 200) {
-				break;
-			}
-			else if (count >= timeout) {
-				return;
-			}
-			count += 10;
-			previous_rpm = flywheel.RPM();
-			pros::delay(10);
-		}
-	}
+	full_voltage(false);
 }
 // Flywheel task
 void FlywheelController::flyControl() {
@@ -197,8 +186,14 @@ void FlywheelController::flyControl() {
 		// Set last_error to current error for next loop
 		last_error = error;
 		
-		// Set flywheel voltage
-		fly.move_voltage(voltage);
+		if (is_full()) {
+			// If we're shooting, we want full power for best recovery
+			fly.move_voltage(12000);
+		}
+		else {
+			// When we're not shooting, we want to maintain a stable state
+			fly.move_voltage(voltage);
+		}
 
 		printf("%.2f %d %d\n", voltage, RPM(), target_RPM());
 

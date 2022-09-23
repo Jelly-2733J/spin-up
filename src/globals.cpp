@@ -19,5 +19,8 @@ pros::Vision vis1 (16);
 pros::Vision vis2 (17);
 pros::Imu inertial (18);
 
+// 3-Wire
+pros::ADIDigitalOut endgame ('A', false);
+
 // Controller
 pros::Controller master(pros::E_CONTROLLER_MASTER);

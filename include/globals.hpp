@@ -2,6 +2,7 @@
 #include "autoaim.hpp"
 #include "flywheel.hpp"
 #include "lvglautonselector.hpp"
+#include "pros/adi.hpp"
 
 #pragma once
 
@@ -22,6 +23,9 @@ extern pros::Motor fly;				    // 20
 extern pros::Vision vis1;				// 16
 extern pros::Vision vis2; 				// 17
 extern pros::Imu inertial;              // 18
+
+// 3-Wire
+extern pros::ADIDigitalOut endgame;     // A
 
 // Controller
 extern pros::Controller master;

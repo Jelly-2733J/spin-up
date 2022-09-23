@@ -9,6 +9,8 @@ class FlywheelController {
 		pros::Mutex flywheel_target_RPM_guard;
 		bool active = false;
 		pros::Mutex active_guard;
+		bool full = false;
+		pros::Mutex full_guard;
 		// Convert degrees to radians
 		static double rads(double deg);
 		// Calculate optimal RPM
@@ -28,10 +30,12 @@ class FlywheelController {
 		void set_active(bool state);
 		// Check if the flywheel control task is active
 		bool is_active();
+		// Toggle going full voltage on the flywheel
+		void full_voltage(bool state);
+		// Check if set to full voltage
+		bool is_full();
 		// Shoot a number of discs
-		void shoot(int num_discs, int timeout);
-		// Ripple discs
-		void ripple(int num_discs, int timeout);
+		void shoot(int num_discs, int timeout = 3000, int rpm_accuracy = 80, int mode = 1);
 		// Flywheel task
 		void flyControl();
 };

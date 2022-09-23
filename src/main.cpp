@@ -1,5 +1,4 @@
 #include "main.h"
-#include "pros/motors.h"
 
 // Chassis constructor
 Drive chassis (
@@ -94,7 +93,7 @@ void initialize() {
 
 	// Start the auton selector
 	// This task is blocking and will not return until the user selects an auton
-	// selector.create();
+	selector.create();
 
 	pros::delay(250); // Wait for auton selector to finish
 
@@ -142,10 +141,10 @@ void autonomous() {
 	chassis.reset_pid_targets(); // Resets PID targets to 0
 	chassis.reset_gyro(); // Reset gyro position to 0
 	chassis.reset_drive_sensor(); // Reset drive sensors to 0
-	chassis.set_drive_brake(MOTOR_BRAKE_HOLD); // Set motors to hold.  This helps autonomous consistency.
+	chassis.set_drive_brake(pros::E_MOTOR_BRAKE_HOLD); // Set motors to hold.  This helps autonomous consistency.
+	chassis.set_active_brake(0.1); // Sets the active brake kP. We recommend 0.1.
 
-	// ez::as::auton_selector.call_auton(selector.selectedAuton()); // Calls selected auton from autonomous selector.
-	ez::as::auton_selector.call_auton(3);
+	ez::as::auton_selector.call_auton(selector.selectedAuton()); // Calls selected auton from autonomous selector.
 }
 
 /**
@@ -170,7 +169,10 @@ void opcontrol() {
 	// It is optimal for ripple shots right at the goal
 	flywheel.set_target_RPM(2700);
 
-	chassis.set_drive_brake(MOTOR_BRAKE_COAST);
+	chassis.set_drive_brake(pros::E_MOTOR_BRAKE_COAST);
+	chassis.set_active_brake(0.0); // Sets the active brake kP. We recommend 0.1.
+
+	bool endgame_state = false;
 
 	// Keep track of when teleop starts to prevent early expansion
 	uint32_t driver_start = pros::millis();
@@ -199,6 +201,12 @@ void opcontrol() {
 			intake = 0;
 		}
 
+		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R2)) {
+			master.rumble(".");
+			flywheel.shoot(3, 3000, 80, 0);
+			master.rumble(".");
+		}
+
 		// Toggle flywheel (Left)
 		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)) {
 			flywheel.set_active(!flywheel.is_active());
@@ -206,8 +214,9 @@ void opcontrol() {
 		}
 
 		// Endgame
-		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT) && pros::millis() - driver_start > 95000) {
-			// Do endgame stuff here
+		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT) && master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
+			endgame_state = !endgame_state;
+			endgame.set_value(endgame_state);
 		}
 
 		pros::delay(ez::util::DELAY_TIME); // Used for timing calculations and reasonable loop speeds
