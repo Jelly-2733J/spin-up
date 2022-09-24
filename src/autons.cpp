@@ -81,7 +81,7 @@ void no_auton() {
 void right_winpoint() {
 
 	flywheel.set_active(true);
-	flywheel.set_target_RPM(2910);
+	flywheel.set_target_RPM(2950);
 
 	chassis.set_drive_pid(-22, DRIVE_SPEED, true);
 	chassis.wait_drive();
@@ -216,6 +216,65 @@ void left_winpoint() {
 ///
 void solo_winpoint() {
 	// make this mattias
+	flywheel.set_active(true);
+	flywheel.set_target_RPM(2860);
+
+	chassis.set_drive_pid(-2, DRIVE_SPEED);
+	chassis.wait_drive();
+
+	intake = 100;
+	pros::delay(150);
+	intake = 0;
+
+	chassis.set_drive_pid(3, DRIVE_SPEED);
+	chassis.wait_drive();
+
+	chassis.set_turn_pid(-127, TURN_SPEED);
+	chassis.wait_drive();
+
+	chassis.set_drive_pid(-51, DRIVE_SPEED, true);
+	chassis.wait_drive();
+
+	chassis.set_turn_pid(-40, TURN_SPEED);
+	chassis.wait_drive();
+
+	chassis.set_drive_pid(12, DRIVE_SPEED);
+	chassis.wait_drive();
+
+	pros::delay(200);
+
+	flywheel.shoot(2, 2000);
+
+	pros::delay(300);
+
+	intake = 100;
+
+	chassis.set_drive_pid(4, DRIVE_SPEED);
+	chassis.wait_drive();
+
+	pros::delay(1000);
+
+	flywheel.shoot(1, 1000);
+
+	chassis.set_drive_pid(-4, DRIVE_SPEED);
+	chassis.wait_drive();
+
+	chassis.set_turn_pid(-135, TURN_SPEED);
+	chassis.wait_drive();
+
+	chassis.set_drive_pid(-84, 115, true);
+	chassis.wait_drive();
+
+	chassis.set_turn_pid(270, TURN_SPEED);
+	chassis.wait_drive();
+
+	chassis.set_drive_pid(-16, DRIVE_SPEED);
+	chassis.wait_drive();
+
+	intake = 100;
+	pros::delay(150);
+	intake = 0;
+
 }
 
 ///
