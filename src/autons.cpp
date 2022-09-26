@@ -358,7 +358,7 @@ void skills() {
 	chassis.set_drive_pid(6, DRIVE_SPEED);
 	chassis.wait_drive();
 
-	pros::delay(300);
+	pros::delay(500);
 
 	flywheel.shoot(3, 3000);
 
@@ -470,7 +470,7 @@ void skills() {
 	chassis.set_drive_pid(7, DRIVE_SPEED);
 	chassis.wait_drive();
 
-	pros::delay(300);
+	pros::delay(500);
 
 	flywheel.shoot(3, 3000);
 
