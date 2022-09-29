@@ -182,6 +182,12 @@ void opcontrol() {
 		
 		chassis.tank(); // Tank drive (left joystick controls left side, right joystick controls right side)
 
+		// Endgame
+		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) && master.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && master.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+			endgame_state = !endgame_state;
+			endgame.set_value(endgame_state);
+		}
+
 		// Adjust flywheel RPM (up & down)
 		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP) && flywheel.target_RPM() <= 2950) {
 			flywheel.set_target_RPM(flywheel.target_RPM() + 50);
@@ -212,12 +218,6 @@ void opcontrol() {
 		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)) {
 			flywheel.set_active(!flywheel.is_active());
 			master.clear();
-		}
-
-		// Endgame
-		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT) && master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
-			endgame_state = !endgame_state;
-			endgame.set_value(endgame_state);
 		}
 
 		pros::delay(ez::util::DELAY_TIME); // Used for timing calculations and reasonable loop speeds
