@@ -81,11 +81,11 @@ bool FlywheelController::is_full() {
 	return to_return;
 };
 // Shoot a number of discs
-void FlywheelController::shoot(int num_discs, int timeout, int rpm_accuracy, int mode) {
+void FlywheelController::shoot(int num_discs, int timeout, int rpm_accuracy) {
 	int count = 0;
 	for (int i = 0; i < num_discs; i++) {
 		while (abs(flywheel.target_RPM() - flywheel.RPM()) > rpm_accuracy) {
-			if (count >= timeout || (mode == 0 && !master.get_digital(pros::E_CONTROLLER_DIGITAL_L2))) {
+			if (count >= timeout) {
 				intake = 100;
 				full_voltage(false);
 				return;
@@ -97,10 +97,7 @@ void FlywheelController::shoot(int num_discs, int timeout, int rpm_accuracy, int
 		intake = -100;
 
 		while (flywheel.RPM() > flywheel.target_RPM() - 300) {
-			if (mode == 0) {
-				chassis.tank();
-			}
-			if (count >= timeout || (mode == 0 && !master.get_digital(pros::E_CONTROLLER_DIGITAL_L2))) {
+			if (count >= timeout) {
 				intake = 100;
 				full_voltage(false);
 				return;

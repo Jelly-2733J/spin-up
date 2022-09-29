@@ -163,8 +163,8 @@ void autonomous() {
  */
 void opcontrol() {
 
-	// For testing, flywheel will be off by default in teleop
-	flywheel.set_active(false);
+	// Activate flywheel
+	flywheel.set_active(true);
 
 	// 2700 RPM is the default flywheel speed
 	// It is optimal for ripple shots right at the goal
@@ -180,7 +180,7 @@ void opcontrol() {
 
 	while (true) {
 		
-		chassis.tank(); // Tank drive (left joystick controls left side, right joystick controls right side)
+		chassis.arcade_standard(ez::SPLIT); // Split Arcade (left stick controls forward/backward, right stick controls turning)
 
 		// Endgame
 		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) && master.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && master.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
@@ -206,12 +206,6 @@ void opcontrol() {
 		}
 		else {
 			intake = 0;
-		}
-
-		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R2)) {
-			master.rumble(".");
-			flywheel.shoot(3, 3000, 80, 0);
-			master.rumble(".");
 		}
 
 		// Toggle flywheel (Left)
