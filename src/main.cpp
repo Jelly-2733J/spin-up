@@ -1,4 +1,5 @@
 #include "main.h"
+#include "EZ-Template/sdcard.hpp"
 
 // Chassis constructor
 Drive chassis (
@@ -65,7 +66,7 @@ void initialize() {
 	// Configure your chassis controls
 	chassis.toggle_modify_curve_with_controller(false); // Enables modifying the controller curve with buttons on the joysticks
 	chassis.set_active_brake(0.1); // Sets the active brake kP. We recommend 0.1.
-	chassis.set_curve_default(0, 0); // Defaults for curve. If using tank, only the first parameter is used. (Comment this line out if you have an SD card!)  
+	chassis.set_curve_default(1.5, 2.5); // Defaults for curve. If using tank, only the first parameter is used. (Comment this line out if you have an SD card!)  
 	default_constants(); // Set the drive to your own constants from autons.cpp!
 	exit_condition_defaults(); // Set the exit conditions to your own constants from autons.cpp!
 
@@ -174,6 +175,7 @@ void opcontrol() {
 	chassis.set_active_brake(0.0); // Sets the active brake kP. We recommend 0.1.
 
 	bool endgame_state = false;
+	bool new_press = true;
 
 	// Keep track of when teleop starts to prevent early expansion
 	uint32_t driver_start = pros::millis();
@@ -183,9 +185,13 @@ void opcontrol() {
 		chassis.arcade_standard(ez::SPLIT); // Split Arcade (left stick controls forward/backward, right stick controls turning)
 
 		// Endgame
-		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) && master.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && master.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+		if (new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) && master.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && master.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
 			endgame_state = !endgame_state;
 			endgame.set_value(endgame_state);
+			new_press = false;
+		}
+		else if (!master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) && !master.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && !master.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && !master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+			new_press = true;
 		}
 
 		// Adjust flywheel RPM (up & down)
@@ -198,10 +204,10 @@ void opcontrol() {
 
 		// Intake controls (R1 + R2)
 		// R1 is intake, R2 is outtake
-		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
+		if (new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
 			intake = 100; // Intake at full speed
 		}
-		else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+		else if (new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
 			intake = -80; // Outtake at 80% speed for better shot consistency
 		}
 		else {

@@ -9,7 +9,7 @@ lv_obj_t * icon;
 lv_obj_t * large_icon;
 lv_obj_t * skills;
 lv_obj_t * confirm;
-lv_obj_t * sideDD;
+lv_obj_t * autonDD;
 lv_obj_t * skillsLabel;
 lv_obj_t * confirmLabel;
 lv_obj_t * autonLabel;
@@ -40,22 +40,22 @@ int LVGLAutonSelector::selectedAuton() {
 }
 
 lv_res_t btn_click_action(lv_obj_t * btn) {
-    char selected_side[32];
-    lv_ddlist_get_selected_str(sideDD, selected_side);
+    char selected_auton[32];
+    lv_ddlist_get_selected_str(autonDD, selected_auton);
 
     uint8_t id = lv_obj_get_free_num(btn);
 
     if (id == 0) {
-        if (strcmp(selected_side, "    Choose Side     ") == 0){
+        if (strcmp(selected_auton, "    Choose Auton     ") == 0){
             autonomousMode = 0;
         }
-        else if (strcmp(selected_side, "         Right") == 0) {
+        else if (strcmp(selected_auton, "         Right") == 0) {
             autonomousMode = 1;
         }
-        else if (strcmp(selected_side, "         Left") == 0) {
+        else if (strcmp(selected_auton, "         Left") == 0) {
             autonomousMode = 2;
         }
-        else if (strcmp(selected_side, "         Solo") == 0) {
+        else if (strcmp(selected_auton, "         Solo") == 0) {
             autonomousMode = 3;
         }
         else {
@@ -66,9 +66,9 @@ lv_res_t btn_click_action(lv_obj_t * btn) {
         autonomousMode = 4;
     }
 
-    printf("Auton: %s\n", selected_side);
+    printf("Auton: %s\n", selected_auton);
 
-    lv_obj_set_hidden(sideDD, true);
+    lv_obj_set_hidden(autonDD, true);
     lv_obj_set_hidden(skills, true);
     lv_obj_set_hidden(confirm, true);
     lv_obj_set_hidden(skillsLabel, true);
@@ -153,16 +153,16 @@ void LVGLAutonSelector::create() {
     lv_obj_set_size(confirm, 100, 50);
     lv_obj_align(confirm, NULL, LV_ALIGN_IN_BOTTOM_RIGHT, -10, -10);
 
-    // Side Dropdown
-    sideDD = lv_ddlist_create(lv_scr_act(), NULL);
-    lv_ddlist_set_options(sideDD, "    Choose Side     \n"
+    // Auton Dropdown
+    autonDD = lv_ddlist_create(lv_scr_act(), NULL);
+    lv_ddlist_set_options(autonDD, "    Choose Auton     \n"
                                 "         Left\n"
                                 "         Right\n"
                                 "         Solo");
-    lv_obj_align(sideDD, NULL, LV_ALIGN_IN_RIGHT_MID, -10, -38);
-    lv_obj_set_free_num(sideDD, 3);
-    lv_ddlist_set_action(sideDD, ddlist_action);
-    lv_ddlist_set_style(sideDD, LV_DDLIST_STYLE_SEL, &styleDD);
+    lv_obj_align(autonDD, NULL, LV_ALIGN_IN_RIGHT_MID, -10, -38);
+    lv_obj_set_free_num(autonDD, 3);
+    lv_ddlist_set_action(autonDD, ddlist_action);
+    lv_ddlist_set_style(autonDD, LV_DDLIST_STYLE_SEL, &styleDD);
 
     skillsLabel = lv_label_create(skills, NULL);
     lv_label_set_text(skillsLabel, "Run Skills");
@@ -186,7 +186,7 @@ void LVGLAutonSelector::end() {
     lv_obj_set_hidden(icon, true);
     lv_obj_set_hidden(skills, true);
     lv_obj_set_hidden(confirm, true);
-    lv_obj_set_hidden(sideDD, true);
+    lv_obj_set_hidden(autonDD, true);
     lv_obj_set_hidden(skillsLabel, true);
     lv_obj_set_hidden(confirmLabel, true);
 
