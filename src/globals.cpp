@@ -20,7 +20,14 @@ pros::Vision vis2 (17);
 pros::Imu inertial (18);
 
 // 3-Wire
-pros::ADIDigitalOut endgame ('A', false);
+pros::ADIDigitalOut endgame1 ('A', false);
+pros::ADIDigitalOut endgame2 ('B', false);
 
 // Controller
 pros::Controller master(pros::E_CONTROLLER_MASTER);
+
+// Functions
+void endgame(bool state) {
+    endgame1.set_value(state);
+    endgame2.set_value(state);
+}

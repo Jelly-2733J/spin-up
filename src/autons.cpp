@@ -535,20 +535,20 @@ void skills() {
 
 	ripple();
 
-	intake = -100;
-
-	chassis.set_turn_pid(-192, TURN_SPEED);
+	chassis.set_turn_pid(-196, TURN_SPEED);
 	chassis.wait_drive();
+
+	intake = -100;
 
 	flywheel.set_active(false);
 
-	chassis.set_drive_pid(-60, DRIVE_SPEED, true);
+	chassis.set_drive_pid(-57, DRIVE_SPEED, true);
 	chassis.wait_drive();
 
 	chassis.set_turn_pid(-135, TURN_SPEED);
 	chassis.wait_drive();
 
-	endgame.set_value(true);
+	endgame(true);
 }
 
 
