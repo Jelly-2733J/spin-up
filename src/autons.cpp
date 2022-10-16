@@ -287,9 +287,9 @@ void triple_tap() {
 	flywheel.full_voltage(true);
 	pros::delay(300);
 	intake = 100;
-	pros::delay(500);
+	pros::delay(350);
 	intake = -80;
-	pros::delay(1000);
+	pros::delay(500);
 	flywheel.full_voltage(false);
 	intake = 0;
 }
@@ -343,7 +343,7 @@ void skills() {
 	chassis.set_drive_pid(50, DRIVE_SPEED, true);
 	chassis.wait_drive();
 
-	ripple();
+	triple_tap();
 
 	intake = -100;
 
@@ -399,7 +399,7 @@ void skills() {
 	chassis.set_turn_pid(-90, TURN_SPEED);
 	chassis.wait_drive();
 
-	chassis.set_drive_pid(-14, DRIVE_SPEED);
+	chassis.set_drive_pid(-14.25, DRIVE_SPEED);
 	chassis.wait_drive();
 
 	chassis.set_turn_pid(-180, TURN_SPEED);
@@ -451,7 +451,7 @@ void skills() {
 	chassis.set_drive_pid(51, DRIVE_SPEED, true);
 	chassis.wait_drive();
 	
-	ripple();
+	triple_tap();
 
 	intake = -100;
 
@@ -511,7 +511,7 @@ void skills() {
 	chassis.set_drive_pid(27, DRIVE_SPEED, true);
 	chassis.wait_drive();
 
-	ripple();
+	triple_tap();
 
 	intake = -100;
 
@@ -533,7 +533,7 @@ void skills() {
 	chassis.set_drive_pid(40, DRIVE_SPEED, true);
 	chassis.wait_drive();
 
-	ripple();
+	triple_tap();
 
 	chassis.set_turn_pid(-196, TURN_SPEED);
 	chassis.wait_drive();
