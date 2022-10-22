@@ -158,7 +158,7 @@ void right_winpoint() {
 void left_winpoint() {
 
 	flywheel.set_active(true);
-	flywheel.set_target_RPM(2910);
+	flywheel.set_target_RPM(2880);
 
 	chassis.set_drive_pid(-2, DRIVE_SPEED);
 	chassis.wait_drive();
@@ -218,7 +218,7 @@ void left_winpoint() {
 void solo_winpoint() {
 	// make this mattias
 	flywheel.set_active(true);
-	flywheel.set_target_RPM(2820);
+	flywheel.set_target_RPM(2870);
 
 	chassis.set_drive_pid(-2, 127);
 	chassis.wait_drive();

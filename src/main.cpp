@@ -195,7 +195,7 @@ void opcontrol() {
 		}
 
 		// Adjust flywheel RPM (up & down)
-		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP) && flywheel.target_RPM() <= 2950) {
+		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP) && flywheel.target_RPM() <= 3950) {
 			flywheel.set_target_RPM(flywheel.target_RPM() + 50);
 		}
 		else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN) && flywheel.target_RPM() >= 100) {
