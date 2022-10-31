@@ -167,6 +167,9 @@ void opcontrol() {
 	// Activate flywheel
 	flywheel.set_active(true);
 
+	// Set blooper to up
+	blooper.set_value(true);
+
 	// 2700 RPM is the default flywheel speed
 	// It is optimal for ripple shots right at the goal
 	flywheel.set_target_RPM(2700);
@@ -175,6 +178,7 @@ void opcontrol() {
 	chassis.set_active_brake(0.0); // Sets the active brake kP. We recommend 0.1.
 
 	bool endgame_state = false;
+	bool blooper_state = true;
 	bool new_press = true;
 
 	// Keep track of when teleop starts to prevent early expansion
@@ -218,6 +222,12 @@ void opcontrol() {
 		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)) {
 			flywheel.set_active(!flywheel.is_active());
 			master.clear();
+		}
+
+		// Blooper (deflector) toggle
+		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
+			blooper_state = !blooper_state;
+			blooper.set_value(blooper_state);
 		}
 
 		//triple tap

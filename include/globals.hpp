@@ -27,6 +27,7 @@ extern pros::Imu inertial;              // 18
 // 3-Wire
 extern pros::ADIDigitalOut endgame1;    // A
 extern pros::ADIDigitalOut endgame2;    // B
+extern pros::ADIDigitalOut blooper;     // C
 
 // Controller
 extern pros::Controller master;

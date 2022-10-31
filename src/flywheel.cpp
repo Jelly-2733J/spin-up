@@ -172,7 +172,7 @@ void FlywheelController::flyControl() {
 			}
 			
 			// Perform TBH calculation and clip voltage to bounds
-			voltage = clip(0.7 * (voltage + tbh), 12000, -12000);
+			voltage = clip(0.5 * (voltage + tbh), 12000, -12000);
 
 			// Set tbh to new voltage
 			tbh = voltage;

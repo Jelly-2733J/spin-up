@@ -22,6 +22,7 @@ pros::Imu inertial (18);
 // 3-Wire
 pros::ADIDigitalOut endgame1 ('A', false);
 pros::ADIDigitalOut endgame2 ('B', false);
+pros::ADIDigitalOut blooper ('C', false);
 
 // Controller
 pros::Controller master(pros::E_CONTROLLER_MASTER);
