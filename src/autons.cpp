@@ -68,6 +68,14 @@ void modified_exit_condition() {
 	chassis.set_exit_condition(chassis.drive_exit, 80, 50, 300, 150, 500, 500);
 }
 
+void getRoller(int distance, int time) {
+	chassis.set_drive_pid(distance, DRIVE_SPEED);
+	chassis.wait_drive();
+	intake = 100;	 
+	pros::delay(time);
+	intake = 0;
+}
+
 
 ///
 // No Auton
@@ -158,14 +166,9 @@ void right_winpoint() {
 void left_winpoint() {
 
 	flywheel.set_active(true);
-	flywheel.set_target_RPM(2880);
+	flywheel.set_target_RPM(2660);
 
-	chassis.set_drive_pid(-2, DRIVE_SPEED);
-	chassis.wait_drive();
-
-	intake = 100;
-	pros::delay(150);
-	intake = 0;
+	getRoller(-3, 160);
 
 	chassis.set_drive_pid(3, DRIVE_SPEED);
 	chassis.wait_drive();
@@ -186,18 +189,16 @@ void left_winpoint() {
 	chassis.set_turn_pid(-127, TURN_SPEED);
 	chassis.wait_drive();
 
-	chassis.set_drive_pid(-51, DRIVE_SPEED, true);
+	chassis.set_drive_pid(-47, DRIVE_SPEED, true);
 	chassis.wait_drive();
 
-	chassis.set_turn_pid(-40, TURN_SPEED);
+	chassis.set_turn_pid(-33, TURN_SPEED);
 	chassis.wait_drive();
 
-	chassis.set_drive_pid(12, DRIVE_SPEED);
+	chassis.set_drive_pid(10, DRIVE_SPEED);
 	chassis.wait_drive();
 
-	pros::delay(200);
-
-	flywheel.shoot(2, 5000);
+	flywheel.shoot(3, 4000);
 
 	pros::delay(300);
 
@@ -206,9 +207,9 @@ void left_winpoint() {
 	chassis.set_drive_pid(4, DRIVE_SPEED);
 	chassis.wait_drive();
 
-	pros::delay(2000);
+	pros::delay(3000);
 
-	flywheel.shoot(2, 10000);
+	flywheel.shoot(1, 10000);
 
 }
 
@@ -218,35 +219,29 @@ void left_winpoint() {
 void solo_winpoint() {
 	// make this mattias
 	flywheel.set_active(true);
-	flywheel.set_target_RPM(2870);
+	flywheel.set_target_RPM(2670);
 
-	chassis.set_drive_pid(-2, 127);
+	getRoller(-3, 160);
+
+	chassis.set_drive_pid(5, 127, true);
 	chassis.wait_drive();
 
-	intake = 100;
-	pros::delay(150);
-	intake = 0;
-
-	chassis.set_swing_pid(ez::LEFT_SWING, 75, 127);
+	chassis.set_turn_pid(75, 127);
 	chassis.wait_drive();
 
 	chassis.set_drive_pid(35, 127, true);
 	chassis.wait_drive();
 
-	chassis.set_turn_pid(20, 127);
+	chassis.set_turn_pid(23, 127);
 	chassis.wait_drive();
-
-	intake = 100;
 
 	chassis.set_drive_pid(34, 127, true);
 	chassis.wait_drive();
 
-	chassis.set_swing_pid(ez::RIGHT_SWING, -57, 127);
+	chassis.set_swing_pid(ez::RIGHT_SWING, -45, 127);
 	chassis.wait_drive();
-
-	intake = 100;
-
-	flywheel.shoot(3, 4000);
+	
+	flywheel.shoot(2, 3000);
 
 	intake = 0;
 
@@ -256,21 +251,16 @@ void solo_winpoint() {
 	chassis.set_turn_pid(-142, 127);
 	chassis.wait_drive();
 
-	chassis.set_drive_pid(-66, 127, true);
+	chassis.set_drive_pid(-73, 127, true);
 	chassis.wait_drive();
 
-	chassis.set_drive_pid(7, 127, true);
+	chassis.set_drive_pid(5, 127, true);
 	chassis.wait_drive();
 
 	chassis.set_turn_pid(-90, 127);
 	chassis.wait_drive();
 
-	chassis.set_drive_pid(-11, 127);
-	chassis.wait_drive();
-
-	intake = 100;
-	pros::delay(150);
-	intake = 0;
+	getRoller(-12, 160);
 
 }
 
@@ -294,23 +284,15 @@ void triple_tap() {
 	intake = 0;
 }
 
-void getRoller(int distance, int time) {
-	chassis.set_drive_pid(-20, DRIVE_SPEED);
-	chassis.wait_until(distance);
-	intake = 100;	 
-	pros::delay(time);
-	intake = 0;
-}
-
 ///
 // Skills
 ///
 void skills() {
 	
 	flywheel.set_active(true);
-	flywheel.set_target_RPM(2800);
+	flywheel.set_target_RPM(2600);
 
-	getRoller(-1, 260);
+	getRoller(-3, 260);
 
 	chassis.set_drive_pid(3, DRIVE_SPEED);
 	chassis.wait_drive();
@@ -328,7 +310,7 @@ void skills() {
 
 	intake = 0;
 
-	getRoller(-10, 260);
+	getRoller(-15, 260);
 
 	intake = 100;
 	pros::delay(230);
@@ -349,7 +331,7 @@ void skills() {
 
 	intake = -100;
 
-	flywheel.set_target_RPM(2520);
+	flywheel.set_target_RPM(2480);
 
 	chassis.set_drive_pid(-42, DRIVE_SPEED, true);
 	chassis.wait_drive();
@@ -376,7 +358,7 @@ void skills() {
 
 	intake = -100;
 
-	flywheel.set_target_RPM(2800);
+	flywheel.set_target_RPM(2600);
 
 	chassis.set_drive_pid(-16, DRIVE_SPEED);
 	chassis.wait_drive();
@@ -454,7 +436,7 @@ void skills() {
 
 	intake = -100;
 
-	flywheel.set_target_RPM(2520);
+	flywheel.set_target_RPM(2480);
 
 	chassis.set_drive_pid(-47, DRIVE_SPEED, true);
 	chassis.wait_drive();
@@ -481,7 +463,7 @@ void skills() {
 
 	intake = -100;
 
-	flywheel.set_target_RPM(2800);
+	flywheel.set_target_RPM(2600);
 
 	chassis.set_turn_pid(45, TURN_SPEED);
 	chassis.wait_drive();

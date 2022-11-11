@@ -94,7 +94,7 @@ void FlywheelController::shoot(int num_discs, int timeout, int rpm_accuracy) {
 			pros::delay(10);
 		}
 
-		intake = -100;
+		intake = -80;
 
 		while (flywheel.RPM() > flywheel.target_RPM() - 300) {
 			if (count >= timeout) {
@@ -172,7 +172,7 @@ void FlywheelController::flyControl() {
 			}
 			
 			// Perform TBH calculation and clip voltage to bounds
-			voltage = clip(0.5 * (voltage + tbh), 12000, -12000);
+			voltage = clip(0.7 * (voltage + tbh), 12000, -12000);
 
 			// Set tbh to new voltage
 			tbh = voltage;
