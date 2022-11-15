@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "Thunderclap",
+    "project_name": "godlike speed",
     "target": "v5",
     "templates": {
       "EZ-Template": {
@@ -186,7 +186,7 @@
     },
     "upload_options": {
       "description": "L + bozo + skill issue + no auton + ratio",
-      "icon": "pros",
+      "icon": "pizza",
       "slot": 1
     }
   }

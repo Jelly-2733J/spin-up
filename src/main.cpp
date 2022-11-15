@@ -1,5 +1,7 @@
 #include "main.h"
 #include "EZ-Template/sdcard.hpp"
+#include "pros/misc.h"
+#include "pros/motors.h"
 
 // Chassis constructor
 Drive chassis (
@@ -16,7 +18,7 @@ Drive chassis (
 
 	// Wheel Diameter (Remember, 4" wheels are actually 4.125!)
 	//    (or tracking wheel diameter)
-	,3.25
+	,2.75
 
 	// Cartridge RPM
 	//   (or tick per rotation if using tracking wheels)
@@ -26,7 +28,7 @@ Drive chassis (
 	//    (or gear ratio of tracking wheel)
 	// eg. if your drive is 84:36 where the 36t is powered, your RATIO would be 2.333.
 	// eg. if your drive is 36:60 where the 60t is powered, your RATIO would be 0.6.
-	,1.667
+	,1.0
 
 	// Uncomment if using tracking wheels
 	/*
@@ -57,11 +59,8 @@ void initialize() {
 
 	pros::delay(500); // Stop the user from doing anything while legacy ports configure.
 	
-	// Flywheel is inactive for initialization
-	flywheel.set_active(false);
-
-	// Set vision tracking target to signature 1, red goal
-	aim.set_tracking_sig(1);
+	// Catapult is inactive for initialization
+	catapult.set_active(false);
 
 	// Configure your chassis controls
 	chassis.toggle_modify_curve_with_controller(false); // Enables modifying the controller curve with buttons on the joysticks
@@ -75,13 +74,13 @@ void initialize() {
 	// chassis.set_right_curve_buttons(pros::E_CONTROLLER_DIGITAL_Y,    pros::E_CONTROLLER_DIGITAL_A);
 
 	// Autonomous Selector using LLEMU
-	ez::as::auton_selector.add_autons({
+	/*ez::as::auton_selector.add_autons({
 		Auton("No Auton", no_auton),
 		Auton("Right Winpoint", right_winpoint),
 		Auton("Left Winpoint", left_winpoint),
 		Auton("Solo Winpoint", solo_winpoint),
 		Auton("Skills", skills),
-	});
+	});*/
 
 	// Initialize chassis and auton selector
 	chassis.initialize();
@@ -89,6 +88,9 @@ void initialize() {
 
 	// Set intake brake mode to hold to improve roller consistency
 	intake.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+
+	// Set cata motor to coast to prevent unnecessary
+	cata.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 
 	// Clear the LCD for the auton selector
 	pros::screen::erase();
@@ -99,11 +101,8 @@ void initialize() {
 
 	pros::delay(250); // Wait for auton selector to finish
 
-	// Create the flywheel control task
-	pros::Task flywheel_control([&]{ flywheel.flyControl(); });
-
-	// Create the goal tracking task
-	pros::Task goal_tracking([&]{ aim.goalSense(); });
+	// Create the catapult control task
+	pros::Task catapult_control([&]{ catapult.cataControl(); });
 
 }
 
@@ -113,8 +112,8 @@ void initialize() {
  * the robot is enabled, this task will exit.
  */
 void disabled() {
-	// Set flywheel to inactive to prevent the code from attempting to control a disabled motor
-	flywheel.set_active(false);
+	// Set catapult to inactive to prevent the code from attempting to control a disabled motor
+	catapult.set_active(false);
 }
 
 /**
@@ -164,15 +163,8 @@ void autonomous() {
  */
 void opcontrol() {
 
-	// Activate flywheel
-	flywheel.set_active(true);
-
-	// Set blooper to up
-	blooper.set_value(true);
-
-	// 2700 RPM is the default flywheel speed
-	// It is optimal for ripple shots right at the goal
-	flywheel.set_target_RPM(2700);
+	// Activate catapult
+	catapult.set_active(true);
 
 	chassis.set_drive_brake(pros::E_MOTOR_BRAKE_COAST);
 	chassis.set_active_brake(0.0); // Sets the active brake kP. We recommend 0.1.
@@ -180,9 +172,6 @@ void opcontrol() {
 	bool endgame_state = false;
 	bool blooper_state = true;
 	bool new_press = true;
-
-	// Keep track of when teleop starts to prevent early expansion
-	uint32_t driver_start = pros::millis();
 
 	while (true) {
 		
@@ -198,55 +187,22 @@ void opcontrol() {
 			new_press = true;
 		}
 
-		// Adjust flywheel RPM (up & down)
-		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP) && flywheel.target_RPM() <= 3950) {
-			flywheel.set_target_RPM(flywheel.target_RPM() + 50);
-		}
-		else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN) && flywheel.target_RPM() >= 100) {
-			flywheel.set_target_RPM(flywheel.target_RPM() - 50);
-		}
-
 		// Intake controls (R1 + R2)
 		// R1 is intake, R2 is outtake
 		if (new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
-			intake = 100; // Intake at full speed
+			intake = 100;
 		}
 		else if (new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
-			intake = -80; // Outtake at 80% speed for better shot consistency
+			intake = -100;
 		}
 		else {
 			intake = 0;
 		}
 
-		// Toggle flywheel (Left)
-		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)) {
-			flywheel.set_active(!flywheel.is_active());
-			master.clear();
+		// Shoot catapult
+		if (new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
+			catapult.shoot(3);
 		}
-
-		// Blooper (deflector) toggle
-		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
-			blooper_state = !blooper_state;
-			blooper.set_value(blooper_state);
-		}
-
-		//triple tap
-		if (new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_B)) {
-			intake = -80;
-			flywheel.full_voltage(true);
-			pros::delay(300);
-			intake = 100;
-			//300
-			pros::delay(400);
-			intake = -80;
-			//500
-			pros::delay(500);
-			//1000
-			flywheel.full_voltage(false);
-			intake = 0;
-		}
-
-
 
 		pros::delay(ez::util::DELAY_TIME); // Used for timing calculations and reasonable loop speeds
 

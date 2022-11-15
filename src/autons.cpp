@@ -3,7 +3,6 @@
 #include "globals.hpp"
 #include "main.h"
 
-
 /////
 // For installation, upgrading, documentation, and tutorials, check out website!
 // https://ez-robotics.github.io/EZ-Template/
@@ -67,6 +66,8 @@ void modified_exit_condition() {
 	chassis.set_exit_condition(chassis.swing_exit, 100, 3, 500, 7, 500, 500);
 	chassis.set_exit_condition(chassis.drive_exit, 80, 50, 300, 150, 500, 500);
 }
+
+/*
 
 void getRoller(int distance, int time) {
 	chassis.set_drive_pid(distance, DRIVE_SPEED);
@@ -644,4 +645,4 @@ void interfered_example() {
 
 // . . .
 // Make your own autonomous functions here!
-// . . .
+// . . . */
