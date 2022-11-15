@@ -7,8 +7,6 @@ class CataController {
 	private:
 		bool active = false;
 		pros::Mutex active_guard;
-		bool is_loaded = false;
-		pros::Mutex is_loaded_guard;
 		bool shooting = 0;
 		pros::Mutex shooting_guard;
 	public:
@@ -18,6 +16,9 @@ class CataController {
 		bool is_active();
 		// Set shooting state
 		void set_shooting(int discs);
+		// Wait until catapult is loaded
+		// timeout is 0 for no timeout
+		void wait_for_load(int timeout = 3000);
 		// Returns the number of discs the catapult is shooting
 		// 0 if the catapult is not shooting
 		int is_shooting();

@@ -24,6 +24,21 @@ void CataController::set_shooting(int discs) {
 	shooting = discs;
 	shooting_guard.give();
 };
+// Wait until catapult is loaded
+// timeout is 0 for no timeout
+void CataController::wait_for_load(int timeout) {
+	if (timeout == 0) {
+		while (!cata_switch.get_value()) {
+			pros::delay(10);
+		}
+	}
+	else {
+		int start_time = pros::millis();
+		while (!cata_switch.get_value() && pros::millis() - start_time < timeout) {
+			pros::delay(10);
+		}
+	}
+};
 // Returns the number of discs the catapult is shooting
 // 0 if the catapult is not shooting
 int CataController::is_shooting() {
