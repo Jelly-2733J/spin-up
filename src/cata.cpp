@@ -33,8 +33,13 @@ int CataController::is_shooting() {
 	return to_return;
 };
 // Shoot a number of discs
-void CataController::shoot(int num_discs) {
+void CataController::shoot(int num_discs, bool wait) {
 	set_shooting(num_discs);
+	if (wait) {
+		while (is_shooting() > 0) {
+			pros::delay(10);
+		}
+	}
 };
 // Catapult task
 void CataController::cataControl() {

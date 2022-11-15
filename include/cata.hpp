@@ -22,7 +22,7 @@ class CataController {
 		// 0 if the catapult is not shooting
 		int is_shooting();
 		// Shoot a number of discs
-		void shoot(int num_discs);
+		void shoot(int num_discs, bool wait = false);
 		// Catapult task
 		void cataControl();
 };
