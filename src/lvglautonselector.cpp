@@ -3,6 +3,7 @@
 
 #include "lvglautonselector.hpp"
 #include "globals.hpp"
+#include "pros/misc.h"
 
 // LVGL SETUP
 lv_obj_t * icon;
@@ -174,6 +175,21 @@ void LVGLAutonSelector::create() {
     lv_obj_set_hidden(autonLabel, true);
 
     while (autonomousMode == -1) {
+        if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) && master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
+            autonomousMode = 0;
+            lv_obj_set_hidden(autonDD, true);
+            lv_obj_set_hidden(skills, true);
+            lv_obj_set_hidden(confirm, true);
+            lv_obj_set_hidden(skillsLabel, true);
+            lv_obj_set_hidden(confirmLabel, true);
+
+            lv_label_set_text(autonLabel, std::to_string(autonomousMode).c_str());
+            lv_obj_align(autonLabel, NULL, LV_ALIGN_IN_BOTTOM_RIGHT, 0, 0);
+            lv_obj_set_hidden(autonLabel, false);
+
+            printf("Auton: %d\n", autonomousMode);
+            break;
+        }
         pros::delay(10);
     }
 

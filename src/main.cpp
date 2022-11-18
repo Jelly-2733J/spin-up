@@ -209,12 +209,15 @@ void opcontrol() {
 		// Intake controls (R1 + R2)
 		// R1 is intake, R2 is outtake
 		if (new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
+			flywheel.full_voltage(false);
 			intake = 100; // Intake at full speed
 		}
 		else if (new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
-			intake = -80; // Outtake at 80% speed for better shot consistency
+			flywheel.full_voltage(true);
+			intake = -100; // Outtake at full speed
 		}
 		else {
+			flywheel.full_voltage(false);
 			intake = 0;
 		}
 
