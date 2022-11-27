@@ -166,30 +166,89 @@ void right_winpoint() {
 void left_winpoint() {
 
 	flywheel.set_active(true);
-	flywheel.set_target_RPM(2660);
+	flywheel.set_target_RPM(2775);
 
 	getRoller(-3, 160);
 
-	chassis.set_drive_pid(3, DRIVE_SPEED);
+
+	chassis.set_drive_pid(4, DRIVE_SPEED);
 	chassis.wait_drive();
 
-	chassis.set_turn_pid(-45, TURN_SPEED);
+	chassis.set_turn_pid(-40, TURN_SPEED);
 	chassis.wait_drive();
 
 	intake = 100;
+
+	//flywheel.full_voltage(true);
 
 	chassis.set_drive_pid(9, 50);
 	chassis.wait_drive();
 
 	pros::delay(250);
 
-	chassis.set_drive_pid(-9, DRIVE_SPEED);
+	chassis.set_drive_pid(-7, DRIVE_SPEED);
 	chassis.wait_drive();
 
-	chassis.set_turn_pid(-127, TURN_SPEED);
+	//flywheel.full_voltage(false);
+
+	chassis.set_turn_pid(53, TURN_SPEED);
 	chassis.wait_drive();
 
-	chassis.set_drive_pid(-47, DRIVE_SPEED, true);
+	//-127
+//mattias grows someballs
+
+	chassis.set_drive_pid(14, DRIVE_SPEED, true);
+	chassis.wait_drive();
+	
+
+
+	chassis.set_swing_pid(ez::RIGHT_SWING, -18, DRIVE_SPEED);
+	chassis.wait_drive();
+
+/*
+	chassis.set_turn_pid(-18, TURN_SPEED);
+	chassis.wait_drive();
+
+	chassis.set_drive_pid(8, DRIVE_SPEED, true);
+	chassis.wait_drive();
+*/
+	flywheel.shoot(3, 1500, 30);
+
+	intake = -100;
+
+	//pros::delay(300);
+
+	chassis.set_swing_pid(ez::RIGHT_SWING, 42, DRIVE_SPEED);
+	chassis.wait_drive();
+
+	flywheel.set_target_RPM(2650);
+
+	intake = 100;
+
+	chassis.set_drive_pid(36, DRIVE_SPEED, true);
+	chassis.wait_until(8);
+	chassis.set_max_speed(35);
+	chassis.wait_until(30);
+	chassis.set_max_speed(55);
+	chassis.wait_drive();
+	
+	chassis.set_turn_pid(-35, TURN_SPEED);
+	chassis.wait_drive();
+
+	chassis.set_drive_pid(4, DRIVE_SPEED);
+	chassis.wait_drive();
+
+	pros::delay(500);
+
+	flywheel.shoot(3, 2000, 30);
+
+	intake = 100;
+
+	chassis.set_drive_pid(1, DRIVE_SPEED);
+	chassis.wait_drive();
+
+/*
+	chassis.set_drive_pid(-49, DRIVE_SPEED, true);
 	chassis.wait_drive();
 
 	chassis.set_turn_pid(-33, TURN_SPEED);
@@ -198,19 +257,19 @@ void left_winpoint() {
 	chassis.set_drive_pid(10, DRIVE_SPEED);
 	chassis.wait_drive();
 
-	flywheel.shoot(3, 4000);
+	flywheel.shoot(3, 3000);
 
-	pros::delay(300);
+	//pros::delay(300);
 
 	intake = 100;
 
-	chassis.set_drive_pid(4, DRIVE_SPEED);
+	chassis.set_drive_pid(2.5, DRIVE_SPEED);
 	chassis.wait_drive();
 
-	pros::delay(3000);
+	pros::delay(2000);
 
 	flywheel.shoot(1, 10000);
-
+*/
 }
 
 ///

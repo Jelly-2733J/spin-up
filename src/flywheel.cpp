@@ -84,6 +84,7 @@ bool FlywheelController::is_full() {
 void FlywheelController::shoot(int num_discs, int timeout, int rpm_accuracy) {
 	int count = 0;
 	for (int i = 0; i < num_discs; i++) {
+		full_voltage(true);
 		while (abs(flywheel.target_RPM() - flywheel.RPM()) > rpm_accuracy) {
 			if (count >= timeout) {
 				intake = 100;
@@ -96,7 +97,7 @@ void FlywheelController::shoot(int num_discs, int timeout, int rpm_accuracy) {
 
 		intake = -80;
 
-		while (flywheel.RPM() > flywheel.target_RPM() - 300) {
+		while (flywheel.RPM() > flywheel.target_RPM() - 175) {
 			if (count >= timeout) {
 				intake = 100;
 				full_voltage(false);
@@ -106,7 +107,7 @@ void FlywheelController::shoot(int num_discs, int timeout, int rpm_accuracy) {
 			pros::delay(10);
 		}
 
-		full_voltage(true);
+
 		intake = 100;
 		pros::delay(300);
 	}
@@ -172,7 +173,7 @@ void FlywheelController::flyControl() {
 			}
 			
 			// Perform TBH calculation and clip voltage to bounds
-			voltage = clip(0.7 * (voltage + tbh), 12000, -12000);
+			voltage = clip(0.5 * (voltage + tbh), 12000, -12000);
 
 			// Set tbh to new voltage
 			tbh = voltage;
