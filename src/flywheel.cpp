@@ -91,13 +91,18 @@ void FlywheelController::shoot(int num_discs, int timeout, int rpm_accuracy) {
 				full_voltage(false);
 				return;
 			}
+			if (flywheel.RPM() > flywheel.target_RPM()) {
+				full_voltage(false);
+				fly.move_voltage(0);
+			}
 			count += 10;
 			pros::delay(10);
 		}
 
 		intake = -80;
+		full_voltage(true);
 
-		while (flywheel.RPM() > flywheel.target_RPM() - 175) {
+		while (flywheel.RPM() > flywheel.target_RPM() - 300) {
 			if (count >= timeout) {
 				intake = 100;
 				full_voltage(false);
@@ -107,9 +112,7 @@ void FlywheelController::shoot(int num_discs, int timeout, int rpm_accuracy) {
 			pros::delay(10);
 		}
 
-
 		intake = 100;
-		pros::delay(300);
 	}
 	full_voltage(false);
 }
@@ -122,6 +125,7 @@ void FlywheelController::flyControl() {
 
 	double gain = 0.08;
 	double tbh = 0.0;
+	double tbv = 0.0;
 	bool first_cross = false;
 	int max_rpm = 3000;
 
@@ -158,6 +162,9 @@ void FlywheelController::flyControl() {
 		// Calculate error
 		error = target_RPM() - RPM();
 
+		// Calculate variable take back
+		tbv = 1.0 - (3000.0 - target_RPM()) / 1500;
+
 		// Integrate
 		voltage += gain * error;
 
@@ -171,9 +178,9 @@ void FlywheelController::flyControl() {
 				first_cross = true;
 				tbh = ((double) target_RPM() / max_rpm) * 12000;
 			}
-			
+
 			// Perform TBH calculation and clip voltage to bounds
-			voltage = clip(0.5 * (voltage + tbh), 12000, -12000);
+			voltage = clip(tbv * (voltage + tbh), 12000, -12000);
 
 			// Set tbh to new voltage
 			tbh = voltage;

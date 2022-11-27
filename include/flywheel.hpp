@@ -35,7 +35,7 @@ class FlywheelController {
 		// Check if set to full voltage
 		bool is_full();
 		// Shoot a number of discs
-		void shoot(int num_discs, int timeout = 3000, int rpm_accuracy = 80);
+		void shoot(int num_discs, int timeout = 3000, int rpm_accuracy = 30);
 		// Flywheel task
 		void flyControl();
 };
