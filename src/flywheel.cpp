@@ -83,14 +83,22 @@ bool FlywheelController::is_full() {
 // Shoot a number of discs
 void FlywheelController::shoot(int num_discs, int timeout, int rpm_accuracy) {
 	int count = 0;
+
+	// Shoot number of times specified
 	for (int i = 0; i < num_discs; i++) {
+
+		// Full voltage for best RPM recovery and fastest possible shooting
 		full_voltage(true);
+
+		// Wait for RPM to be within accuracy
 		while (abs(flywheel.target_RPM() - flywheel.RPM()) > rpm_accuracy) {
+			// If the timeout is reached, exit
 			if (count >= timeout) {
 				intake = 100;
 				full_voltage(false);
 				return;
 			}
+			// If flywheel RPM is above the target, disable full voltage so that it can decrease
 			if (flywheel.RPM() > flywheel.target_RPM()) {
 				full_voltage(false);
 				fly.move_voltage(0);
@@ -99,10 +107,13 @@ void FlywheelController::shoot(int num_discs, int timeout, int rpm_accuracy) {
 			pros::delay(10);
 		}
 
+		// Outtake to shoot
 		intake = -80;
 		full_voltage(true);
 
+		// Wait for an RPM drop to indicate that the disc has been shot
 		while (flywheel.RPM() > flywheel.target_RPM() - 300) {
+			// If the timeout is reached, exit
 			if (count >= timeout) {
 				intake = 100;
 				full_voltage(false);
@@ -112,8 +123,11 @@ void FlywheelController::shoot(int num_discs, int timeout, int rpm_accuracy) {
 			pros::delay(10);
 		}
 
+		// Intake at full to reduce chances of an accidental double shot
 		intake = 100;
 	}
+
+	// Disable full voltage mode after shooting is complete.
 	full_voltage(false);
 }
 // Flywheel task
@@ -124,7 +138,7 @@ void FlywheelController::flyControl() {
 	uint32_t t = pros::millis();
 
 	double gain = 0.08;
-	double tbh = 0.0;
+	double takeback = 0.0;
 	double tbv = 0.0;
 	bool first_cross = false;
 	int max_rpm = 3000;
@@ -144,7 +158,7 @@ void FlywheelController::flyControl() {
 			fly = 0;
 
 			// Reset all control variables
-			tbh = 0.0;
+			takeback = 0.0;
 			first_cross = false;
 			error = 0.0;
 			last_error = 0.0;
@@ -155,7 +169,7 @@ void FlywheelController::flyControl() {
 			// Delay next loop until 10 ms have passed from the start of this loop
 			pros::Task::delay_until(&t, 10);
 
-			// Continue to next loop, skipping tbh calculation and voltage control
+			// Continue to next loop, skipping take back variable calculation and voltage control
 			continue;
 		}
 
@@ -171,21 +185,21 @@ void FlywheelController::flyControl() {
 		// Keep voltage within bounds
 		voltage = clip(voltage, 12000, -12000);
 
-		// TBH if there is a switch in the sign of the errors
+		// Take back variable if there is a switch in the sign of the errors
 		if (check_sign(last_error) != check_sign(error)) {
-			// On first error cross, set tbh to theoretical voltage estimate to reach a quicker stable state
+			// On first error cross, set takeback to theoretical voltage estimate to reach a quicker stable state
 			if (first_cross == false) {
 				first_cross = true;
-				tbh = ((double) target_RPM() / max_rpm) * 12000;
+				takeback = ((double) target_RPM() / max_rpm) * 12000;
 			}
 
-			// Perform TBH calculation and clip voltage to bounds
-			voltage = clip(tbv * (voltage + tbh), 12000, -12000);
+			// Perform take back variable calculation and clip voltage to bounds
+			voltage = clip(tbv * (voltage + takeback), 12000, -12000);
 
-			// Set tbh to new voltage
-			tbh = voltage;
+			// Set takeback to new voltage
+			takeback = voltage;
 			
-			printf("     TBH     \n");
+			printf("     TBV %.2f     \n", tbv);
 		}
 
 		// Set last_error to current error for next loop
