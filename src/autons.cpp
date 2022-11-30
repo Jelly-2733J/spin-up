@@ -1,7 +1,9 @@
 #include "EZ-Template/drive/drive.hpp"
 #include "EZ-Template/util.hpp"
+#include "autons.hpp"
 #include "globals.hpp"
 #include "main.h"
+#include "pros/rtos.hpp"
 
 
 /////
@@ -162,9 +164,9 @@ void left_winpoint() {
 
 	intake = 100;
 
-	flywheel.full_voltage(true);
+	//flywheel.full_voltage(true);
 
-	chassis.set_drive_pid(9, 50);
+	chassis.set_drive_pid(8, 50);
 	chassis.wait_drive();
 
 	pros::delay(250);
@@ -172,28 +174,22 @@ void left_winpoint() {
 	chassis.set_drive_pid(-7, DRIVE_SPEED);
 	chassis.wait_drive();
 
-	chassis.set_turn_pid(-127, TURN_SPEED);
+	chassis.set_turn_pid(53, TURN_SPEED);
 	chassis.wait_drive();
 
 	//-127
 //mattias grows someballs
-/*
+
 	chassis.set_drive_pid(14, DRIVE_SPEED, true);
 	chassis.wait_drive();
 	
-	flywheel.full_voltage(false);
+	//flywheel.full_voltage(false);
 
-	chassis.set_swing_pid(ez::RIGHT_SWING, -18, DRIVE_SPEED);
+	chassis.set_swing_pid(ez::RIGHT_SWING, -19, DRIVE_SPEED);
 	chassis.wait_drive();
 
 
-	chassis.set_turn_pid(-18, TURN_SPEED);
-	chassis.wait_drive();
-
-	chassis.set_drive_pid(8, DRIVE_SPEED, true);
-	chassis.wait_drive();
-
-	flywheel.shoot(3, 2000, 30);
+	flywheel.shoot(3, 2000, 15);
 
 	intake = -100;
 
@@ -202,24 +198,28 @@ void left_winpoint() {
 	chassis.set_swing_pid(ez::RIGHT_SWING, 42, DRIVE_SPEED);
 	chassis.wait_drive();
 
-	flywheel.set_target_RPM(2650);
+	flywheel.set_target_RPM(2700);
 
 	intake = 100;
 
 	chassis.set_drive_pid(36, DRIVE_SPEED, true);
-	chassis.wait_until(8);
-	chassis.set_max_speed(30);
+	chassis.wait_until(4);
+	chassis.set_max_speed(25);
 	chassis.wait_until(30);
 	chassis.set_max_speed(50);
 	chassis.wait_drive();
 	
-	chassis.set_turn_pid(-35, TURN_SPEED);
+	chassis.set_swing_pid(ez::LEFT_SWING, -32, DRIVE_SPEED);
 	chassis.wait_drive();
 
-	flywheel.shoot(3, 2000, 30);
+	chassis.set_drive_pid(8, DRIVE_SPEED);
+	chassis.wait_drive();
 
-*/
+	pros::delay(250);
 
+	flywheel.shoot(3, 5000, 30);
+
+/*
 	chassis.set_drive_pid(-49, DRIVE_SPEED, true);
 	chassis.wait_drive();
 
@@ -241,6 +241,7 @@ void left_winpoint() {
 	pros::delay(2500);
 
 	flywheel.shoot(3, 10000);
+*/
 }
 
 ///
@@ -265,32 +266,49 @@ void solo_winpoint() {
 	chassis.set_turn_pid(23, 127);
 	chassis.wait_drive();
 
+	intake = 100;
+
 	chassis.set_drive_pid(34, 127, true);
 	chassis.wait_drive();
 
-	chassis.set_swing_pid(ez::RIGHT_SWING, -45, 127);
+	chassis.set_swing_pid(ez::RIGHT_SWING, -46, 127);
 	chassis.wait_drive();
-	
-	flywheel.shoot(2, 3000);
 
-	intake = 0;
+	pros::delay(750);
+
+	flywheel.shoot(3, 3000);
 
 	chassis.set_drive_pid(-7, 127);
 	chassis.wait_drive();
 
-	chassis.set_turn_pid(-142, 127);
+	flywheel.set_target_RPM(3000);
+
+	intake = 100;
+
+	chassis.set_turn_pid(38, 127);
 	chassis.wait_drive();
 
-	chassis.set_drive_pid(-73, 127, true);
+	chassis.set_drive_pid(73, DRIVE_SPEED, true);
+	chassis.wait_until(24);
+	chassis.set_max_speed(20);
+	chassis.wait_until(30);
+	chassis.set_max_speed(127);
 	chassis.wait_drive();
 
-	chassis.set_drive_pid(5, 127, true);
-	chassis.wait_drive();
+	//chassis.set_drive_pid(5, 127, true);
+	//chassis.wait_drive();
 
 	chassis.set_turn_pid(-90, 127);
 	chassis.wait_drive();
 
-	getRoller(-12, 160);
+	intake = 0;
+
+	getRoller(-7, 160);
+
+	chassis.set_swing_pid(ez::LEFT_SWING, -88, 127);
+	chassis.wait_drive();
+
+	flywheel.shoot(3, 3000);
 
 }
 
