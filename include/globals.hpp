@@ -29,9 +29,12 @@ extern pros::Imu inertial;              // 18
 extern pros::ADIDigitalOut endgame1;    // A
 extern pros::ADIDigitalOut endgame2;    // B
 extern pros::ADIDigitalOut blooper;     // C
+extern pros::ADIDigitalOut indexer;     // D
+extern pros::ADIDigitalOut pressure_bar;// E
 
 // Controller
 extern pros::Controller master;
 
 // Functions
 extern void endgame(bool state);
+extern void fire();

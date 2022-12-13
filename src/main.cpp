@@ -1,5 +1,6 @@
 #include "main.h"
 #include "EZ-Template/sdcard.hpp"
+#include "globals.hpp"
 
 // Chassis constructor
 Drive chassis (
@@ -210,14 +211,28 @@ void opcontrol() {
 		// R1 is intake, R2 is outtake
 		if (new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
 			flywheel.full_voltage(false);
+			pressure_bar.set_value(false);
 			intake = 100; // Intake at full speed
 		}
 		else if (new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
 			flywheel.full_voltage(true);
+			pressure_bar.set_value(true);
 			intake = -100; // Outtake at full speed
 		}
 		else {
 			flywheel.full_voltage(false);
+			intake = 0;
+		}
+
+		// Independent intake controls (L1 + L2)
+		// L1 is intake, L2 is outtake
+		if (new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
+			intake = 100; // Intake at full speed
+		}
+		else if (new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
+			intake = -100; // Outtake at full speed
+		}
+		else {
 			intake = 0;
 		}
 
