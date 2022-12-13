@@ -44,7 +44,6 @@
 #include <cmath>
 #include "EZ-Template/api.hpp"
 #include "autons.hpp"
-#include "autoaim.hpp"
 #include "flywheel.hpp"
 #include "lvglautonselector.hpp"
 #include "globals.hpp"

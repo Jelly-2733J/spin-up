@@ -4,9 +4,6 @@
 
 // Classes
 
-// AutoAim
-AutoAim aim;
-
 // Flywheel control and telemetry
 FlywheelController flywheel;
 

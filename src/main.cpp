@@ -61,9 +61,6 @@ void initialize() {
 	// Flywheel is inactive for initialization
 	flywheel.set_active(false);
 
-	// Set vision tracking target to signature 1, red goal
-	aim.set_tracking_sig(1);
-
 	// Configure your chassis controls
 	chassis.toggle_modify_curve_with_controller(false); // Enables modifying the controller curve with buttons on the joysticks
 	chassis.set_active_brake(0.1); // Sets the active brake kP. We recommend 0.1.
@@ -102,9 +99,6 @@ void initialize() {
 
 	// Create the flywheel control task
 	pros::Task flywheel_control([&]{ flywheel.flyControl(); });
-
-	// Create the goal tracking task
-	pros::Task goal_tracking([&]{ aim.goalSense(); });
 
 }
 

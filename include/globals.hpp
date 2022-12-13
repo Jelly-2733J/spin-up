@@ -1,5 +1,4 @@
 #include "api.h"
-#include "autoaim.hpp"
 #include "flywheel.hpp"
 #include "lvglautonselector.hpp"
 #include "pros/adi.hpp"
@@ -7,9 +6,6 @@
 #pragma once
 
 // Classes
-
-// AutoAim
-extern AutoAim aim;
 
 // Flywheel control and telemetry
 extern FlywheelController flywheel;
