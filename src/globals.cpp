@@ -13,9 +13,6 @@ LVGLAutonSelector selector;
 // Ports
 pros::Motor intake (19, pros::E_MOTOR_GEARSET_06, true, pros::E_MOTOR_ENCODER_DEGREES);
 pros::Motor fly (20, pros::E_MOTOR_GEARSET_06, true, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Vision vis1 (16);
-pros::Vision vis2 (17);
-pros::Optical optical (7);
 pros::Imu inertial (18);
 
 // 3-Wire

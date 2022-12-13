@@ -162,8 +162,6 @@ void FlywheelController::flyControl() {
 			continue;
 		}
 
-		printf("%d\n", optical.get_proximity());
-
 		// Calculate error
 		error = target_RPM() - RPM();
 
