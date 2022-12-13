@@ -22,6 +22,7 @@ extern pros::Motor intake;				// 19
 extern pros::Motor fly;				    // 20
 extern pros::Vision vis1;				// 16
 extern pros::Vision vis2; 				// 17
+extern pros::Optical optical;           // 7
 extern pros::Imu inertial;              // 18
 
 // 3-Wire

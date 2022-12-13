@@ -111,10 +111,13 @@ void FlywheelController::shoot(int num_discs, int timeout, int rpm_accuracy) {
 		intake = -80;
 		full_voltage(true);
 
-		// Wait for an RPM drop to indicate that the disc has been shot
-		while (flywheel.RPM() > flywheel.target_RPM() - 300) {
+		pros::delay(300);
+
+		// Wait for optical sensor to detect a shot
+		while (optical.get_proximity() < 110) {
 			// If the timeout is reached, exit
-			if (count >= timeout) {
+			// If the proximity is also less than 80, there are no discs left
+			if (count >= timeout || optical.get_proximity() < 70) {
 				intake = 100;
 				full_voltage(false);
 				return;
@@ -125,6 +128,18 @@ void FlywheelController::shoot(int num_discs, int timeout, int rpm_accuracy) {
 
 		// Intake at full to reduce chances of an accidental double shot
 		intake = 100;
+
+		// Wait for optical sensor to detect that there isn't a disc being currently shot
+		while (optical.get_proximity() > 110) {
+			// If the timeout is reached, exit
+			if (count >= timeout) {
+				intake = 100;
+				full_voltage(false);
+				return;
+			}
+			count += 10;
+			pros::delay(10);
+		}
 	}
 
 	// Disable full voltage mode after shooting is complete.
@@ -173,6 +188,8 @@ void FlywheelController::flyControl() {
 			continue;
 		}
 
+		printf("%d\n", optical.get_proximity());
+
 		// Calculate error
 		error = target_RPM() - RPM();
 
@@ -199,7 +216,7 @@ void FlywheelController::flyControl() {
 			// Set takeback to new voltage
 			takeback = voltage;
 			
-			printf("     TBV %.2f     \n", tbv);
+			// printf("     TBV %.2f     \n", tbv);
 		}
 
 		// Set last_error to current error for next loop
@@ -214,7 +231,7 @@ void FlywheelController::flyControl() {
 			fly.move_voltage(voltage);
 		}
 
-		printf("%.2f %d %d\n", voltage, RPM(), target_RPM());
+		// printf("%.2f %d %d\n", voltage, RPM(), target_RPM());
 
 		if (count == 300) {
 			master.print(2, 0, "TEMP: %d C", (int) fly.get_temperature());

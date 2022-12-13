@@ -80,7 +80,7 @@ void initialize() {
 		Auton("Right Winpoint", right_winpoint),
 		Auton("Left Winpoint", left_winpoint),
 		Auton("Solo Winpoint", solo_winpoint),
-		Auton("Skills", skills),
+		Auton("Skills", auton_skills),
 	});
 
 	// Initialize chassis and auton selector
@@ -235,21 +235,8 @@ void opcontrol() {
 
 		//triple tap
 		if (new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_B)) {
-			intake = -80;
-			flywheel.full_voltage(true);
-			pros::delay(300);
-			intake = 100;
-			//300
-			pros::delay(400);
-			intake = -80;
-			//500
-			pros::delay(500);
-			//1000
-			flywheel.full_voltage(false);
-			intake = 0;
+			flywheel.shoot(3, 3000);
 		}
-
-
 
 		pros::delay(ez::util::DELAY_TIME); // Used for timing calculations and reasonable loop speeds
 
