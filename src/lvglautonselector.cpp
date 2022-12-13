@@ -1,4 +1,5 @@
 #include "pros/apix.h"
+#include "gif-pros/gifclass.hpp"
 #include <mutex>
 
 #include "lvglautonselector.hpp"
@@ -136,7 +137,7 @@ void LVGLAutonSelector::create() {
     lv_img_set_src(icon, &jelly);
     lv_obj_align(icon, NULL, LV_ALIGN_IN_LEFT_MID, 20, 0);
 
-    // Skills
+    // Skills Button
     skills = lv_btn_create(lv_scr_act(), NULL);
     lv_obj_set_free_num(skills, 1);
     lv_btn_set_action(skills, LV_BTN_ACTION_CLICK, btn_click_action);
@@ -166,7 +167,7 @@ void LVGLAutonSelector::create() {
     lv_ddlist_set_style(autonDD, LV_DDLIST_STYLE_SEL, &styleDD);
 
     skillsLabel = lv_label_create(skills, NULL);
-    lv_label_set_text(skillsLabel, "Run Skills");
+    lv_label_set_text(skillsLabel, "Run skills");
 
     confirmLabel = lv_label_create(confirm, NULL);
     lv_label_set_text(confirmLabel, "Confirm");
@@ -210,6 +211,13 @@ void LVGLAutonSelector::end() {
     LV_IMG_DECLARE(jellylarge);
     lv_img_set_src(large_icon, &jellylarge);
     lv_obj_align(large_icon, NULL, LV_ALIGN_CENTER, 0, 0);
+
+    lv_obj_t* lightning = lv_obj_create(lv_scr_act(), NULL);
+    lv_obj_set_size(lightning, 480, 240);
+    lv_obj_set_style(lightning, &lv_style_transp); // make the container invisible
+    lv_obj_align(lightning, NULL, LV_ALIGN_CENTER, 0, 0);
+
+    static Gif gif("/usd/lightning.gif", lightning);
 
     selectAuton(autonomousMode);
 }
