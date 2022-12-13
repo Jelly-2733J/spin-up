@@ -242,15 +242,15 @@ void opcontrol() {
 			master.clear();
 		}
 
-		// Blooper (deflector) toggle
+		// Blooper (deflector) toggle (X)
 		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
 			blooper_state = !blooper_state;
 			blooper.set_value(blooper_state);
 		}
 
-		//triple tap
-		if (new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_B)) {
-			flywheel.shoot(3, 3000);
+		// Pneumatic shoot (B)
+		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {
+			fire();
 		}
 
 		pros::delay(ez::util::DELAY_TIME); // Used for timing calculations and reasonable loop speeds

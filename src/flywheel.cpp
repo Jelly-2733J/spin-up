@@ -107,39 +107,13 @@ void FlywheelController::shoot(int num_discs, int timeout, int rpm_accuracy) {
 			pros::delay(10);
 		}
 
-		// Outtake to shoot
-		intake = -80;
+		// Fire disc
+		fire();
 		full_voltage(true);
 
-		pros::delay(300);
+		// Wait 200 ms for disc to enter flywheel and be shot
+		pros::delay(200);
 
-		// Wait for optical sensor to detect a shot
-		while (optical.get_proximity() < 110) {
-			// If the timeout is reached, exit
-			// If the proximity is also less than 80, there are no discs left
-			if (count >= timeout || optical.get_proximity() < 70) {
-				intake = 100;
-				full_voltage(false);
-				return;
-			}
-			count += 10;
-			pros::delay(10);
-		}
-
-		// Intake at full to reduce chances of an accidental double shot
-		intake = 100;
-
-		// Wait for optical sensor to detect that there isn't a disc being currently shot
-		while (optical.get_proximity() > 110) {
-			// If the timeout is reached, exit
-			if (count >= timeout) {
-				intake = 100;
-				full_voltage(false);
-				return;
-			}
-			count += 10;
-			pros::delay(10);
-		}
 	}
 
 	// Disable full voltage mode after shooting is complete.
@@ -156,7 +130,7 @@ void FlywheelController::flyControl() {
 	double takeback = 0.0;
 	double tbv = 0.0;
 	bool first_cross = false;
-	int max_rpm = 3000;
+	double max_rpm = 3500.0;
 
 	double error;
 	double last_error;
@@ -194,7 +168,7 @@ void FlywheelController::flyControl() {
 		error = target_RPM() - RPM();
 
 		// Calculate variable take back
-		tbv = 1.0 - (3000.0 - target_RPM()) / 1500;
+		tbv = 1.0 - (max_rpm - target_RPM()) / (max_rpm / 2);
 
 		// Integrate
 		voltage += gain * error;
