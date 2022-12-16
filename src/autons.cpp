@@ -560,7 +560,7 @@ void auton_skills() {
 
 	*/
 
-	endgame(true);
+	endgame.set_value(true);
 }
 
 

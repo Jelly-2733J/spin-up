@@ -14,21 +14,18 @@ extern FlywheelController flywheel;
 extern LVGLAutonSelector selector;
 
 // Ports
-extern pros::Motor intake;				// 19
-extern pros::Motor fly;				    // 20
-extern pros::Optical optical;           // 7
-extern pros::Imu inertial;              // 18
+extern pros::Motor intake;				// 16
+extern pros::Motor fly;				    // 15
+extern pros::Imu inertial;              // 14
 
 // 3-Wire
-extern pros::ADIDigitalOut endgame1;    // A
-extern pros::ADIDigitalOut endgame2;    // B
-extern pros::ADIDigitalOut blooper;     // C
-extern pros::ADIDigitalOut indexer;     // D
-extern pros::ADIDigitalOut pressure_bar;// E
+extern pros::ADIDigitalOut endgame;     // A
+extern pros::ADIDigitalOut blooper;     // B
+extern pros::ADIDigitalOut indexer;     // C
+extern pros::ADIDigitalOut pressure_bar;// D
 
 // Controller
 extern pros::Controller master;
 
 // Functions
-extern void endgame(bool state);
 extern void fire();

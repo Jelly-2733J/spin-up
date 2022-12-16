@@ -6,14 +6,14 @@
 Drive chassis (
 	// Left Chassis Ports (negative port will reverse it!)
 	//   the first port is the sensored port (when trackers are not used!)
-	{-1, -2, -3}
+	{-20, -19, -18}
 
 	// Right Chassis Ports (negative port will reverse it!)
 	//   the first port is the sensored port (when trackers are not used!)
-	,{8, 9, 10}
+	,{11, 12, 13}
 
 	// IMU Port
-	,18
+	,14
 
 	// Wheel Diameter (Remember, 4" wheels are actually 4.125!)
 	//    (or tracking wheel diameter)
@@ -27,7 +27,7 @@ Drive chassis (
 	//    (or gear ratio of tracking wheel)
 	// eg. if your drive is 84:36 where the 36t is powered, your RATIO would be 2.333.
 	// eg. if your drive is 36:60 where the 60t is powered, your RATIO would be 0.6.
-	,1.667
+	,1.5
 
 	// Uncomment if using tracking wheels
 	/*
@@ -186,7 +186,7 @@ void opcontrol() {
 		// Endgame
 		if (new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) && master.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && master.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
 			endgame_state = !endgame_state;
-			endgame(endgame_state);
+			endgame.set_value(endgame_state);
 			new_press = false;
 		}
 		else if (!master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) && !master.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && !master.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && !master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
@@ -215,18 +215,6 @@ void opcontrol() {
 		}
 		else {
 			flywheel.full_voltage(false);
-			intake = 0;
-		}
-
-		// Independent intake controls (L1 + L2)
-		// L1 is intake, L2 is outtake
-		if (new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
-			intake = 100; // Intake at full speed
-		}
-		else if (new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
-			intake = -100; // Outtake at full speed
-		}
-		else {
 			intake = 0;
 		}
 

@@ -166,7 +166,7 @@ void FlywheelController::flyControl() {
 		error = target_RPM() - RPM();
 
 		// Calculate variable take back
-		tbv = 1.0 - (max_rpm - target_RPM()) / (max_rpm / 2);
+		tbv = 1.0 - (3000.0 - target_RPM()) / 1500.0;
 
 		// Integrate
 		voltage += gain * error;
