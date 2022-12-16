@@ -107,12 +107,14 @@ void FlywheelController::shoot(int num_discs, int timeout, int rpm_accuracy) {
 			pros::delay(10);
 		}
 
+		intake = 0;
+
 		// Fire disc
 		fire();
 		full_voltage(true);
 
-		// Wait 200 ms for disc to enter flywheel and be shot
-		pros::delay(200);
+		// Wait 400 ms for next disc to fall into proper indexing position
+		pros::delay(400);
 
 	}
 

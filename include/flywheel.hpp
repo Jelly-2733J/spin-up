@@ -2,7 +2,7 @@
 
 #pragma once
 
-// FlywheelController class allows for automated flywheel control and RPM calculation.
+// FlywheelController class allows for automated flywheel control and smart shooting
 class FlywheelController {
 	private:
 		int flywheel_target_RPM;
