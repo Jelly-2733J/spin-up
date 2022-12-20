@@ -54,13 +54,13 @@ Drive chassis (
  */
 void initialize() {
 
+	// Flywheel is inactive for initialization
+	flywheel.set_active(false);
+
 	// Print our branding over your terminal :D
 	ez::print_ez_template();
 
 	pros::delay(500); // Stop the user from doing anything while legacy ports configure.
-	
-	// Flywheel is inactive for initialization
-	flywheel.set_active(false);
 
 	// Configure your chassis controls
 	chassis.toggle_modify_curve_with_controller(false); // Enables modifying the controller curve with buttons on the joysticks

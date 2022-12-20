@@ -13,8 +13,6 @@ class FlywheelController {
 		pros::Mutex full_guard;
 		// Convert degrees to radians
 		static double rads(double deg);
-		// Calculate optimal RPM
-		int calculate_RPM(double distance);
 		// Check the sign of a number
 		bool check_sign(double num);
 		// Clip a number to a certain range

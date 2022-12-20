@@ -7,14 +7,7 @@
 
 // Convert degrees to radians
 double FlywheelController::rads(double deg) {
-	return deg * 3.14159265358979323846 / 180;
-}
-// Calculate optimal RPM
-int FlywheelController::calculate_RPM(double distance) {
-	
-	// TODO: Experimentally find best fit curve for different distances
-	// Graph should be RPM (dependent) vs. Distance (independent)
-	return distance; // Add equation here
+	return deg * PI / 180;
 }
 // Check the sign of a number
 bool FlywheelController::check_sign(double num) {
