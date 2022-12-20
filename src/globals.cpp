@@ -7,13 +7,15 @@
 // Flywheel control and telemetry
 FlywheelController flywheel;
 
+// Odometry
+Odometry odometry(1.0, 1.0, 1.0, 2.75, 'A', 'B', 'C', 'D', 'E', 'F');
+
 // Auton Selector
 LVGLAutonSelector selector;
 
 // Ports
 pros::Motor intake (16, pros::E_MOTOR_GEARSET_06, true, pros::E_MOTOR_ENCODER_DEGREES);
 pros::Motor fly (15, pros::E_MOTOR_GEARSET_06, true, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Imu inertial (14);
 
 // 3-Wire
 pros::ADIDigitalOut endgame ({ 17, 'A' }, false);
