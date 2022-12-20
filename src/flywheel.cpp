@@ -87,20 +87,15 @@ void FlywheelController::shoot(int num_discs, int timeout, int rpm_accuracy) {
 	// Shoot number of times specified
 	for (int i = 0; i < num_discs; i++) {
 
-		// Full voltage for best RPM recovery and fastest possible shooting
-		full_voltage(true);
-
 		// Wait for RPM to be within accuracy
 		while (abs(flywheel.target_RPM() - flywheel.RPM()) > rpm_accuracy) {
 			// If the timeout is reached, exit
 			if (count >= timeout) {
 				intake = 100;
-				full_voltage(false);
 				return;
 			}
-			// If flywheel RPM is above the target, disable full voltage so that it can decrease
+			// If flywheel RPM is above the target, set voltage to 0
 			if (flywheel.RPM() > flywheel.target_RPM()) {
-				full_voltage(false);
 				fly.move_voltage(0);
 			}
 			count += 10;
@@ -111,15 +106,11 @@ void FlywheelController::shoot(int num_discs, int timeout, int rpm_accuracy) {
 
 		// Fire disc
 		fire();
-		full_voltage(true);
 
-		// Wait 400 ms for next disc to fall into proper indexing position
-		pros::delay(400);
+		// Wait 500 ms for next disc to fall into proper indexing position
+		pros::delay(500);
 
 	}
-
-	// Disable full voltage mode after shooting is complete.
-	full_voltage(false);
 }
 // Flywheel task
 void FlywheelController::flyControl() {
@@ -168,7 +159,7 @@ void FlywheelController::flyControl() {
 		error = target_RPM() - RPM();
 
 		// Calculate variable take back
-		tbv = 1.0 - (3000.0 - target_RPM()) / 1500.0;
+		tbv = 0.5 - (2250.0 - target_RPM()) / 20000.0;
 
 		// Integrate
 		voltage += gain * error;
