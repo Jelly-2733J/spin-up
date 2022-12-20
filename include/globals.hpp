@@ -14,7 +14,7 @@
 extern FlywheelController flywheel;
 
 // Odometry
-extern Odometry odometry;
+extern Odometry odom;
 
 // Auton Selector
 extern LVGLAutonSelector selector;

@@ -22,6 +22,7 @@ class Odometry {
         double h = 0.0;
         double prev_x = 0.0;
         double prev_y = 0.0;
+        double prev_h = 0.0;
 
         // Encoder variables
         int prev_L = 0;
@@ -34,6 +35,7 @@ class Odometry {
         pros::Mutex h_guard;
         pros::Mutex prev_x_guard;
         pros::Mutex prev_y_guard;
+        pros::Mutex prev_h_guard;
         pros::Mutex prev_L_guard;
         pros::Mutex prev_R_guard;
         pros::Mutex prev_B_guard;
@@ -54,6 +56,8 @@ class Odometry {
         void set_prev_x(double value);
         // Set the previous y position
         void set_prev_y(double value);
+        // Set the previous heading
+        void set_prev_h(double value);
         // Set the previous left encoder value
         void set_prev_L(int value);
         // Set the previous right encoder value
@@ -91,8 +95,10 @@ class Odometry {
         double get_x();
         // Get the current y position
         double get_y();
-        // Get the current heading in degrees
+        // Get the current heading in radians
         double get_h();
+        // Get the current heading in degrees
+        double get_h_deg();
         // Reset the position and heading
         void reset(double set_x = 0.0, double set_y = 0.0, double set_heading = 0.0);
         // Odometry task

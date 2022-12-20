@@ -8,7 +8,7 @@
 FlywheelController flywheel;
 
 // Odometry
-Odometry odometry(1.0, 1.0, 1.0, 2.75, 'A', 'B', 'C', 'D', 'E', 'F');
+Odometry odom(1.0, 1.0, 1.0, 2.75, 'A', 'B', 'C', 'D', 'E', 'F');
 
 // Auton Selector
 LVGLAutonSelector selector;
