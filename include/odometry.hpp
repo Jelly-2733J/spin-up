@@ -2,9 +2,8 @@
 
 #pragma once
 
-// RobotMotion class allows for positional and rotational tracking of the robot using 3-wheel odometry
-// combined with motion algorithms for autonomous control
-class RobotMotion {
+// Odometry class allows for positional and rotational tracking of the robot using 3-wheel odometry
+class Odometry {
     private:
         // Encoder objects
         pros::ADIEncoder encoder_L;
@@ -30,16 +29,8 @@ class RobotMotion {
         int prev_R = 0;
         int prev_B = 0;
 
-        // Mutexes
-        pros::Mutex x_guard;
-        pros::Mutex y_guard;
-        pros::Mutex h_guard;
-        pros::Mutex prev_x_guard;
-        pros::Mutex prev_y_guard;
-        pros::Mutex prev_h_guard;
-        pros::Mutex prev_L_guard;
-        pros::Mutex prev_R_guard;
-        pros::Mutex prev_B_guard;
+        // Mutex
+        pros::Mutex lock;
 
         // Convert degrees to radians
         static double rads(double deg);
@@ -77,12 +68,10 @@ class RobotMotion {
         int get_prev_R();
         // Get the previous back encoder value
         int get_prev_B();
-        // Clip a number to a certain range
-		double clip(double num, double min, double max);
 
     public:
         // Constructor
-        RobotMotion(double distance_L, double distance_R, double distance_B, double wheel_diameter, char port_L1, char port_L2, char port_R1, char port_R2, char port_B1, char port_B2) : encoder_L(port_L1, port_L2, false), encoder_R(port_R1, port_R2, false), encoder_B(port_B1, port_B2, false) {
+        Odometry(double distance_L, double distance_R, double distance_B, double wheel_diameter, char port_L1, char port_L2, char port_R1, char port_R2, char port_B1, char port_B2) : encoder_L(port_L1, port_L2, false), encoder_R(port_R1, port_R2, false), encoder_B(port_B1, port_B2, false) {
             // Set chassis constants
             s_L = distance_L;
             s_R = distance_R;
@@ -109,10 +98,4 @@ class RobotMotion {
         void reset(double set_x = 0.0, double set_y = 0.0, double set_heading = 0.0);
         // Odometry task
         void odometry();
-
-        // Motion methods
-
-        // Point to point
-        void point_to_point(double target_x, double target_y, double target_h, double max_drive_speed, double max_turn_speed);
-
 };

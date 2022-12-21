@@ -15,8 +15,6 @@ class FlywheelController {
 		static double rads(double deg);
 		// Check the sign of a number
 		bool check_sign(double num);
-		// Clip a number to a certain range
-		double clip(double num, double min, double max);
 	public:
 		// Set target RPM
 		void set_target_RPM(int rpm);
@@ -35,5 +33,5 @@ class FlywheelController {
 		// Shoot a number of discs
 		void shoot(int num_discs, int timeout = 3000, int rpm_accuracy = 30);
 		// Flywheel task
-		void flyControl();
+		void fly_control();
 };

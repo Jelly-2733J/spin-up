@@ -99,10 +99,10 @@ void initialize() {
 	pros::delay(250); // Wait for auton selector to finish
 
 	// Create the flywheel control task
-	pros::Task flywheel_control([&]{ flywheel.flyControl(); });
+	pros::Task flywheel_control([&]{ flywheel.fly_control(); });
 
 	// Create the odometry task
-	pros::Task odometry_task([&]{ motion.odometry(); });
+	pros::Task odometry_task([&]{ odom.odometry(); });
 
 }
 

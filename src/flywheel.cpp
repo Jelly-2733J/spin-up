@@ -18,18 +18,6 @@ bool FlywheelController::check_sign(double num) {
 		return false;
 	}
 }
-// Clip a number to a certain range
-double FlywheelController::clip(double num, double max, double min) {
-	if (num < min) {
-		return min;
-	}
-	else if (num > max) {
-		return max;
-	}
-	else {
-		return num;
-	}
-}
 // Set target RPM
 void FlywheelController::set_target_RPM(int rpm) {
 	flywheel_target_RPM_guard.take();
@@ -106,7 +94,7 @@ void FlywheelController::shoot(int num_discs, int timeout, int rpm_accuracy) {
 	}
 }
 // Flywheel task
-void FlywheelController::flyControl() {
+void FlywheelController::fly_control() {
 
 	// t is the last loop timestamp in milliseconds
 	// This is used to ensure consistent loop intervals with pros::Task::delay_until
@@ -158,7 +146,7 @@ void FlywheelController::flyControl() {
 		voltage += gain * error;
 
 		// Keep voltage within bounds
-		voltage = clip(voltage, 12000, -12000);
+		voltage = std::clamp(voltage, -12000.0, 12000.0);
 
 		// Take back variable if there is a switch in the sign of the errors
 		if (check_sign(last_error) != check_sign(error)) {
@@ -168,8 +156,8 @@ void FlywheelController::flyControl() {
 				takeback = ((double) target_RPM() / max_rpm) * 12000;
 			}
 
-			// Perform take back variable calculation and clip voltage to bounds
-			voltage = clip(tbv * (voltage + takeback), 12000, -12000);
+			// Perform take back variable calculation and clamp voltage to bounds
+			voltage = std::clamp(tbv * (voltage + takeback), 12000.0, -12000.0);
 
 			// Set takeback to new voltage
 			takeback = voltage;
