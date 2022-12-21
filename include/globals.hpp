@@ -1,6 +1,6 @@
 #include "api.h"
 #include "flywheel.hpp"
-#include "odometry.hpp"
+#include "robotmotion.hpp"
 #include "lvglautonselector.hpp"
 #include "pros/adi.hpp"
 
@@ -14,7 +14,7 @@
 extern FlywheelController flywheel;
 
 // Odometry
-extern Odometry odom;
+extern RobotMotion motion;
 
 // Auton Selector
 extern LVGLAutonSelector selector;

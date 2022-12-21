@@ -1,37 +1,38 @@
 #include "main.h"
 #include <cmath>
 #include <mutex>
+#include <ratio>
 
 #include "globals.hpp"
-#include "odometry.hpp"
+#include "robotmotion.hpp"
 
 // Convert degrees to radians
-double Odometry::rads(double deg) {
+double RobotMotion::rads(double deg) {
     return deg * PI / 180;
 }
 // Convert radians to degrees
-double Odometry::degs(double rad) {
+double RobotMotion::degs(double rad) {
     return rad * 180 / PI;
 }
 // Convert ticks to inches
-double Odometry::ticks_to_inches(int ticks) {
+double RobotMotion::ticks_to_inches(int ticks) {
     // 360 ticks per revolution
     return (ticks / 360.0) * d * PI;
 }
 // Set the x position
-void Odometry::set_x(double value) {
+void RobotMotion::set_x(double value) {
     x_guard.take();
     x = value;
     x_guard.give();
 }
 // Set the y position
-void Odometry::set_y(double value) {
+void RobotMotion::set_y(double value) {
     y_guard.take();
     y = value;
     y_guard.give();
 }
 // Set the heading
-void Odometry::set_h(double value) {
+void RobotMotion::set_h(double value) {
     if (value >= 2 * PI) {
         value -= 2 * PI;
     } else if (value < 0) {
@@ -42,113 +43,125 @@ void Odometry::set_h(double value) {
     h_guard.give();
 }
 // Set the previous x position
-void Odometry::set_prev_x(double value) {
+void RobotMotion::set_prev_x(double value) {
     prev_x_guard.take();
     prev_x = value;
     prev_x_guard.give();
 }
 // Set the previous y position
-void Odometry::set_prev_y(double value) {
+void RobotMotion::set_prev_y(double value) {
     prev_y_guard.take();
     prev_y = value;
     prev_y_guard.give();
 }
 // Set the previous heading
-void Odometry::set_prev_h(double value) {
+void RobotMotion::set_prev_h(double value) {
     prev_h_guard.take();
     prev_h = value;
     prev_h_guard.give();
 }
 // Set the previous left encoder value
-void Odometry::set_prev_L(int value) {
+void RobotMotion::set_prev_L(int value) {
     prev_L_guard.take();
     prev_L = value;
     prev_L_guard.give();
 }
 // Set the previous right encoder value
-void Odometry::set_prev_R(int value) {
+void RobotMotion::set_prev_R(int value) {
     prev_R_guard.take();
     prev_R = value;
     prev_R_guard.give();
 }
 // Set the previous back encoder value
-void Odometry::set_prev_B(int value) {
+void RobotMotion::set_prev_B(int value) {
     prev_B_guard.take();
     prev_B = value;
     prev_B_guard.give();
 }
 // Get the current x position
-double Odometry::get_x() {
+double RobotMotion::get_x() {
     x_guard.take();
     double to_return = x;
     x_guard.give();
     return to_return;
 }
 // Get the current y position
-double Odometry::get_y() {
+double RobotMotion::get_y() {
     y_guard.take();
     double to_return = y;
     y_guard.give();
     return to_return;
 }
 // Get the current heading in radians
-double Odometry::get_h() {
+double RobotMotion::get_h() {
     h_guard.take();
     double to_return = h;
     h_guard.give();
     return to_return;
 }
 // Get the current heading in degrees
-double Odometry::get_h_deg() {
+double RobotMotion::get_h_deg() {
     h_guard.take();
     double to_return = degs(h);
     h_guard.give();
     return to_return;
 }
 // Get the previous x position
-double Odometry::get_prev_x() {
+double RobotMotion::get_prev_x() {
     prev_x_guard.take();
     double to_return = prev_x;
     prev_x_guard.give();
     return to_return;
 }
 // Get the previous y position
-double Odometry::get_prev_y() {
+double RobotMotion::get_prev_y() {
     prev_y_guard.take();
     double to_return = prev_y;
     prev_y_guard.give();
     return to_return;
 }
 // Get the previous heading
-double Odometry::get_prev_h() {
+double RobotMotion::get_prev_h() {
     prev_h_guard.take();
     double to_return = prev_h;
     prev_h_guard.give();
     return to_return;
 }
 // Get the previous left encoder value
-int Odometry::get_prev_L() {
+int RobotMotion::get_prev_L() {
     prev_L_guard.take();
     int to_return = prev_L;
     prev_L_guard.give();
     return to_return;
 }
 // Get the previous right encoder value
-int Odometry::get_prev_R() {
+int RobotMotion::get_prev_R() {
     prev_R_guard.take();
     int to_return = prev_R;
     prev_R_guard.give();
     return to_return;
 }
 // Get the previous back encoder value
-int Odometry::get_prev_B() {
+int RobotMotion::get_prev_B() {
     prev_B_guard.take();
     int to_return = prev_B;
     prev_B_guard.give();
     return to_return;
 }
+// Clip a number to a certain range
+double RobotMotion::clip(double num, double min, double max) {
+    if (num < min) {
+        return min;
+    }
+    else if (num > max) {
+        return max;
+    }
+    else {
+        return num;
+    }
+}
 // Reset the position and heading
-void Odometry::reset(double reset_x, double reset_y, double reset_heading) {
+void RobotMotion::reset(double reset_x, double reset_y, double reset_heading) {
     set_x(reset_x);
     set_y(reset_y);
     set_h(rads(reset_heading));
@@ -159,7 +172,7 @@ void Odometry::reset(double reset_x, double reset_y, double reset_heading) {
     set_prev_R(0);
     set_prev_B(0);
 }
-void Odometry::odometry() {
+void RobotMotion::odometry() {
     while (true) {
         // Get the current encoder values
         int current_L = encoder_L.get_value();
@@ -220,6 +233,21 @@ void Odometry::odometry() {
 
         // Wait for the next iteration
         pros::delay(10);
-        
     }
+}
+// Point to point
+void RobotMotion::point_to_point(double target_x, double target_y, double target_h, double max_drive_speed, double max_turn_speed) {
+    // Calculate the angle between the robot's current position and the target position
+    double angle = degs(atan2(target_y - get_y(), target_x - get_x()));
+    // Calculate the distance between the robot's current position and the target position
+    double distance = sqrt(pow(target_x - get_x(), 2) + pow(target_y - get_y(), 2));
+
+    chassis.set_turn_pid(90 - angle, max_turn_speed);
+    chassis.wait_drive();
+
+    chassis.set_drive_pid(distance, max_drive_speed);
+    chassis.wait_drive();
+
+    chassis.set_turn_pid(target_h, max_turn_speed);
+    chassis.wait_drive();
 }
