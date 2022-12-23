@@ -37,11 +37,12 @@
 #include "api.h"
 
 /**
- * You should add more #includes here
+ * You should add more #includes    here
  */
 //#include "okapi/api.hpp"
 //#include "pros/api_legacy.h"
 #include "EZ-Template/api.hpp"
+#include "gif-pros/gifclass.hpp"
 
 // More includes here...
 #include "autons.hpp"

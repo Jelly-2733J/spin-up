@@ -107,7 +107,7 @@ class Drive {
   /**
    * Calibrates imu and initializes sd card to curve.
    */
-  void initialize();
+  void initialize(int gif_length, std::string gif_path);
 
   /**
    * Tasks for autonomous.
@@ -475,12 +475,7 @@ class Drive {
    * \param run_loading_animation
    *        bool for running loading animation
    */
-  bool imu_calibrate(bool run_loading_animation = true);
-
-  /**
-   * Loading display while the IMU calibrates.
-   */
-  void imu_loading_display(int iter);
+  bool imu_calibrate(int gif_length, std::string gif_path);
 
   /////
   //

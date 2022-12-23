@@ -255,58 +255,34 @@ bool Drive::left_over_current() { return left_motors.front().is_over_current(); 
 void Drive::reset_gyro(double new_heading) { imu.set_rotation(new_heading); }
 double Drive::get_gyro() { return imu.get_rotation(); }
 
-void Drive::imu_loading_display(int iter) {
-  // If the lcd is already initialized, don't run this function
-  if (pros::lcd::is_initialized()) return;
-
-  // Boarder
-  int boarder = 50;
-
-  // Create the boarder
-  pros::screen::set_pen(COLOR_WHITE);
-  for (int i = 1; i < 3; i++) {
-    pros::screen::draw_rect(boarder + i, boarder + i, 480 - boarder - i, 240 - boarder - i);
-  }
-
-  // While IMU is loading
-  if (iter < 2000) {
-    static int last_x1 = boarder;
-    pros::screen::set_pen(0x00ED1C24);  // Blackout Red
-    int x1 = (iter * ((480 - (boarder * 2)) / 2000.0)) + boarder;
-    pros::screen::fill_rect(last_x1, boarder, x1, 240 - boarder);
-    last_x1 = x1;
-  }
-  // Failsafe time
-  else {
-    static int last_x1 = boarder;
-    pros::screen::set_pen(0x00ED1C24); // Blackout Red
-    int x1 = ((iter - 2000) * ((480 - (boarder * 2)) / 1000.0)) + boarder;
-    pros::screen::fill_rect(last_x1, boarder, x1, 240 - boarder);
-    last_x1 = x1;
-  }
-}
-
-bool Drive::imu_calibrate(bool run_loading_animation) {
+bool Drive::imu_calibrate(int gif_length, std::string gif_path) {
   imu.reset();
   int iter = 0;
+  static Gif gif(const_cast<char*>(gif_path.c_str()), lv_scr_act());
   while (true) {
     iter += util::DELAY_TIME;
-
-    if (run_loading_animation) imu_loading_display(iter);
+    bool imu_calibrated_displayed = false;
+    bool imu_failed_displayed = false;
 
     if (iter >= 2000) {
       if (!(imu.get_status() & pros::c::E_IMU_STATUS_CALIBRATING)) {
-        break;
+        if (!imu_calibrated_displayed) {
+          imu_calibrated_displayed = true;
+          printf("IMU is done calibrating (took %d ms)\n", iter);
+        }
       }
-      if (iter >= 3000) {
-        printf("No IMU plugged in, (took %d ms to realize that)\n", iter);
-        return false;
-      }
+    }
+    if (iter >= gif_length) {
+      gif.clean();
+      break;
+    }
+    if (iter == 3000 && !imu_failed_displayed) {
+      printf("No IMU plugged in, (took %d ms to realize that)\n", iter);
+      imu_failed_displayed = true;
     }
     pros::delay(util::DELAY_TIME);
   }
   master.rumble(".");
-  printf("IMU is done calibrating (took %d ms)\n", iter);
   return true;
 }
 
@@ -321,9 +297,9 @@ void Drive::set_drive_brake(pros::motor_brake_mode_e_t brake_type) {
   }
 }
 
-void Drive::initialize() {
+void Drive::initialize(int gif_length, std::string gif_path) {
   init_curve_sd();
-  imu_calibrate(false); // false because we don't want to run the loading animation
+  imu_calibrate(gif_length, gif_path);
   reset_drive_sensor();
 }
 

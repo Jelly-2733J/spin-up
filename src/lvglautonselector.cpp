@@ -143,8 +143,8 @@ void LVGLAutonSelector::create() {
     lv_btn_set_action(skills, LV_BTN_ACTION_CLICK, btn_click_action);
     lv_btn_set_style(skills, LV_BTN_STYLE_REL, &skillsREL);
     lv_btn_set_style(skills, LV_BTN_STYLE_PR, &skillsPR);
-    lv_obj_set_size(skills, 100, 50);
-    lv_obj_align(skills, NULL, LV_ALIGN_IN_BOTTOM_RIGHT, -115, -10);
+    lv_obj_set_size(skills, 107, 50);
+    lv_obj_align(skills, NULL, LV_ALIGN_IN_BOTTOM_RIGHT, -125, -10);
 
     // Confirmation Button
     confirm = lv_btn_create(lv_scr_act(), NULL);
@@ -152,7 +152,7 @@ void LVGLAutonSelector::create() {
     lv_btn_set_action(confirm, LV_BTN_ACTION_CLICK, btn_click_action);
     lv_btn_set_style(confirm, LV_BTN_STYLE_REL, &confirmREL);
     lv_btn_set_style(confirm, LV_BTN_STYLE_PR, &confirmPR);
-    lv_obj_set_size(confirm, 100, 50);
+    lv_obj_set_size(confirm, 107, 50);
     lv_obj_align(confirm, NULL, LV_ALIGN_IN_BOTTOM_RIGHT, -10, -10);
 
     // Auton Dropdown
@@ -161,7 +161,7 @@ void LVGLAutonSelector::create() {
                                 "         Left\n"
                                 "         Right\n"
                                 "         Solo");
-    lv_obj_align(autonDD, NULL, LV_ALIGN_IN_RIGHT_MID, -10, -38);
+    lv_obj_align(autonDD, NULL, LV_ALIGN_IN_RIGHT_MID, -10, -20);
     lv_obj_set_free_num(autonDD, 3);
     lv_ddlist_set_action(autonDD, ddlist_action);
     lv_ddlist_set_style(autonDD, LV_DDLIST_STYLE_SEL, &styleDD);
