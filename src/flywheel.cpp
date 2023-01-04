@@ -61,6 +61,10 @@ bool FlywheelController::is_full() {
 	full_guard.give();
 	return to_return;
 };
+// Check to see if a disc is properly indexed and ready to shoot
+bool FlywheelController::disc_indexed() {
+	return true;
+};
 // Shoot a number of discs
 void FlywheelController::shoot(int num_discs, int timeout, int rpm_accuracy) {
 	int count = 0;
@@ -68,8 +72,8 @@ void FlywheelController::shoot(int num_discs, int timeout, int rpm_accuracy) {
 	// Shoot number of times specified
 	for (int i = 0; i < num_discs; i++) {
 
-		// Wait for RPM to be within accuracy
-		while (abs(flywheel.target_RPM() - flywheel.RPM()) > rpm_accuracy) {
+		// Wait for RPM to be within accuracy and a disc to be in the proper indexing position
+		while (!(abs(flywheel.target_RPM() - flywheel.RPM()) < rpm_accuracy && flywheel.disc_indexed())) {
 			// If the timeout is reached, exit
 			if (count >= timeout) {
 				intake = 100;

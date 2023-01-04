@@ -101,7 +101,7 @@ void initialize() {
 	pros::Task flywheel_control([&]{ flywheel.fly_control(); });
 
 	// Create the odometry task
-	pros::Task odometry_task([&]{ odom.odometry(); });
+	// pros::Task odometry_task([&]{ odom.odometry(); });
 	
 }
 
