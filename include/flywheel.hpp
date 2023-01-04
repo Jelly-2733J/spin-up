@@ -19,9 +19,9 @@ class FlywheelController {
 		// Set target RPM
 		void set_target_RPM(int rpm);
 		// Read the current RPM
-		int RPM();
+		double RPM();
 		// Read the current target RPM
-		int target_RPM();
+		double target_RPM();
 		// Activate or deactivate the flywheel control task
 		void set_active(bool state);
 		// Check if the flywheel control task is active

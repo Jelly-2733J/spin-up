@@ -21,17 +21,17 @@ bool FlywheelController::check_sign(double num) {
 // Set target RPM
 void FlywheelController::set_target_RPM(int rpm) {
 	flywheel_target_RPM_guard.take();
-	flywheel_target_RPM = rpm;
+	flywheel_target_RPM = (double) rpm;
 	flywheel_target_RPM_guard.give();
 };
 // Read the current RPM
-int FlywheelController::RPM() {
-	return (int) (fly.get_actual_velocity() * 6.0);
+double FlywheelController::RPM() {
+	return fly.get_actual_velocity() * 6.0;
 };
 // Read the current RPM
-int FlywheelController::target_RPM() {
+double FlywheelController::target_RPM() {
 	flywheel_target_RPM_guard.take();
-	int to_return = flywheel_target_RPM;
+	double to_return = flywheel_target_RPM;
 	flywheel_target_RPM_guard.give();
 	return to_return;
 };
@@ -177,15 +177,15 @@ void FlywheelController::fly_control() {
 			fly.move_voltage(voltage);
 		}
 
-		// printf("%.2f %d %d\n", voltage, RPM(), target_RPM());
+		// printf("%.2f %d %d\n", voltage, (int) RPM(), (int) target_RPM());
 
 		if (count == 300) {
 			master.print(2, 0, "TEMP: %d C", (int) fly.get_temperature());
 			count = 0;
 		} else if (count == 200) {
-			master.print(1, 0, "TGT: %d", target_RPM());
+			master.print(1, 0, "TGT: %d", (int) target_RPM());
 		} else if (count == 100) {
-			master.print(0, 0, "RPM: %d", RPM());
+			master.print(0, 0, "RPM: %d", (int) RPM());
 		}
 		
 		count += 10;
