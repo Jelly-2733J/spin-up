@@ -21,6 +21,7 @@ extern LVGLAutonSelector selector;
 // Ports
 extern pros::Motor intake;				// 16
 extern pros::Motor fly;				    // 15
+extern pros::Optical optical;           // 10
 
 // 3-Wire
 extern pros::ADIDigitalOut endgame;     // A

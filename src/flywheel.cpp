@@ -63,7 +63,7 @@ bool FlywheelController::is_full() {
 };
 // Check to see if a disc is properly indexed and ready to shoot
 bool FlywheelController::disc_indexed() {
-	return true;
+	return optical.get_proximity() > 200;
 };
 // Shoot a number of discs
 void FlywheelController::shoot(int num_discs, int timeout, int rpm_accuracy) {
@@ -139,44 +139,44 @@ void FlywheelController::fly_control() {
 			// Continue to next loop, skipping take back variable calculation and voltage control
 			continue;
 		}
-
-		// Calculate error
-		error = target_RPM() - RPM();
-
-		// Calculate variable take back
-		tbv = 0.5 - (2250.0 - target_RPM()) / 20000.0;
-
-		// Integrate
-		voltage += gain * error;
-
-		// Keep voltage within bounds
-		voltage = std::clamp(voltage, -12000.0, 12000.0);
-
-		// Take back variable if there is a switch in the sign of the errors
-		if (check_sign(last_error) != check_sign(error)) {
-			// On first error cross, set takeback to theoretical voltage estimate to reach a quicker stable state
-			if (first_cross == false) {
-				first_cross = true;
-				takeback = ((double) target_RPM() / max_rpm) * 12000;
-			}
-
-			// Perform take back variable calculation and clamp voltage to bounds
-			voltage = std::clamp(tbv * (voltage + takeback), 12000.0, -12000.0);
-
-			// Set takeback to new voltage
-			takeback = voltage;
-			
-			// printf("     TBV %.2f     \n", tbv);
-		}
-
-		// Set last_error to current error for next loop
-		last_error = error;
 		
 		if (is_full()) {
 			// If we're shooting, we want full power for best recovery
 			fly.move_voltage(12000);
 		}
 		else {
+			// Calculate error
+			error = target_RPM() - RPM();
+
+			// Calculate variable take back
+			tbv = 0.5 - (2250.0 - target_RPM()) / 20000.0;
+
+			// Integrate
+			voltage += gain * error;
+
+			// Keep voltage within bounds
+			voltage = std::clamp(voltage, -12000.0, 12000.0);
+
+			// Take back variable if there is a switch in the sign of the errors
+			if (check_sign(last_error) != check_sign(error)) {
+				// On first error cross, set takeback to theoretical voltage estimate to reach a quicker stable state
+				if (first_cross == false) {
+					first_cross = true;
+					takeback = ((double) target_RPM() / max_rpm) * 12000;
+				}
+
+				// Perform take back variable calculation and clamp voltage to bounds
+				voltage = std::clamp(tbv * (voltage + takeback), -12000.0, 12000.0);
+
+				// Set takeback to new voltage
+				takeback = voltage;
+				
+				// printf("     TBV %.2f     \n", tbv);
+			}
+
+			// Set last_error to current error for next loop
+			last_error = error;
+
 			// When we're not shooting, we want to maintain a stable state
 			fly.move_voltage(voltage);
 		}

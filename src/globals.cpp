@@ -1,5 +1,6 @@
 #include "api.h"
 #include "globals.hpp"
+#include "pros/optical.hpp"
 #include <strings.h>
 
 // Classes
@@ -14,8 +15,9 @@ Odometry odom(1.0, 1.0, 1.0, 2.75, 'A', 'B', 'C', 'D', 'E', 'F');
 LVGLAutonSelector selector;
 
 // Ports
-pros::Motor intake (16, pros::E_MOTOR_GEARSET_06, true, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor intake (16, pros::E_MOTOR_GEARSET_06, false, pros::E_MOTOR_ENCODER_DEGREES);
 pros::Motor fly (15, pros::E_MOTOR_GEARSET_06, true, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Optical optical (10);
 
 // 3-Wire
 pros::ADIDigitalOut endgame ({ 17, 'A' }, false);
