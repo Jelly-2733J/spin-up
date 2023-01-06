@@ -11,6 +11,8 @@ class FlywheelController {
 		pros::Mutex active_guard;
 		bool full = false;
 		pros::Mutex full_guard;
+		bool disc_loads = false;
+		pros::Mutex disc_loads_guard;
 		// Convert degrees to radians
 		static double rads(double deg);
 		// Check the sign of a number
@@ -30,6 +32,10 @@ class FlywheelController {
 		void full_voltage(bool state);
 		// Check if set to full voltage
 		bool is_full();
+		// Toggle matchloads
+		void set_matchloads(bool state);
+		// Check if matchloads is active
+		bool is_matchloads();
 		// Check to see if a disc is properly indexed and ready to shoot
 		bool disc_indexed();
 		// Shoot a number of discs

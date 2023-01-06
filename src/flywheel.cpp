@@ -61,6 +61,19 @@ bool FlywheelController::is_full() {
 	full_guard.give();
 	return to_return;
 };
+// Toggle matchloads
+void FlywheelController::set_matchloads(bool state) {
+	disc_loads_guard.take();
+	disc_loads = state;
+	disc_loads_guard.give();
+};
+// Check if matchloads is active
+bool FlywheelController::is_matchloads() {
+	disc_loads_guard.take();
+	bool to_return = disc_loads;
+	disc_loads_guard.give();
+	return to_return;
+};
 // Check to see if a disc is properly indexed and ready to shoot
 bool FlywheelController::disc_indexed() {
 	return optical.get_proximity() > 200;
@@ -105,7 +118,8 @@ void FlywheelController::matchloads() {
 	uint32_t t = pros::millis();
 
 	while (true) {
-		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_B)) {
+		
+		if (flywheel.is_matchloads() && master.get_digital(pros::E_CONTROLLER_DIGITAL_B)) {
 
 			bool shoot = true;
 
