@@ -67,7 +67,10 @@ bool FlywheelController::disc_indexed() {
 };
 // Shoot a number of discs
 void FlywheelController::shoot(int num_discs, int timeout, int rpm_accuracy) {
+	
 	int count = 0;
+	
+	intake = 0;
 
 	// Shoot number of times specified
 	for (int i = 0; i < num_discs; i++) {
@@ -76,7 +79,6 @@ void FlywheelController::shoot(int num_discs, int timeout, int rpm_accuracy) {
 		while (!(abs(flywheel.target_RPM() - flywheel.RPM()) < rpm_accuracy && flywheel.disc_indexed())) {
 			// If the timeout is reached, exit
 			if (count >= timeout) {
-				intake = 100;
 				return;
 			}
 			// If flywheel RPM is above the target, set voltage to 0
@@ -87,14 +89,51 @@ void FlywheelController::shoot(int num_discs, int timeout, int rpm_accuracy) {
 			pros::delay(10);
 		}
 
-		intake = 0;
-
 		// Fire disc
 		fire();
 
-		// Wait 500 ms for next disc to fall into proper indexing position
+		// Wait at least 500 ms for next disc to fall into proper indexing position
 		pros::delay(500);
 
+	}
+}
+// Matchloads task
+void FlywheelController::matchloads() {
+
+	// t is the last loop timestamp in milliseconds
+	// This is used to ensure consistent loop intervals with pros::Task::delay_until
+	uint32_t t = pros::millis();
+
+	while (true) {
+		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_B)) {
+
+			bool shoot = true;
+
+			intake = 0;
+
+			// Wait for RPM to be within accuracy and a disc to be in the proper indexing position
+			while (!(abs(flywheel.target_RPM() - flywheel.RPM()) < 30 && flywheel.disc_indexed())) {
+				// If B is no longer pressed, exit
+				if (!master.get_digital(pros::E_CONTROLLER_DIGITAL_B)) {
+					shoot = false;
+					break;
+				}
+				// If flywheel RPM is above the target, set voltage to 0
+				if (flywheel.RPM() > flywheel.target_RPM()) {
+					fly.move_voltage(0);
+				}
+				pros::delay(10);
+			}
+
+			// Fire disc
+			if (shoot) {
+				fire();
+			}
+
+			// Wait at least 500 ms for next disc to fall into proper indexing position
+			pros::delay(500);
+		}
+		pros::Task::delay_until(&t, 10);
 	}
 }
 // Flywheel task

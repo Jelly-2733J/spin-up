@@ -100,6 +100,9 @@ void initialize() {
 	// Create the flywheel control task
 	pros::Task flywheel_control([&]{ flywheel.fly_control(); });
 
+	// Create the matchloads task
+	pros::Task matchloads_task([&]{ flywheel.matchloads(); });
+
 	// Create the odometry task
 	// pros::Task odometry_task([&]{ odom.odometry(); });
 	
