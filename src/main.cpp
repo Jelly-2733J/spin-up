@@ -12,7 +12,7 @@ Drive chassis (
 
 	// Right Chassis Ports (negative port will reverse it!)
 	//   the first port is the sensored port (when trackers are not used!)
-	,{11, 12, 13}
+	,{11, 2, 13}
 
 	// IMU Port
 	,14
@@ -192,7 +192,7 @@ void opcontrol() {
 	uint32_t driver_start = pros::millis();
 
 	while (true) {
-		
+
 		chassis.arcade_standard(ez::SPLIT); // Split Arcade (left stick controls forward/backward, right stick controls turning)
 
 		// Endgame
@@ -214,16 +214,16 @@ void opcontrol() {
 		}
 
 		// Intake controls (R1 + R2)
-		// R1 is intake, R2 is outtake
+		// R1 is intake, R2 is outtake (pneumatic fire)
 		if (new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
 			flywheel.full_voltage(false);
 			pressure_bar.set_value(false);
 			intake = 100; // Intake at full speed
 		}
-		else if (new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+		else if (new_press && master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R2)) {
 			flywheel.full_voltage(true);
 			pressure_bar.set_value(true);
-			intake = -100; // Outtake at full speed
+			fire();
 		}
 		else if (!master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) && !master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
 			flywheel.full_voltage(false);
@@ -242,9 +242,9 @@ void opcontrol() {
 			blooper.set_value(blooper_state);
 		}
 
-		// Pneumatic shoot (L2)
-		if (new_press && master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) {
-			fire();
+		// Outtake (L2)
+		if (new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
+			intake = -100; // Outtake at full speed
 		}
 
 		// Toggle matchloads RPM (Y)
