@@ -76,7 +76,7 @@ bool FlywheelController::is_matchloads() {
 };
 // Check to see if a disc is properly indexed and ready to shoot
 bool FlywheelController::disc_indexed() {
-	return optical.get_proximity() > 200;
+	return optical.get_proximity() > 235;
 };
 // Shoot a number of discs
 void FlywheelController::shoot(int num_discs, int timeout, int rpm_accuracy) {
