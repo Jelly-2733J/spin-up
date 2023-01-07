@@ -349,7 +349,7 @@ void auton_skills() {
 	chassis.set_drive_pid(44, DRIVE_SPEED, true);
 	chassis.wait_drive();
 
-	flywheel.shoot(3,2000);
+	flywheel.shoot(3, 2000);
 
 	intake = -100;
 

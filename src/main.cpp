@@ -177,12 +177,12 @@ void opcontrol() {
 	// Set blooper to up
 	blooper.set_value(true);
 
-	// 2700 RPM is the default flywheel speed
+	// 2250 RPM is the default flywheel speed
 	// It is optimal for ripple shots right at the goal
 	flywheel.set_target_RPM(2250);
 
 	chassis.set_drive_brake(pros::E_MOTOR_BRAKE_COAST);
-	chassis.set_active_brake(0.0); // Sets the active brake kP. We recommend 0.1.
+	chassis.set_active_brake(0.0); // Sets the active brake kP to 0.0.  This disables active braking.
 
 	bool endgame_state = false;
 	bool blooper_state = true;
@@ -192,7 +192,7 @@ void opcontrol() {
 	uint32_t driver_start = pros::millis();
 
 	while (true) {
-		//chassis.tank();
+		
 		chassis.arcade_standard(ez::SPLIT); // Split Arcade (left stick controls forward/backward, right stick controls turning)
 
 		// Endgame
@@ -249,8 +249,8 @@ void opcontrol() {
 
 		// Toggle matchloads RPM (Y)
 		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
-			if (flywheel.target_RPM() != 2400.0) {
-				flywheel.set_target_RPM(2400);
+			if (flywheel.target_RPM() != 2300.0) {
+				flywheel.set_target_RPM(2300);
 			}
 			else {
 				flywheel.set_target_RPM(2250);
