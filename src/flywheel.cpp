@@ -142,10 +142,12 @@ void FlywheelController::matchloads() {
 			// Fire disc
 			if (shoot) {
 				fire();
+				intake = -100;
+				// Wait at least 500 ms for next disc to fall into proper indexing position
+				pros::delay(500);
+				intake = 0;
 			}
 
-			// Wait at least 500 ms for next disc to fall into proper indexing position
-			pros::delay(500);
 		}
 		pros::Task::delay_until(&t, 10);
 	}
