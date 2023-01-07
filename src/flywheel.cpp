@@ -121,6 +121,8 @@ void FlywheelController::matchloads() {
 		
 		if (flywheel.is_matchloads() && master.get_digital(pros::E_CONTROLLER_DIGITAL_B)) {
 
+			flywheel.set_target_RPM(2400);
+
 			bool shoot = true;
 
 			intake = 0;
