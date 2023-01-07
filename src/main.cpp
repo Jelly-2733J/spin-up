@@ -1,6 +1,7 @@
 #include "main.h"
 #include "EZ-Template/sdcard.hpp"
 #include "globals.hpp"
+#include "pros/misc.h"
 #include "pros/screen.hpp"
 
 // Chassis constructor
@@ -229,18 +230,6 @@ void opcontrol() {
 			intake = 0;
 		}
 
-		// Pure intake controls (L1 + L2)
-		// L1 is intake, L2 is outtake
-		if (new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
-			intake = 100; // Intake at full speed
-		}
-		else if (new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
-			intake = -100; // Outtake at full speed
-		}
-		else if (!master.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && !master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
-			intake = 0;
-		}
-
 		// Toggle flywheel (Left)
 		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)) {
 			flywheel.set_active(!flywheel.is_active());
@@ -253,8 +242,8 @@ void opcontrol() {
 			blooper.set_value(blooper_state);
 		}
 
-		// Pneumatic shoot (B)
-		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {
+		// Pneumatic shoot (L2)
+		if (new_press && master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) {
 			fire();
 		}
 
