@@ -342,7 +342,7 @@ void auton_skills() {
 	chassis.set_drive_pid(44, DRIVE_SPEED, true);
 	chassis.wait_drive();
 
-	ripple();
+	flywheel.shoot(3, 2000);
 
 	intake = -100;
 
@@ -441,7 +441,7 @@ void auton_skills() {
 	chassis.set_drive_pid(44, DRIVE_SPEED, true);
 	chassis.wait_drive();
 	
-	ripple();
+	flywheel.shoot(3, 2000);
 
 	intake = -100;
 
@@ -499,7 +499,7 @@ void auton_skills() {
 	chassis.set_drive_pid(32, DRIVE_SPEED, true);
 	chassis.wait_drive();
 
-	ripple();
+	flywheel.shoot(3, 2000);
 
 	intake = -100;
 
@@ -525,7 +525,7 @@ void auton_skills() {
 	chassis.set_drive_pid(36, DRIVE_SPEED, true);
 	chassis.wait_drive();
 
-	ripple();
+	flywheel.shoot(3, 2000);
 
 	chassis.set_turn_pid(-188, TURN_SPEED);
 	chassis.wait_drive();
