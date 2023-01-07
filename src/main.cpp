@@ -247,6 +247,16 @@ void opcontrol() {
 			fire();
 		}
 
+		// Toggle matchloads RPM (Y)
+		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
+			if (flywheel.target_RPM() != 2400.0) {
+				flywheel.set_target_RPM(2400);
+			}
+			else {
+				flywheel.set_target_RPM(2250);
+			}
+		}
+
 		pros::delay(ez::util::DELAY_TIME); // Used for timing calculations and reasonable loop speeds
 
 	}
