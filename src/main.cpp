@@ -101,9 +101,6 @@ void initialize() {
 	// Create the flywheel control task
 	pros::Task flywheel_control([&]{ flywheel.fly_control(); });
 
-	// Create the matchloads task
-	pros::Task matchloads_task([&]{ flywheel.matchloads(); });
-
 	// Create the odometry task
 	// pros::Task odometry_task([&]{ odom.odometry(); });
 	
@@ -142,7 +139,6 @@ void competition_initialize() {}
  * from where it left off.
  */
 void autonomous() {
-	flywheel.set_matchloads(false); // Disable driver matchloads during autonomous
 
 	chassis.reset_pid_targets(); // Resets PID targets to 0
 	chassis.reset_gyro(); // Reset gyro position to 0
@@ -170,9 +166,6 @@ void opcontrol() {
 
 	// Activate flywheel
 	flywheel.set_active(true);
-
-	// Enable matchloads
-	flywheel.set_matchloads(true);
 
 	// Set blooper to up
 	blooper.set_value(true);
@@ -214,19 +207,31 @@ void opcontrol() {
 		}
 
 		// Intake controls (R1 + R2)
-		// R1 is intake, R2 is outtake (pneumatic fire)
+		// R1 is intake, R2 is outtake
 		if (new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
 			flywheel.full_voltage(false);
 			pressure_bar.set_value(false);
 			intake = 100; // Intake at full speed
 		}
-		else if (new_press && master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R2)) {
+		else if (new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
 			flywheel.full_voltage(true);
 			pressure_bar.set_value(true);
-			fire();
+			intake = -100; // Outtake at full speed
 		}
 		else if (!master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) && !master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
 			flywheel.full_voltage(false);
+			intake = 0;
+		}
+
+		// Pure intake controls (L1 + L2)
+		// L1 is intake, L2 is outtake
+		if (new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
+			intake = 100; // Intake at full speed
+		}
+		else if (new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
+			intake = -100; // Outtake at full speed
+		}
+		else if (!master.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && !master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
 			intake = 0;
 		}
 
@@ -242,19 +247,9 @@ void opcontrol() {
 			blooper.set_value(blooper_state);
 		}
 
-		// Outtake (L2)
-		if (new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
-			intake = -100; // Outtake at full speed
-		}
-
-		// Toggle matchloads RPM (Y)
-		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
-			if (flywheel.target_RPM() != 2300.0) {
-				flywheel.set_target_RPM(2300);
-			}
-			else {
-				flywheel.set_target_RPM(2250);
-			}
+		// Pneumatic shoot (B)
+		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {
+			fire();
 		}
 
 		pros::delay(ez::util::DELAY_TIME); // Used for timing calculations and reasonable loop speeds

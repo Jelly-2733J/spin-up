@@ -259,11 +259,10 @@ bool Drive::imu_calibrate(int gif_length, std::string gif_path) {
   imu.reset();
   int iter = 0;
   static Gif gif(const_cast<char*>(gif_path.c_str()), lv_scr_act());
+  bool imu_calibrated_displayed = false;
+  bool imu_failed_displayed = false;
   while (true) {
     iter += util::DELAY_TIME;
-    bool imu_calibrated_displayed = false;
-    bool imu_failed_displayed = false;
-
     if (iter >= 2000) {
       if (!(imu.get_status() & pros::c::E_IMU_STATUS_CALIBRATING)) {
         if (!imu_calibrated_displayed) {
