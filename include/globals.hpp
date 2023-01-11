@@ -1,7 +1,6 @@
 #include "api.h"
 #include "flywheel.hpp"
 #include "odometry.hpp"
-#include "lvglautonselector.hpp"
 
 #pragma once
 
@@ -14,9 +13,6 @@ extern FlywheelController flywheel;
 
 // Odometry
 extern Odometry odom;
-
-// Auton Selector
-extern LVGLAutonSelector selector;
 
 // Ports
 extern pros::Motor intake;				// 16

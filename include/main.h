@@ -46,7 +46,6 @@
 #include "autons.hpp"
 #include "flywheel.hpp"
 #include "odometry.hpp"
-#include "lvglautonselector.hpp"
 #include "globals.hpp"
 
 // More includes here...

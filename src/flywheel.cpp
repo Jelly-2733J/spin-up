@@ -76,7 +76,8 @@ bool FlywheelController::is_matchloads() {
 };
 // Check to see if a disc is properly indexed and ready to shoot
 bool FlywheelController::disc_indexed() {
-	return optical.get_proximity() > 235;
+	// return optical.get_proximity() > 235;
+	return true;
 };
 // Shoot a number of discs
 void FlywheelController::shoot(int num_discs, int timeout, int rpm_accuracy) {
@@ -89,9 +90,10 @@ void FlywheelController::shoot(int num_discs, int timeout, int rpm_accuracy) {
 	for (int i = 0; i < num_discs; i++) {
 
 		// Wait for RPM to be within accuracy and a disc to be in the proper indexing position
-		while (!(abs(flywheel.target_RPM() - flywheel.RPM()) < rpm_accuracy && flywheel.disc_indexed())) {
+		while (!(abs(flywheel.target_RPM() - flywheel.RPM()) < rpm_accuracy)) {
 			// If the timeout is reached, exit
 			if (count >= timeout) {
+				fire();
 				return;
 			}
 			// If flywheel RPM is above the target, set voltage to 0
@@ -105,8 +107,8 @@ void FlywheelController::shoot(int num_discs, int timeout, int rpm_accuracy) {
 		// Fire disc
 		fire();
 
-		// Wait at least 500 ms for next disc to fall into proper indexing position
-		pros::delay(500);
+		// Wait at least 750 ms for next disc to fall into proper indexing position
+		pros::delay(750);
 
 	}
 }

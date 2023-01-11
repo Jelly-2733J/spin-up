@@ -92,18 +92,18 @@ void no_auton() {
 void right_winpoint() {
 
 	flywheel.set_active(true);
-	flywheel.set_target_RPM(2610);
-/*
-	chassis.set_drive_pid(-24, DRIVE_SPEED, true);
-	chassis.wait_drive();
+	flywheel.set_target_RPM(2660);
 
+	chassis.set_drive_pid(-3, DRIVE_SPEED, true);
+	chassis.wait_drive();
+/*
 	chassis.set_turn_pid(90, TURN_SPEED);
 	chassis.wait_drive();
 */
     chassis.set_swing_pid(ez::RIGHT_SWING, 90, DRIVE_SPEED);
 	chassis.wait_drive();
 
-	getRoller(-2, 190);
+	getRoller(-4, 190);
 
 	chassis.set_drive_pid(11, DRIVE_SPEED);
 	chassis.wait_drive();
@@ -119,13 +119,19 @@ void right_winpoint() {
 	chassis.set_turn_pid(112, TURN_SPEED);
 	chassis.wait_drive();
 
-	intake = 0;
+	chassis.set_drive_pid(6, DRIVE_SPEED);
+	chassis.wait_drive();
 
 	pros::delay(750);
 
-	flywheel.shoot(3, 3500, 10);
+	intake = 0;
+
+	flywheel.shoot(2, 3500, 10);
 
 	flywheel.set_target_RPM(2660);
+
+	chassis.set_drive_pid(-6, DRIVE_SPEED);
+	chassis.wait_drive();
 
 	intake = 100;
 
@@ -139,6 +145,9 @@ void right_winpoint() {
 	chassis.wait_drive();
 
 	chassis.set_turn_pid(112, TURN_SPEED);
+	chassis.wait_drive();
+
+	chassis.set_drive_pid(6, DRIVE_SPEED);
 	chassis.wait_drive();
 
 	intake = 0;

@@ -81,8 +81,8 @@ void initialize() {
   });
 
   // Initialize chassis and auton selector
-  chassis.initialize();
-  ez::as::initialize();
+  chassis.initialize(3900, "/usd/loading_gif.gif");
+  ez::as::initialize("/usd/menu_gif.gif", "/usd/gif.gif");
 }
 
 

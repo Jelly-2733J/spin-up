@@ -171,8 +171,6 @@ void Drive::set_defaults() {
   toggle_auto_drive(true);
   toggle_auto_print(true);
 
-  // Disables limit switch for auto selector
-  as::limit_switch_lcd_initialize(nullptr, nullptr);
 }
 
 double Drive::get_tick_per_inch() {
@@ -259,11 +257,10 @@ bool Drive::imu_calibrate(int gif_length, std::string gif_path) {
   imu.reset();
   int iter = 0;
   static Gif gif(const_cast<char*>(gif_path.c_str()), lv_scr_act());
+  bool imu_calibrated_displayed = false;
+  bool imu_failed_displayed = false;
   while (true) {
     iter += util::DELAY_TIME;
-    bool imu_calibrated_displayed = false;
-    bool imu_failed_displayed = false;
-
     if (iter >= 2000) {
       if (!(imu.get_status() & pros::c::E_IMU_STATUS_CALIBRATING)) {
         if (!imu_calibrated_displayed) {
@@ -272,13 +269,13 @@ bool Drive::imu_calibrate(int gif_length, std::string gif_path) {
         }
       }
     }
-    if (iter >= gif_length) {
-      gif.clean();
-      break;
-    }
     if (iter == 3000 && !imu_failed_displayed) {
       printf("No IMU plugged in, (took %d ms to realize that)\n", iter);
       imu_failed_displayed = true;
+    }
+    if (iter >= gif_length) {
+      gif.clean();
+      break;
     }
     pros::delay(util::DELAY_TIME);
   }

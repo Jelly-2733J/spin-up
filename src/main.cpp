@@ -86,10 +86,6 @@ void initialize() {
 	chassis.initialize(3900, "/usd/rengoku.gif");
 	ez::as::initialize();
 
-	// Start the auton selector
-	// This task is blocking and will not return until the user selects an auton
-	selector.create();
-
 	// Set intake brake mode to hold to improve roller consistency
 	intake.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 
@@ -150,7 +146,7 @@ void autonomous() {
 	chassis.set_drive_brake(pros::E_MOTOR_BRAKE_HOLD); // Set motors to hold.  This helps autonomous consistency.
 	chassis.set_active_brake(0.1); // Sets the active brake kP. We recommend 0.1.
 
-	ez::as::auton_selector.call_auton(selector.selectedAuton()); // Calls selected auton from autonomous selector.
+	ez::as::auton_selector.call_selected_auton(); // Calls selected auton from autonomous selector.
 }
 
 /**
@@ -194,6 +190,7 @@ void opcontrol() {
 	while (true) {
 
 		chassis.arcade_standard(ez::SPLIT); // Split Arcade (left stick controls forward/backward, right stick controls turning)
+		// chassis.tank();
 
 		// Endgame
 		if (new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) && master.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && master.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
