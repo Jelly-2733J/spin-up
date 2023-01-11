@@ -61,19 +61,6 @@ bool FlywheelController::is_full() {
 	full_guard.give();
 	return to_return;
 };
-// Toggle matchloads
-void FlywheelController::set_matchloads(bool state) {
-	disc_loads_guard.take();
-	disc_loads = state;
-	disc_loads_guard.give();
-};
-// Check if matchloads is active
-bool FlywheelController::is_matchloads() {
-	disc_loads_guard.take();
-	bool to_return = disc_loads;
-	disc_loads_guard.give();
-	return to_return;
-};
 // Check to see if a disc is properly indexed and ready to shoot
 bool FlywheelController::disc_indexed() {
 	// return optical.get_proximity() > 235;
@@ -110,50 +97,6 @@ void FlywheelController::shoot(int num_discs, int timeout, int rpm_accuracy) {
 		// Wait at least 750 ms for next disc to fall into proper indexing position
 		pros::delay(750);
 
-	}
-}
-// Matchloads task
-void FlywheelController::matchloads() {
-
-	// t is the last loop timestamp in milliseconds
-	// This is used to ensure consistent loop intervals with pros::Task::delay_until
-	uint32_t t = pros::millis();
-
-	while (true) {
-		
-		if (flywheel.is_matchloads() && master.get_digital(pros::E_CONTROLLER_DIGITAL_B)) {
-
-			flywheel.set_target_RPM(2300);
-
-			bool shoot = true;
-
-			intake = 0;
-
-			// Wait for RPM to be within accuracy and a disc to be in the proper indexing position
-			while (!(abs(flywheel.target_RPM() - flywheel.RPM()) < 30 && flywheel.disc_indexed())) {
-				// If B is no longer pressed, exit
-				if (!master.get_digital(pros::E_CONTROLLER_DIGITAL_B)) {
-					shoot = false;
-					break;
-				}
-				// If flywheel RPM is above the target, set voltage to 0
-				if (flywheel.RPM() > flywheel.target_RPM()) {
-					fly.move_voltage(0);
-				}
-				pros::delay(10);
-			}
-
-			// Fire disc
-			if (shoot) {
-				fire();
-				intake = -100;
-				// Wait at least 500 ms for next disc to fall into proper indexing position
-				pros::delay(500);
-				intake = 0;
-			}
-
-		}
-		pros::Task::delay_until(&t, 10);
 	}
 }
 // Flywheel task
