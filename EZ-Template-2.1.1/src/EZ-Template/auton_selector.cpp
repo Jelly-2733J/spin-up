@@ -87,10 +87,6 @@ lv_res_t btn_click_action(lv_obj_t * btn) {
   lv_obj_set_hidden(skillsLabel, true);
   lv_obj_set_hidden(confirmLabel, true);
 
-  lv_label_set_text(autonLabel, std::to_string(auton).c_str());
-  lv_obj_align(autonLabel, NULL, LV_ALIGN_IN_BOTTOM_RIGHT, 0, 0);
-  lv_obj_set_hidden(autonLabel, false);
-
   printf("Auton: %d\n", auton);
 
   return LV_RES_OK;
@@ -205,16 +201,9 @@ void AutonSelector::create() {
   confirmLabel = lv_label_create(confirm, NULL);
   lv_label_set_text(confirmLabel, "Confirm");
 
-  autonLabel = lv_label_create(lv_scr_act(), NULL);
-  lv_obj_set_hidden(autonLabel, true);
-
   while (auton == -1) {
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) && master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
       auton = 0;
-      
-      lv_label_set_text(autonLabel, std::to_string(auton).c_str());
-      lv_obj_align(autonLabel, NULL, LV_ALIGN_IN_BOTTOM_RIGHT, 0, 0);
-      lv_obj_set_hidden(autonLabel, false);
 
       printf("Auton: %d\n", auton);
       break;
@@ -242,6 +231,13 @@ void AutonSelector::end() {
   lv_obj_align(gif_obj, NULL, LV_ALIGN_CENTER, 0, 0);
 
   static Gif gif(const_cast<char*>(gif_path.c_str()), gif_obj);
+
+  autonLabel = lv_label_create(lv_scr_act(), NULL);
+  lv_obj_set_hidden(autonLabel, true);
+
+  lv_label_set_text(autonLabel, std::to_string(auton).c_str());
+  lv_obj_align(autonLabel, NULL, LV_ALIGN_IN_BOTTOM_RIGHT, 0, 0);
+  lv_obj_set_hidden(autonLabel, false);
 
   selected_auton = auton;
 }

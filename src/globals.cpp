@@ -28,8 +28,6 @@ pros::Controller master(pros::E_CONTROLLER_MASTER);
 // Functions
 void fire() {
     indexer.set_value(true);
-    intake = -100;
     pros::delay(200);
     indexer.set_value(false);
-    intake = 0;
 }

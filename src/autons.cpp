@@ -70,7 +70,7 @@ void modified_exit_condition() {
 	chassis.set_exit_condition(chassis.drive_exit, 80, 50, 300, 150, 500, 500);
 }
 
-void getRoller(int distance, int time) {
+void getRoller(double distance, int time) {
 	chassis.set_drive_pid(distance, DRIVE_SPEED);
 	chassis.wait_drive();
 	intake = 100;	 
@@ -92,9 +92,9 @@ void no_auton() {
 void right_winpoint() {
 
 	flywheel.set_active(true);
-	flywheel.set_target_RPM(2660);
+	flywheel.set_target_RPM(2750);
 
-	chassis.set_drive_pid(-3, DRIVE_SPEED, true);
+	chassis.set_drive_pid(-5, DRIVE_SPEED, true);
 	chassis.wait_drive();
 /*
 	chassis.set_turn_pid(90, TURN_SPEED);
@@ -116,43 +116,58 @@ void right_winpoint() {
 	chassis.set_drive_pid(20, DRIVE_SPEED, true);
 	chassis.wait_drive();
 
-	chassis.set_turn_pid(112, TURN_SPEED);
+	chassis.set_turn_pid(110.5, TURN_SPEED);
 	chassis.wait_drive();
-
-	chassis.set_drive_pid(6, DRIVE_SPEED);
-	chassis.wait_drive();
-
-	pros::delay(750);
 
 	intake = 0;
 
-	flywheel.shoot(2, 3500, 10);
+	flywheel.shoot(3, 2000);
 
-	flywheel.set_target_RPM(2660);
+	flywheel.set_target_RPM(2680);
 
-	chassis.set_drive_pid(-6, DRIVE_SPEED);
+	intake = 100;
+
+	chassis.set_drive_pid(10, DRIVE_SPEED);
+	chassis.wait_drive();
+
+	chassis.set_drive_pid(-10, DRIVE_SPEED);
 	chassis.wait_drive();
 
 	intake = 100;
 
+	pressure_bar.set_value(true);
+
 	chassis.set_turn_pid(45, TURN_SPEED);
 	chassis.wait_drive();
 
-	chassis.set_drive_pid(36, DRIVE_SPEED, true);
+	pressure_bar.set_value(false);
+
+	chassis.set_drive_pid(34, DRIVE_SPEED, true);
 	chassis.wait_drive();
 
-	chassis.set_drive_pid(-36, DRIVE_SPEED, true);
+	chassis.set_drive_pid(-17, DRIVE_SPEED, true);
 	chassis.wait_drive();
 
-	chassis.set_turn_pid(112, TURN_SPEED);
-	chassis.wait_drive();
-
-	chassis.set_drive_pid(6, DRIVE_SPEED);
+	chassis.set_turn_pid(118.5, TURN_SPEED);
 	chassis.wait_drive();
 
 	intake = 0;
 
-	flywheel.shoot(3, 10000);
+	flywheel.shoot(1, 1000);
+
+	flywheel.set_target_RPM(2660);
+
+	intake = 100;
+
+	chassis.set_drive_pid(10, DRIVE_SPEED);
+	chassis.wait_drive();
+
+	pros::delay(750);
+
+	flywheel.shoot(3, 2000);
+
+	chassis.set_swing_pid(ez::RIGHT_SWING, 190, DRIVE_SPEED);
+	chassis.wait_drive();
 
 }
 
@@ -321,7 +336,7 @@ void auton_skills() {
 	
 	flywheel.set_active(true);
 	flywheel.set_target_RPM(2350);
-//	blooper.set_value(true);
+	blooper.set_value(true);
 
 	getRoller(-3, 380);
 
@@ -353,22 +368,23 @@ void auton_skills() {
 	chassis.set_turn_pid(2, TURN_SPEED);
 	chassis.wait_drive();
 
-	//pressure_bar.set_value(true);
+	pressure_bar.set_value(true);
 
 	chassis.set_drive_pid(44, DRIVE_SPEED, true);
 	chassis.wait_drive();
 
-	flywheel.shoot(3, 2000);
+	ripple();
+
+	flywheel.set_target_RPM(2400);
+
+	pressure_bar.set_value(false);
 
 	intake = -100;
-
-	flywheel.set_target_RPM(2500);
 
 	chassis.set_drive_pid(-39, DRIVE_SPEED, true);
 	chassis.wait_drive();
 
-//	pressure_bar.set_value(false);
-//	blooper.set_value(false);
+	blooper.set_value(false);
 
 	chassis.set_turn_pid(45, TURN_SPEED);
 	chassis.wait_drive();
@@ -384,18 +400,17 @@ void auton_skills() {
 	chassis.set_turn_pid(-45, TURN_SPEED);
 	chassis.wait_drive();
 
-	chassis.set_drive_pid(-8, DRIVE_SPEED);
-	chassis.wait_drive();
+	pressure_bar.set_value(true);
 
-	pros::delay(300);
+	ripple();
 
-	flywheel.shoot(3, 2000);
+	pressure_bar.set_value(false);
 
 	intake = -100;
 
 	flywheel.set_target_RPM(2350);
 
-	chassis.set_drive_pid(-8, DRIVE_SPEED);
+	chassis.set_drive_pid(-16, DRIVE_SPEED);
 	chassis.wait_drive();
 
 	chassis.set_turn_pid(45, TURN_SPEED);
@@ -451,25 +466,24 @@ void auton_skills() {
 	chassis.set_turn_pid(0, TURN_SPEED);
 	chassis.wait_drive();
 
-//	pressure_bar.set_value(true);
-//	blooper.set_value(true);
+	pressure_bar.set_value(true);
+	blooper.set_value(true);
 
 	chassis.set_drive_pid(44, DRIVE_SPEED, true);
 	chassis.wait_drive();
 	
-//	ripple();
+	ripple();
 
-	flywheel.shoot(3,2000);
+	pressure_bar.set_value(false);
+
+	flywheel.set_target_RPM(2400);
 
 	intake = -100;
-
-	flywheel.set_target_RPM(2500);
 
 	chassis.set_drive_pid(-39, DRIVE_SPEED, true);
 	chassis.wait_drive();
 
-//	pressure_bar.set_value(false);
-//	blooper.set_value(false);
+	blooper.set_value(false);
 
 	chassis.set_turn_pid(45, TURN_SPEED);
 	chassis.wait_drive();
@@ -485,9 +499,11 @@ void auton_skills() {
 	chassis.set_turn_pid(-48, TURN_SPEED);
 	chassis.wait_drive();
 
-	pros::delay(300);
+	pressure_bar.set_value(true);
 
-	flywheel.shoot(3, 2000);
+	ripple();
+
+	pressure_bar.set_value(false);
 
 	intake = -100;
 
@@ -511,15 +527,13 @@ void auton_skills() {
 	chassis.set_turn_pid(-90, TURN_SPEED);
 	chassis.wait_drive();
 
-//	pressure_bar.set_value(true);
-//	blooper.set_value(true);
+	pressure_bar.set_value(true);
+	blooper.set_value(true);
 
 	chassis.set_drive_pid(32, DRIVE_SPEED, true);
 	chassis.wait_drive();
 
-//	ripple();
-
-	flywheel.shoot(3,2000);
+	ripple();
 
 	intake = -100;
 
