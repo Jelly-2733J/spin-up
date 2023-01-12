@@ -87,8 +87,6 @@ lv_res_t btn_click_action(lv_obj_t * btn) {
   lv_obj_set_hidden(skillsLabel, true);
   lv_obj_set_hidden(confirmLabel, true);
 
-  printf("Auton: %d\n", auton);
-
   return LV_RES_OK;
 }
 
@@ -224,6 +222,8 @@ void AutonSelector::end() {
   lv_obj_set_hidden(autonDD, true);
   lv_obj_set_hidden(skillsLabel, true);
   lv_obj_set_hidden(confirmLabel, true);
+
+  pros::delay(500);
 
   gif_obj = lv_obj_create(lv_scr_act(), NULL);
   lv_obj_set_size(gif_obj, 480, 240);

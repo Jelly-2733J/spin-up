@@ -74,7 +74,7 @@ void initialize() {
 
 	// Autonomous Selector using LLEMU
 	ez::as::auton_selector.add_autons({
-		Auton("No Auton", no_auton),
+		Auton("No Auton              ", no_auton),
 		Auton("Right Winpoint", right_winpoint),
 		Auton("Left Winpoint", left_winpoint),
 		Auton("Solo Winpoint", solo_winpoint),
@@ -84,7 +84,7 @@ void initialize() {
 
 	// Initialize chassis and auton selector
 	chassis.initialize(3900, "/usd/rengoku.gif");
-	ez::as::initialize("", "/usd/demonjelly.gif");
+	ez::as::initialize("/usd/jellyblackoutmenuglitch.gif", "/usd/jellyrengoku.gif");
 
 	// Set intake brake mode to hold to improve roller consistency
 	intake.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
