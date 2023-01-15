@@ -70,8 +70,6 @@ bool FlywheelController::disc_indexed() {
 void FlywheelController::shoot(int num_discs, int timeout, int rpm_accuracy) {
 	
 	int count = 0;
-	
-	intake = 0;
 
 	// Shoot number of times specified
 	for (int i = 0; i < num_discs; i++) {
@@ -80,6 +78,7 @@ void FlywheelController::shoot(int num_discs, int timeout, int rpm_accuracy) {
 		while (!(abs(flywheel.target_RPM() - flywheel.RPM()) < rpm_accuracy)) {
 			// If the timeout is reached, exit
 			if (count >= timeout) {
+				intake = 0;
 				return;
 			}
 			// If flywheel RPM is above the target, set voltage to 0
@@ -90,13 +89,19 @@ void FlywheelController::shoot(int num_discs, int timeout, int rpm_accuracy) {
 			pros::delay(10);
 		}
 
+		intake = -127;
+		
 		// Fire disc
 		fire();
 
-		// Wait 250 ms for next disc to fall into proper indexing position
-		pros::delay(250);
+		intake = 0;
+
+		// Wait 350 ms for next disc to fall into proper indexing position
+		pros::delay(350);
 
 	}
+
+	intake = 0;
 }
 // Flywheel task
 void FlywheelController::fly_control() {

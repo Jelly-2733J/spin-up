@@ -208,12 +208,12 @@ void opcontrol() {
 		if (new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
 			flywheel.full_voltage(false);
 			pressure_bar.set_value(false);
-			intake = 100; // Intake at full speed
+			intake = 127; // Intake at full speed
 		}
 		else if (new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
 			flywheel.full_voltage(true);
 			pressure_bar.set_value(true);
-			intake = -100; // Outtake at full speed
+			intake = -127; // Outtake at full speed
 		}
 		else if (!master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) && !master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
 			flywheel.full_voltage(false);
@@ -223,10 +223,10 @@ void opcontrol() {
 		// Pure intake controls (L1 + L2)
 		// L1 is intake, L2 is outtake
 		if (new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
-			intake = 100; // Intake at full speed
+			intake = -127; // Intake at full speed
 		}
 		else if (new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
-			intake = -100; // Outtake at full speed
+			intake = -127; // Outtake at full speed
 		}
 		else if (!master.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && !master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
 			intake = 0;
