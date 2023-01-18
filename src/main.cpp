@@ -78,6 +78,7 @@ void initialize() {
 		Auton("Right Winpoint", right_winpoint),
 		Auton("Left Winpoint", left_winpoint),
 		Auton("Solo Winpoint", solo_winpoint),
+		Auton("Three Stack", three_stack),
 		Auton("Skills", auton_skills),
 	});
 

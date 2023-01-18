@@ -81,15 +81,13 @@ void FlywheelController::shoot(int num_discs, int timeout, int rpm_accuracy) {
 				intake = 0;
 				return;
 			}
-			// If flywheel RPM is above the target, set voltage to 0
-			if (flywheel.RPM() > flywheel.target_RPM()) {
-				fly.move_voltage(0);
-			}
 			count += 10;
 			pros::delay(10);
 		}
 
 		intake = -127;
+		
+		pros::delay(200);
 		
 		// Fire disc
 		fire();

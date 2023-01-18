@@ -8,6 +8,8 @@ void no_auton();
 void right_winpoint();
 void left_winpoint();
 void auton_skills();
+void jerk_test();
+void three_stack();
 void solo_winpoint();
 void wait_until_change_speed();
 void swing_example();
