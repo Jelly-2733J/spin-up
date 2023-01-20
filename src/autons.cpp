@@ -70,7 +70,7 @@ void modified_exit_condition() {
 	chassis.set_exit_condition(chassis.drive_exit, 80, 50, 300, 150, 500, 500);
 }
 
-void getRoller(double distance, int time) {
+void get_roller(double distance, int time) {
 	chassis.set_drive_pid(distance, DRIVE_SPEED);
 	chassis.wait_drive();
 	intake = 127;	 
@@ -100,7 +100,7 @@ void right_winpoint() {
     chassis.set_swing_pid(ez::RIGHT_SWING, 92, DRIVE_SPEED);
 	chassis.wait_drive();
 
-	getRoller(-4, 250);
+	get_roller(-4, 250);
 
 	chassis.set_drive_pid(9, DRIVE_SPEED);
 	chassis.wait_drive();
@@ -163,7 +163,7 @@ void left_winpoint() {
 	flywheel.set_active(true);
 	flywheel.set_target_RPM(2750);
 
-	getRoller(-3, 250);
+	get_roller(-3, 250);
 
 	chassis.set_drive_pid(4, DRIVE_SPEED);
 	chassis.wait_drive();
@@ -230,7 +230,7 @@ void solo_winpoint() {
 	flywheel.set_active(true);
 	flywheel.set_target_RPM(2525);
 
-	getRoller(-3, 250);
+	get_roller(-3, 250);
 
 	chassis.set_drive_pid(5, 127, true);
 	chassis.wait_drive();
@@ -280,7 +280,7 @@ void solo_winpoint() {
 
 	intake = 0;
 
-	getRoller(-7, 250);
+	get_roller(-7, 250);
 
 	chassis.set_drive_pid(5, 50);
 	chassis.wait_drive();
@@ -320,7 +320,7 @@ void nerfed_skills() {
 	flywheel.set_active(true);
 	flywheel.set_target_RPM(2350);
 
-	getRoller(-3, 500);
+	get_roller(-3, 500);
 
 	chassis.set_drive_pid(4, DRIVE_SPEED);
 	chassis.wait_drive();
@@ -338,7 +338,7 @@ void nerfed_skills() {
 
 	intake = 0;
 
-	getRoller(-11, 500);
+	get_roller(-11, 500);
 
 	chassis.set_drive_pid(8, DRIVE_SPEED);
 	chassis.wait_drive();
@@ -441,7 +441,7 @@ void nerfed_skills() {
 
 	intake = 0;
 
-	getRoller(-8, 500);
+	get_roller(-8, 500);
 
 	chassis.set_drive_pid(14, DRIVE_SPEED);
 	chassis.wait_drive();
@@ -500,7 +500,7 @@ void nerfed_skills() {
 
 	intake = 0;
 
-	getRoller(-16, 500);
+	get_roller(-16, 500);
 
 	chassis.set_drive_pid(4, DRIVE_SPEED, true);
 	chassis.wait_drive();
@@ -631,7 +631,7 @@ void auton_skills() {
 	flywheel.set_active(true);
 	flywheel.set_target_RPM(2350);
 
-	getRoller(-3, 500);
+	get_roller(-3, 500);
 
 	chassis.set_drive_pid(4, DRIVE_SPEED);
 	chassis.wait_drive();
@@ -649,7 +649,7 @@ void auton_skills() {
 
 	intake = 0;
 
-	getRoller(-11, 500);
+	get_roller(-11, 500);
 
 	chassis.set_drive_pid(8, DRIVE_SPEED);
 	chassis.wait_drive();
@@ -731,7 +731,7 @@ void auton_skills() {
 	chassis.set_swing_pid(ez::LEFT_SWING, -180, SWING_SPEED);
 	chassis.wait_drive();
 
-	getRoller(-8, 500);
+	get_roller(-8, 500);
 
 	chassis.set_drive_pid(14, DRIVE_SPEED);
 	chassis.wait_drive();
@@ -775,7 +775,7 @@ void auton_skills() {
 	chassis.set_turn_pid(90, TURN_SPEED);
 	chassis.wait_drive();
 
-	getRoller(-10, 500);
+	get_roller(-10, 500);
 
 	chassis.set_drive_pid(4, DRIVE_SPEED, true);
 	chassis.wait_drive();
