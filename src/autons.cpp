@@ -313,9 +313,9 @@ void triple_tap() {
 }
 
 ///
-// Skills
+// Nerfed Skills
 ///
-void auton_skills() {
+void nerfed_skills() {
 	
 	flywheel.set_active(true);
 	flywheel.set_target_RPM(2350);
@@ -615,6 +615,253 @@ void auton_skills() {
 	chassis.wait_drive();
 
 	chassis.set_drive_pid(-59, 127);
+	chassis.wait_drive();
+
+	chassis.set_turn_pid(-135, TURN_SPEED);
+	chassis.wait_drive();
+
+	endgame.set_value(true);
+}
+
+///
+// Skills
+///
+void auton_skills() {
+	
+	flywheel.set_active(true);
+	flywheel.set_target_RPM(2350);
+
+	getRoller(-3, 500);
+
+	chassis.set_drive_pid(4, DRIVE_SPEED);
+	chassis.wait_drive();
+
+	chassis.set_turn_pid(-30, TURN_SPEED);
+	chassis.wait_drive();
+
+	intake = 127;
+
+	chassis.set_drive_pid(27, DRIVE_SPEED, true);
+	chassis.wait_drive();
+
+	chassis.set_turn_pid(90, TURN_SPEED);
+	chassis.wait_drive();
+
+	intake = 0;
+
+	getRoller(-11, 500);
+
+	chassis.set_drive_pid(8, DRIVE_SPEED);
+	chassis.wait_drive();
+
+	intake = 127;
+
+	chassis.set_turn_pid(1, TURN_SPEED);
+	chassis.wait_drive();
+
+	pressure_bar.set_value(true);
+
+	chassis.set_drive_pid(43, DRIVE_SPEED, true);
+	chassis.wait_drive();
+
+	ripple();
+
+	flywheel.set_target_RPM(2300);
+	
+	pressure_bar.set_value(false);
+
+	chassis.set_drive_pid(-38, DRIVE_SPEED, true);
+	chassis.wait_drive();
+
+	chassis.set_turn_pid(45, TURN_SPEED);
+	chassis.wait_drive();
+
+	intake = 127;
+
+	chassis.set_drive_pid(67, DRIVE_SPEED, true);
+	chassis.wait_until(39);
+	chassis.set_max_speed(70);
+	chassis.wait_drive();
+
+	chassis.set_drive_pid(-4, DRIVE_SPEED);
+	chassis.wait_drive();
+
+	chassis.set_turn_pid(-46, TURN_SPEED);
+	chassis.wait_drive();
+
+	pressure_bar.set_value(true);
+
+	pros::delay(125);
+
+	ripple();
+
+	flywheel.set_target_RPM(2350);
+
+	pressure_bar.set_value(false);
+
+	chassis.set_turn_pid(45, TURN_SPEED);
+	chassis.wait_drive();
+
+	intake = 127;
+
+	chassis.set_drive_pid(59, 90, true);
+	chassis.wait_until(10);
+	chassis.set_max_speed(50);
+	chassis.wait_drive();
+
+	chassis.set_drive_pid(-4, DRIVE_SPEED);
+	chassis.wait_drive();
+
+	chassis.set_turn_pid(-88, TURN_SPEED);
+	chassis.wait_drive();
+
+	chassis.set_drive_pid(34, DRIVE_SPEED, true);
+	chassis.wait_until(20);
+	intake = 0;
+	pressure_bar.set_value(true);
+	chassis.wait_drive();
+
+	ripple();
+
+	pressure_bar.set_value(false);
+
+	chassis.set_drive_pid(-29, DRIVE_SPEED, true);
+	chassis.wait_drive();
+
+	chassis.set_swing_pid(ez::LEFT_SWING, -180, SWING_SPEED);
+	chassis.wait_drive();
+
+	getRoller(-8, 500);
+
+	chassis.set_drive_pid(14, DRIVE_SPEED);
+	chassis.wait_drive();
+
+	chassis.set_turn_pid(-180, TURN_SPEED);
+	chassis.wait_drive();
+
+	chassis.reset_gyro(0);
+
+	// OTHER SIDE
+
+	chassis.set_turn_pid(-20, TURN_SPEED);
+	chassis.wait_drive();
+
+	intake = 127;
+
+	chassis.set_drive_pid(52, 90, true);
+	chassis.set_max_speed(50);
+	chassis.wait_drive();
+
+	chassis.set_turn_pid(0, TURN_SPEED);
+	chassis.wait_drive();
+
+	chassis.set_drive_pid(8, DRIVE_SPEED);
+	chassis.wait_drive();
+
+	intake = 0;
+	pressure_bar.set_value(true);
+
+	pros::delay(125);
+
+	ripple();
+
+	flywheel.set_target_RPM(2300);
+
+	pressure_bar.set_value(false);
+
+	chassis.set_drive_pid(-38, DRIVE_SPEED, true);
+	chassis.wait_drive();
+
+	chassis.set_turn_pid(90, TURN_SPEED);
+	chassis.wait_drive();
+
+	getRoller(-10, 500);
+
+	chassis.set_drive_pid(4, DRIVE_SPEED, true);
+	chassis.wait_drive();
+
+	chassis.set_turn_pid(45, TURN_SPEED);
+	chassis.wait_drive();
+
+	intake = 127;
+
+	chassis.set_drive_pid(67, DRIVE_SPEED, true);
+	chassis.wait_until(39);
+	chassis.set_max_speed(70);
+	chassis.wait_drive();
+
+	chassis.set_drive_pid(-4, DRIVE_SPEED);
+	chassis.wait_drive();
+
+	chassis.set_turn_pid(-46, TURN_SPEED);
+	chassis.wait_drive();
+
+	pressure_bar.set_value(true);
+
+	pros::delay(125);
+
+	ripple();
+
+	flywheel.set_target_RPM(2350);
+
+	pressure_bar.set_value(false);
+
+	chassis.set_turn_pid(45, TURN_SPEED);
+	chassis.wait_drive();
+
+	intake = 127;
+
+	chassis.set_drive_pid(59, 90, true);
+	chassis.wait_until(10);
+	chassis.set_max_speed(50);
+	chassis.wait_drive();
+
+	chassis.set_drive_pid(-4, DRIVE_SPEED);
+	chassis.wait_drive();
+
+	chassis.set_turn_pid(-88, TURN_SPEED);
+	chassis.wait_drive();
+
+	chassis.set_drive_pid(32, DRIVE_SPEED, true);
+	chassis.wait_until(20);
+	intake = 0;
+	pressure_bar.set_value(true);
+	chassis.wait_drive();
+
+	ripple();
+
+	pressure_bar.set_value(false);
+
+	chassis.set_drive_pid(-38, DRIVE_SPEED, true);
+	chassis.wait_drive();
+
+	chassis.set_turn_pid(-207, TURN_SPEED);
+	chassis.wait_drive();
+
+	intake = 127;
+
+	chassis.set_drive_pid(64, DRIVE_SPEED, true);
+	chassis.wait_until(8);
+	chassis.set_max_speed(50);
+	chassis.wait_until(32);
+	chassis.set_max_speed(DRIVE_SPEED);
+	chassis.wait_drive();
+
+	chassis.set_turn_pid(-175, TURN_SPEED);
+	chassis.wait_drive();
+
+	intake = 0;
+
+	pressure_bar.set_value(true);
+
+	pros::delay(125);
+
+	ripple();
+
+	chassis.set_turn_pid(-185, TURN_SPEED);
+	chassis.wait_drive();
+
+	chassis.set_drive_pid(-59, TURN_SPEED);
 	chassis.wait_drive();
 
 	chassis.set_turn_pid(-135, TURN_SPEED);

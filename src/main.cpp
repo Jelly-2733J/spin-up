@@ -1,5 +1,6 @@
 #include "main.h"
 #include "EZ-Template/sdcard.hpp"
+#include "autons.hpp"
 #include "globals.hpp"
 #include "pros/misc.h"
 #include "pros/screen.hpp"
@@ -78,7 +79,7 @@ void initialize() {
 		Auton("Right Winpoint", right_winpoint),
 		Auton("Left Winpoint", left_winpoint),
 		Auton("Solo Winpoint", solo_winpoint),
-		Auton("Three Stack", three_stack),
+		Auton("Nerfed Skills", nerfed_skills),
 		Auton("Skills", auton_skills),
 	});
 
