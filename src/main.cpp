@@ -56,8 +56,8 @@ Drive chassis (
  */
 void initialize() {
 
-	// Flywheel is inactive for initialization
-	flywheel.set_active(false);
+	// Cata is inactive for initialization
+	cata.set_active(false);
 
 	// Print our branding over your terminal :D
 	ez::print_ez_template();
@@ -79,28 +79,20 @@ void initialize() {
 		Auton("Right Winpoint", right_winpoint),
 		Auton("Left Winpoint", left_winpoint),
 		Auton("Solo Winpoint", solo_winpoint),
-		Auton("Nerfed Skills", nerfed_skills),
 		Auton("Skills", auton_skills),
 	});
-
 
 	// Initialize chassis and auton selector
 	chassis.initialize(3900, "/usd/rengoku.gif");
 	ez::as::initialize("/usd/jellyblackoutmenuglitch.gif", "/usd/rengokujellydragon.gif");
 
-	// Set intake brake mode to hold to improve roller consistency
-	intake.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-
-	// Clear the LCD for the auton selector
-	pros::screen::erase();
-
 	pros::delay(250); // Wait for auton selector to finish
 
-	// Create the flywheel control task
-	pros::Task flywheel_control([&]{ flywheel.fly_control(); });
+	// Disable driver control for the cata
+	cata.driver_control(false);
 
-	// Create the odometry task
-	// pros::Task odometry_task([&]{ odom.odometry(); });
+	// Create the cata control task
+	pros::Task cata_control([&]{ cata.cata_control(); });
 	
 }
 
@@ -110,8 +102,11 @@ void initialize() {
  * the robot is enabled, this task will exit.
  */
 void disabled() {
-	// Set flywheel to inactive to prevent the code from attempting to control a disabled motor
-	flywheel.set_active(false);
+	// Disable driver control for the cata
+	cata.driver_control(false);
+
+	// Set cata to inactive to prevent the code from attempting to control a disabled motor
+	cata.set_active(false);
 }
 
 /**
@@ -137,6 +132,8 @@ void competition_initialize() {}
  * from where it left off.
  */
 void autonomous() {
+	// Disable driver control for the cata
+	cata.driver_control(false);
 
 	chassis.reset_pid_targets(); // Resets PID targets to 0
 	chassis.reset_gyro(); // Reset gyro position to 0
@@ -163,14 +160,10 @@ void autonomous() {
 void opcontrol() {
 
 	// Activate flywheel
-	flywheel.set_active(true);
+	cata.set_active(true);
 
-	// Set blooper to up
-	blooper.set_value(true);
-
-	// 2250 RPM is the default flywheel speed
-	// It is optimal for ripple shots right at the goal
-	flywheel.set_target_RPM(2250);
+	// Enable driver control for the cata
+	cata.driver_control(true);
 
 	chassis.set_drive_brake(pros::E_MOTOR_BRAKE_COAST);
 	chassis.set_active_brake(0.0); // Sets the active brake kP to 0.0.  This disables active braking.
@@ -184,71 +177,25 @@ void opcontrol() {
 
 	while (true) {
 
-		chassis.arcade_standard(ez::SPLIT); // Split Arcade (left stick controls forward/backward, right stick controls turning)
-		// chassis.tank();
+		chassis.tank(); // Tank drive
 
 		// Endgame
 		if (new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) && master.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && master.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
 			endgame_state = !endgame_state;
 			endgame.set_value(endgame_state);
 			new_press = false;
+
+			// Skip the rest of the driver control loop to avoid accidental shooting
+			pros::delay(ez::util::DELAY_TIME); // Used for timing calculations and reasonable loop speeds
+			continue;
 		}
 		else if (!master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) && !master.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && !master.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && !master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
 			new_press = true;
 		}
 
-		// Adjust flywheel RPM (up & down)
-		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP) && flywheel.target_RPM() <= 3950) {
-			flywheel.set_target_RPM(flywheel.target_RPM() + 50);
-		}
-		else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN) && flywheel.target_RPM() >= 100) {
-			flywheel.set_target_RPM(flywheel.target_RPM() - 50);
-		}
-
-		// Intake controls (R1 + R2)
-		// R1 is intake, R2 is outtake
-		if (new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
-			flywheel.full_voltage(false);
-			pressure_bar.set_value(false);
-			intake = 127; // Intake at full speed
-		}
-		else if (new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
-			flywheel.full_voltage(true);
-			pressure_bar.set_value(true);
-			intake = -127; // Outtake at full speed
-		}
-		else if (!master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) && !master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
-			flywheel.full_voltage(false);
-			intake = 0;
-		}
-
-		// Pure intake controls (L1 + L2)
-		// L1 is intake, L2 is outtake
-		if (new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
-			intake = -127; // Intake at full speed
-		}
-		else if (new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
-			intake = -127; // Outtake at full speed
-		}
-		else if (!master.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && !master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
-			intake = 0;
-		}
-
-		// Toggle flywheel (Left)
-		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)) {
-			flywheel.set_active(!flywheel.is_active());
-			master.clear();
-		}
-
-		// Blooper (deflector) toggle (X)
-		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
-			blooper_state = !blooper_state;
-			blooper.set_value(blooper_state);
-		}
-
-		// Pneumatic shoot (B)
-		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {
-			fire();
+		// Shoot the cata
+		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R2)) {
+			cata.shoot();
 		}
 
 		pros::delay(ez::util::DELAY_TIME); // Used for timing calculations and reasonable loop speeds

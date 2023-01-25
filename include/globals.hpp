@@ -1,6 +1,6 @@
 #include "api.h"
-#include "flywheel.hpp"
-#include "odometry.hpp"
+#include "cata.hpp"
+#include "pros/adi.hpp"
 
 #pragma once
 
@@ -8,25 +8,17 @@
 
 // Classes
 
-// Flywheel control and telemetry
-extern FlywheelController flywheel;
-
-// Odometry
-extern Odometry odom;
+// Cata control and telemetry
+extern CataController cata;
 
 // Ports
-extern pros::Motor intake;				// 16
-extern pros::Motor fly;				    // 15
-extern pros::Optical optical;           // 10
+extern pros::Motor cata1;				// 16
+extern pros::Motor cata2;				// 15
 
 // 3-Wire
 extern pros::ADIDigitalOut endgame;     // A
-extern pros::ADIDigitalOut blooper;     // B
-extern pros::ADIDigitalOut indexer;     // C
-extern pros::ADIDigitalOut pressure_bar;// D
+extern pros::ADIDigitalOut band_assist; // B
+extern pros::ADIDigitalIn cata_switch;  // C
 
 // Controller
 extern pros::Controller master;
-
-// Functions
-extern void fire();

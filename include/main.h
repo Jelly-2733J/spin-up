@@ -44,8 +44,7 @@
 #include <cmath>
 #include "EZ-Template/api.hpp"
 #include "autons.hpp"
-#include "flywheel.hpp"
-#include "odometry.hpp"
+#include "cata.hpp"
 #include "globals.hpp"
 
 // More includes here...

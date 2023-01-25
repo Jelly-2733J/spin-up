@@ -1,33 +1,20 @@
 #include "api.h"
 #include "globals.hpp"
-#include "pros/optical.hpp"
-#include <strings.h>
+#include "pros/motors.h"
 
 // Classes
 
-// Flywheel control and telemetry
-FlywheelController flywheel;
-
-// Odometry
-Odometry odom(1.0, 1.0, 1.0, 2.75, 'A', 'B', 'C', 'D', 'E', 'F');
+// Cata control and telemetry
+CataController cata;
 
 // Ports
-pros::Motor intake (16, pros::E_MOTOR_GEARSET_06, false, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor fly (15, pros::E_MOTOR_GEARSET_06, true, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Optical optical (10);
+pros::Motor cata1 (16, pros::E_MOTOR_GEARSET_06, false, pros::E_MOTOR_ENCODER_DEGREES); // 16
+pros::Motor cata2 (15, pros::E_MOTOR_GEARSET_06, true, pros::E_MOTOR_ENCODER_DEGREES);	// 15
 
 // 3-Wire
-pros::ADIDigitalOut endgame ({ 3, 'A' }, false);
-pros::ADIDigitalOut blooper ({ 3, 'B' }, false);
-pros::ADIDigitalOut indexer ({ 3, 'C' }, false);
-pros::ADIDigitalOut pressure_bar ({ 3, 'D' }, false);
+pros::ADIDigitalOut endgame ({ 3, 'A' }, false);        // A
+pros::ADIDigitalOut band_assist ({ 3, 'B' }, false);    // B
+pros::ADIDigitalIn cata_switch ({ 3, 'C' });            // C
 
 // Controller
 pros::Controller master(pros::E_CONTROLLER_MASTER);
-
-// Functions
-void fire() {
-    indexer.set_value(true);
-    pros::delay(200);
-    indexer.set_value(false);
-}
