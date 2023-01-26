@@ -2,6 +2,7 @@
 #include "main.h"
 #include <cmath>
 #include <mutex>
+#include <set>
 
 #include "globals.hpp"
 #include "cata.hpp"
@@ -66,7 +67,7 @@ void CataController::shoot() {
 	// Reverse cata motors to pull back until cata isn't ready anymore (meaning it has shot)
 	while (cata_ready() && timeout < 1000) {
 		if (is_driver()) {
-			chassis.tank();
+			 try { chassis.tank(); } catch (...) {}
 		}
 		timeout += 10;
 		set_motors(-127);
@@ -109,7 +110,7 @@ void CataController::cata_control() {
 		}
 		// If cata is in driver control, it should be controlled by R1 with L1 overriding the cata_ready() check
 		else {
-			set_motors((master.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && cata_ready()) || master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) ? 127 : 0);
+			try { set_motors((master.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && cata_ready()) || master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) ? 127 : 0); } catch (...) { set_motors(0); }
 		}
 
 		// Print ready status
