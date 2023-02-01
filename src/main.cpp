@@ -159,10 +159,8 @@ void autonomous() {
  */
 void opcontrol() {
 
-	// Activate flywheel
+	// Activate cata and enable driver control
 	cata.set_active(true);
-
-	// Enable driver control for the cata
 	cata.driver_control(true);
 
 	chassis.set_drive_brake(pros::E_MOTOR_BRAKE_COAST);
@@ -180,7 +178,7 @@ void opcontrol() {
 		chassis.tank(); // Tank drive
 
 		// Endgame
-		if (new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) && master.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && master.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+		if ((pros::millis() - driver_start > 96000 || master.get_digital(pros::E_CONTROLLER_DIGITAL_A)) && new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) && master.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && master.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
 			endgame_state = !endgame_state;
 			endgame.set_value(endgame_state);
 			new_press = false;
