@@ -79,7 +79,6 @@ void initialize() {
 		Auton("Right Winpoint", right_winpoint),
 		Auton("Left Winpoint", left_winpoint),
 		Auton("Solo Winpoint", solo_winpoint),
-		Auton("Nerfed Skills", nerfed_skills),
 		Auton("Skills", auton_skills),
 	});
 
@@ -168,9 +167,9 @@ void opcontrol() {
 	// Set blooper to up
 	blooper.set_value(true);
 
-	// 2250 RPM is the default flywheel speed
+	// 2050 RPM is the default flywheel speed
 	// It is optimal for ripple shots right at the goal
-	flywheel.set_target_RPM(2250);
+	flywheel.set_target_RPM(2050);
 
 	chassis.set_drive_brake(pros::E_MOTOR_BRAKE_COAST);
 	chassis.set_active_brake(0.0); // Sets the active brake kP to 0.0.  This disables active braking.
@@ -184,8 +183,8 @@ void opcontrol() {
 
 	while (true) {
 
-		chassis.arcade_standard(ez::SPLIT); // Split Arcade (left stick controls forward/backward, right stick controls turning)
-		// chassis.tank();
+		// chassis.arcade_standard(ez::SPLIT); // Split Arcade (left stick controls forward/backward, right stick controls turning)
+		chassis.tank();
 
 		// Endgame
 		if (new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) && master.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && master.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {

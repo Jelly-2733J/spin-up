@@ -6,7 +6,7 @@
 // Classes
 
 // Flywheel control and telemetry
-FlywheelController flywheel;
+FlywheelController flywheel (5);
 
 // Odometry
 Odometry odom(1.0, 1.0, 1.0, 2.75, 'A', 'B', 'C', 'D', 'E', 'F');
@@ -27,6 +27,7 @@ pros::Controller master(pros::E_CONTROLLER_MASTER);
 
 // Functions
 void fire() {
+    printf("FIRING\n");
     indexer.set_value(true);
     pros::delay(200);
     indexer.set_value(false);

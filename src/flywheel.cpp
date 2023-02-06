@@ -5,6 +5,11 @@
 #include "globals.hpp"
 #include "flywheel.hpp"
 
+// Constructor
+FlywheelController::FlywheelController(int sma) {
+	std::vector <int> prev_RPMs(sma, 0);
+}
+
 // Convert degrees to radians
 double FlywheelController::rads(double deg) {
 	return deg * PI / 180;
@@ -24,11 +29,21 @@ void FlywheelController::set_target_RPM(int rpm) {
 	flywheel_target_RPM = (double) rpm;
 	flywheel_target_RPM_guard.give();
 };
-// Read the current RPM
+// Read the current RPM using a simple moving average
 double FlywheelController::RPM() {
-	return fly.get_actual_velocity() * 6.0;
+
+	// Get the current flywheel RPM
+	double current_RPM = fly.get_actual_velocity() * 6.0;
+
+	// Remove the first element of the vector and add the current RPM to the end
+	prev_RPMs.erase(prev_RPMs.begin());
+	prev_RPMs.push_back(current_RPM);
+
+	// Calculate and return the average of the vector using std::accumulate
+	return std::accumulate(prev_RPMs.begin(), prev_RPMs.end(), 0.0) / prev_RPMs.size();
+	
 };
-// Read the current RPM
+// Read the current target RPM
 double FlywheelController::target_RPM() {
 	flywheel_target_RPM_guard.take();
 	double to_return = flywheel_target_RPM;
@@ -74,6 +89,8 @@ void FlywheelController::shoot(int num_discs, int timeout, int rpm_accuracy) {
 	// Shoot number of times specified
 	for (int i = 0; i < num_discs; i++) {
 
+		printf("WAITING FOR RPM\n");
+
 		// Wait for RPM to be within accuracy and a disc to be in the proper indexing position
 		while (!(abs(flywheel.target_RPM() - flywheel.RPM()) < rpm_accuracy)) {
 			// If the timeout is reached, exit
@@ -87,15 +104,13 @@ void FlywheelController::shoot(int num_discs, int timeout, int rpm_accuracy) {
 
 		intake = -127;
 		
-		pros::delay(200);
-		
 		// Fire disc
 		fire();
 
 		intake = 0;
 
-		// Wait 350 ms for next disc to fall into proper indexing position
-		pros::delay(350);
+		// Wait 300 ms for next disc to fall into proper indexing position
+		pros::delay(300);
 
 	}
 
@@ -153,7 +168,7 @@ void FlywheelController::fly_control() {
 			error = target_RPM() - RPM();
 
 			// Calculate variable take back
-			tbv = 0.5 - (2250.0 - target_RPM()) / 20000.0;
+			tbv = 0.5 - (2050.0 - target_RPM()) / 100000.0;
 
 			// Integrate
 			voltage += gain * error;
@@ -185,7 +200,7 @@ void FlywheelController::fly_control() {
 			fly.move_voltage(voltage);
 		}
 
-		// printf("%.2f %d %d\n", voltage, (int) RPM(), (int) target_RPM());
+		printf("%.2f %d %d\n", voltage, (int) RPM(), (int) target_RPM());
 
 		if (count == 300) {
 			master.print(2, 0, "TEMP: %d C", (int) fly.get_temperature());
