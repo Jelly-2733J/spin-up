@@ -7,7 +7,7 @@
 
 // Constructor
 FlywheelController::FlywheelController(int sma) {
-	std::vector <int> prev_RPMs(sma, 0);
+	std::vector<double> prev_RPMs(sma, 0.0);
 }
 
 // Convert degrees to radians

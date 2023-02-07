@@ -5,7 +5,7 @@
 // FlywheelController class allows for automated flywheel control and smart shooting
 class FlywheelController {
 	private:
-		std::vector<int> prev_RPMs;
+		std::vector<double> prev_RPMs;
 		int flywheel_target_RPM;
 		pros::Mutex flywheel_target_RPM_guard;
 		bool active = false;
