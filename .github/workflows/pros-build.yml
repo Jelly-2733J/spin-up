@@ -11,3 +11,5 @@ jobs:
         uses: actions/checkout@v2
       - name: Builds Code
         uses: fishsticks89/pros-build@v1
+        with:
+          path: .
