@@ -342,7 +342,7 @@ void nerfed_skills() {
 
 	get_roller(-11, 450);
 
-	chassis.set_drive_pid(8, DRIVE_SPEED);
+	chassis.set_drive_pid(7, DRIVE_SPEED);
 	chassis.wait_drive();
 
 	intake = 127;
@@ -352,7 +352,7 @@ void nerfed_skills() {
 
 	pressure_bar.set_value(true);
 
-	chassis.set_drive_pid(43, DRIVE_SPEED, true);
+	chassis.set_drive_pid(41, DRIVE_SPEED, true);
 	chassis.wait_drive();
 
 	// Stack 1
@@ -643,7 +643,7 @@ void auton_skills() {
 
 	get_roller(-11, 450);
 
-	chassis.set_drive_pid(8, 127);
+	chassis.set_drive_pid(7, 127);
 	chassis.wait_drive();
 
 	intake = 127;
@@ -651,7 +651,7 @@ void auton_skills() {
 	chassis.set_turn_pid(1, TURN_SPEED);
 	chassis.wait_drive();
 
-	chassis.set_drive_pid(43, 127, true);
+	chassis.set_drive_pid(41, 127, true);
 	chassis.wait_drive();
 
 	// Stack 1
@@ -738,7 +738,7 @@ void auton_skills() {
 	chassis.set_turn_pid(0, TURN_SPEED);
 	chassis.wait_drive();
 
-	chassis.set_drive_pid(8, 127);
+	chassis.set_drive_pid(6, 127);
 	chassis.wait_drive();
 
 	ripple();
@@ -805,7 +805,7 @@ void auton_skills() {
 	chassis.set_turn_pid(-93, TURN_SPEED);
 	chassis.wait_drive();
 
-	chassis.set_drive_pid(-38, 127, true);
+	chassis.set_drive_pid(-36, 127, true);
 	chassis.wait_drive();
 
 	chassis.set_turn_pid(-207, TURN_SPEED);
@@ -814,7 +814,7 @@ void auton_skills() {
 	intake = 127;
 
 	// Stack 7
-	chassis.set_drive_pid(64, 35, true);
+	chassis.set_drive_pid(63, 35, true);
 	chassis.wait_until(32);
 	chassis.set_max_speed(70);
 	chassis.wait_drive();
