@@ -167,9 +167,9 @@ void opcontrol() {
 	// Set blooper to up
 	blooper.set_value(true);
 
-	// 2050 RPM is the default flywheel speed
+	// 2100 RPM is the default flywheel speed
 	// It is optimal for ripple shots right at the goal
-	flywheel.set_target_RPM(2050);
+	flywheel.set_target_RPM(2100);
 
 	chassis.set_drive_brake(pros::E_MOTOR_BRAKE_COAST);
 	chassis.set_active_brake(0.0); // Sets the active brake kP to 0.0.  This disables active braking.

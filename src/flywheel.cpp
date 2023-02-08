@@ -1,6 +1,7 @@
 #include "main.h"
 #include <cmath>
 #include <mutex>
+#include <vector>
 
 #include "globals.hpp"
 #include "flywheel.hpp"
@@ -89,7 +90,7 @@ void FlywheelController::shoot(int num_discs, int timeout, int rpm_accuracy) {
 	// Shoot number of times specified
 	for (int i = 0; i < num_discs; i++) {
 
-		printf("WAITING FOR RPM\n");
+		std::cout << "WAITING FOR RPM\n" << std::endl;
 
 		// Wait for RPM to be within accuracy and a disc to be in the proper indexing position
 		while (!(abs(flywheel.target_RPM() - flywheel.RPM()) < rpm_accuracy)) {
