@@ -1,7 +1,6 @@
 #include "main.h"
 #include <cmath>
 #include <mutex>
-#include <vector>
 
 #include "globals.hpp"
 #include "flywheel.hpp"
