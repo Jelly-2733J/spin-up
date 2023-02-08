@@ -5,6 +5,7 @@
 // FlywheelController class allows for automated flywheel control and smart shooting
 class FlywheelController {
 	private:
+		std::vector<double> prev_RPMs;
 		int flywheel_target_RPM;
 		pros::Mutex flywheel_target_RPM_guard;
 		bool active = false;
@@ -16,9 +17,11 @@ class FlywheelController {
 		// Check the sign of a number
 		bool check_sign(double num);
 	public:
+		// Constructor
+		FlywheelController(int sma);
 		// Set target RPM
 		void set_target_RPM(int rpm);
-		// Read the current RPM
+		// Read the current RPM using a simple moving average
 		double RPM();
 		// Read the current target RPM
 		double target_RPM();
