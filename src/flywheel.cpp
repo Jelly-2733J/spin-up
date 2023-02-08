@@ -6,8 +6,10 @@
 #include "flywheel.hpp"
 
 // Constructor
-FlywheelController::FlywheelController(int sma) {
-	std::vector<double> prev_RPMs(sma, 0.0);
+FlywheelController::FlywheelController() {
+	for (int i = 0; i < 5; i++) {
+		prev_RPMs[i] = 0.0;
+	}
 }
 
 // Convert degrees to radians
@@ -35,12 +37,18 @@ double FlywheelController::RPM() {
 	// Get the current flywheel RPM
 	double current_RPM = fly.get_actual_velocity() * 6.0;
 
-	// Remove the first element of the vector and add the current RPM to the end
-	prev_RPMs.erase(prev_RPMs.begin());
-	prev_RPMs.push_back(current_RPM);
+	// Update the SMA array
+	for (int i = 0; i < 4; i++) {
+		prev_RPMs[i] = prev_RPMs[i + 1];
+	}
+	prev_RPMs[4] = current_RPM;
 
-	// Calculate and return the average of the vector using std::accumulate
-	return std::accumulate(prev_RPMs.begin(), prev_RPMs.end(), 0.0) / prev_RPMs.size();
+	// Calculate the SMA
+	double sum = 0.0;
+	for (int i = 0; i < 5; i++) {
+		sum += prev_RPMs[i];
+	}
+	return sum / 5.0;
 	
 };
 // Read the current target RPM

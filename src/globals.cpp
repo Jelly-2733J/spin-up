@@ -6,7 +6,7 @@
 // Classes
 
 // Flywheel control and telemetry
-FlywheelController flywheel (5);
+FlywheelController flywheel;
 
 // Odometry
 Odometry odom(1.0, 1.0, 1.0, 2.75, 'A', 'B', 'C', 'D', 'E', 'F');
