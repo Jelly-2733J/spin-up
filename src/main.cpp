@@ -216,13 +216,13 @@ void opcontrol() {
 			pressure_bar.set_value(true);
 			intake = -127; // Outtake at full speed
 		}
-		else if (!master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
+		else if (!master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
 			flywheel.full_voltage(false);
 			intake = 0;
 		}
 
-		// L1 is blooper (deflector) toggle and RPM change
-		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
+		// L2 is blooper (deflector) toggle and RPM change
+		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) {
 			blooper_state = !blooper_state;
 			blooper.set_value(blooper_state);
 			
@@ -236,8 +236,8 @@ void opcontrol() {
 			}
 		}
 		
-		// L2 is pure outtake
-		if (new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
+		// L1 is pure outtake
+		if (new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
 			intake = -127; // Outtake at full speed
 		}
 		else if (!master.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && !master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
