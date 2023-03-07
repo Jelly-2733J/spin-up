@@ -216,7 +216,7 @@ void opcontrol() {
 			pressure_bar.set_value(true);
 			intake = -127; // Outtake at full speed
 		}
-		else if (!master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) && !master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
+		else if (!master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
 			flywheel.full_voltage(false);
 			intake = 0;
 		}
