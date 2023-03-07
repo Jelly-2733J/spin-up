@@ -221,12 +221,23 @@ void opcontrol() {
 			intake = 0;
 		}
 
-		// Pure intake controls (L1 + L2)
-		// L1 is intake, L2 is outtake
-		if (new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
-			intake = -127; // Intake at full speed
+		// L1 is blooper (deflector) toggle and RPM change
+		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
+			blooper_state = !blooper_state;
+			blooper.set_value(blooper_state);
+			
+			// If blooper is up, set flywheel to 2150 RPM for ripple shots
+			if (blooper_state) {
+				flywheel.set_target_RPM(2150);
+			}
+			// If blooper is down, set flywheel to 2350 RPM for corner shots
+			else {
+				flywheel.set_target_RPM(2350);
+			}
 		}
-		else if (new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
+		
+		// L2 is pure outtake
+		if (new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
 			intake = -127; // Outtake at full speed
 		}
 		else if (!master.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && !master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
@@ -237,12 +248,6 @@ void opcontrol() {
 		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)) {
 			flywheel.set_active(!flywheel.is_active());
 			master.clear();
-		}
-
-		// Blooper (deflector) toggle (X)
-		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
-			blooper_state = !blooper_state;
-			blooper.set_value(blooper_state);
 		}
 
 		// Pneumatic shoot (B)
