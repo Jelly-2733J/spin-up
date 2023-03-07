@@ -9,11 +9,11 @@
 Drive chassis (
 	// Left Chassis Ports (negative port will reverse it!)
 	//   the first port is the sensored port (when trackers are not used!)
-	{-10, -9, -8}
+	{-8, -9, -10}
 
 	// Right Chassis Ports (negative port will reverse it!)
 	//   the first port is the sensored port (when trackers are not used!)
-	,{20, 19, 18}
+	,{18, 19, 20}
 
 	// IMU Port
 	,17
@@ -65,7 +65,7 @@ void initialize() {
 	// Configure your chassis controls
 	chassis.toggle_modify_curve_with_controller(false); // Enables modifying the controller curve with buttons on the joysticks
 	chassis.set_active_brake(0.1); // Sets the active brake kP. We recommend 0.1.
-	chassis.set_curve_default(2.5, 2.5); // Defaults for curve. If using tank, only the first parameter is used. (Comment this line out if you have an SD card!)  
+	chassis.set_curve_default(2.5, 2.0); // Defaults for curve. If using tank, only the first parameter is used. (Comment this line out if you have an SD card!)  
 	default_constants(); // Set the drive to your own constants from autons.cpp!
 	exit_condition_defaults(); // Set the exit conditions to your own constants from autons.cpp!
 	
@@ -167,9 +167,9 @@ void opcontrol() {
 	// Set blooper to up
 	blooper.set_value(true);
 
-	// 2100 RPM is the default flywheel speed
+	// 2150 RPM is the default flywheel speed
 	// It is optimal for ripple shots right at the goal
-	flywheel.set_target_RPM(2100);
+	flywheel.set_target_RPM(2150);
 
 	chassis.set_drive_brake(pros::E_MOTOR_BRAKE_COAST);
 	chassis.set_active_brake(0.0); // Sets the active brake kP to 0.0.  This disables active braking.
@@ -183,8 +183,8 @@ void opcontrol() {
 
 	while (true) {
 
-		// chassis.arcade_standard(ez::SPLIT); // Split Arcade (left stick controls forward/backward, right stick controls turning)
-		chassis.tank();
+		chassis.arcade_standard(ez::SPLIT); // Split Arcade (left stick controls forward/backward, right stick controls turning)
+		//chassis.tank();
 
 		// Endgame
 		if (new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) && master.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && master.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {

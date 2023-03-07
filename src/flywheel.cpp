@@ -131,11 +131,11 @@ void FlywheelController::fly_control() {
 	// This is used to ensure consistent loop intervals with pros::Task::delay_until
 	uint32_t t = pros::millis();
 
-	double gain = 0.08;
+	double gain = 0.095;
 	double takeback = 0.0;
 	double tbv = 0.0;
 	bool first_cross = false;
-	double max_rpm = 3500.0;
+	double max_rpm = 3000.0;
 
 	double error;
 	double last_error;
@@ -176,7 +176,7 @@ void FlywheelController::fly_control() {
 			error = target_RPM() - RPM();
 
 			// Calculate variable take back
-			tbv = 0.5 - (2050.0 - target_RPM()) / 100000.0;
+			tbv = 0.496 + (target_RPM() - 2100.0) / 300000.0;
 
 			// Integrate
 			voltage += gain * error;

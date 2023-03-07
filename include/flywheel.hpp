@@ -36,7 +36,7 @@ class FlywheelController {
 		// Check to see if a disc is properly indexed and ready to shoot
 		bool disc_indexed();
 		// Shoot a number of discs
-		void shoot(int num_discs, int timeout = 3000, int rpm_accuracy = 30);
+		void shoot(int num_discs, int timeout = 3000, int rpm_accuracy = 50);
 		// Flywheel task
 		void fly_control();
 };
