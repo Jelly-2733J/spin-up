@@ -8,6 +8,7 @@ void no_auton();
 void right_winpoint();
 void left_winpoint();
 void auton_skills();
+void nerfed_skills();
 void jerk_test();
 void three_stack();
 void solo_winpoint();
