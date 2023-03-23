@@ -113,7 +113,7 @@ void FlywheelController::shoot(int num_discs, int timeout, int rpm_accuracy) {
 		intake = -127;
 		
 		// Fire disc
-		fire();
+		// fire();
 
 		intake = 0;
 

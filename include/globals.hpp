@@ -1,6 +1,5 @@
 #include "api.h"
 #include "flywheel.hpp"
-#include "odometry.hpp"
 
 #pragma once
 
@@ -11,22 +10,13 @@
 // Flywheel control and telemetry
 extern FlywheelController flywheel;
 
-// Odometry
-extern Odometry odom;
-
 // Ports
 extern pros::Motor intake;				// 16
 extern pros::Motor fly;				    // 15
-extern pros::Optical optical;           // 10
 
 // 3-Wire
 extern pros::ADIDigitalOut endgame;     // A
 extern pros::ADIDigitalOut blooper;     // B
-extern pros::ADIDigitalOut indexer;     // C
-extern pros::ADIDigitalOut pressure_bar;// D
 
 // Controller
 extern pros::Controller master;
-
-// Functions
-extern void fire();

@@ -120,13 +120,9 @@ void right_winpoint() {
 
 	flywheel.set_target_RPM(2750);
 
-	pressure_bar.set_value(true);
-
 	intake = -127;
 
 	pros::delay(400);
-
-	pressure_bar.set_value(false);
 
 	intake = 127;
 
@@ -153,8 +149,6 @@ void right_winpoint() {
 	intake = 0;
 
 	flywheel.shoot(4, 2000);
-
-	pressure_bar.set_value(true);
 
 	intake = -127;
 }
@@ -254,11 +248,7 @@ void solo_winpoint() {
 
 	pros::delay(250);
 
-	pressure_bar.set_value(true);
-
 	pros::delay(250);
-
-	pressure_bar.set_value(false);
 
 	pros::delay(100);
 
@@ -295,11 +285,9 @@ void solo_winpoint() {
 
 void ripple() {
 	intake = -127;
-	pressure_bar.set_value(true);
 	flywheel.full_voltage(true);
 	pros::delay(750);
 	flywheel.full_voltage(false);
-	pressure_bar.set_value(false);
 	intake = 0;
 }
 

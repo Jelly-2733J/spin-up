@@ -9,11 +9,11 @@
 Drive chassis (
 	// Left Chassis Ports (negative port will reverse it!)
 	//   the first port is the sensored port (when trackers are not used!)
-	{-8, -9, -10}
+	{-1, -2, 3}
 
 	// Right Chassis Ports (negative port will reverse it!)
 	//   the first port is the sensored port (when trackers are not used!)
-	,{18, 19, 20}
+	,{8, 9, -10}
 
 	// IMU Port
 	,17
@@ -65,7 +65,7 @@ void initialize() {
 	// Configure your chassis controls
 	chassis.toggle_modify_curve_with_controller(false); // Enables modifying the controller curve with buttons on the joysticks
 	chassis.set_active_brake(0.1); // Sets the active brake kP. We recommend 0.1.
-	chassis.set_curve_default(2.5, 2.0); // Defaults for curve. If using tank, only the first parameter is used. (Comment this line out if you have an SD card!)  
+	chassis.set_curve_default(2.5, 2.5); // Defaults for curve. If using tank, only the first parameter is used. (Comment this line out if you have an SD card!)  
 	default_constants(); // Set the drive to your own constants from autons.cpp!
 	exit_condition_defaults(); // Set the exit conditions to your own constants from autons.cpp!
 	
@@ -85,7 +85,7 @@ void initialize() {
 
 
 	// Initialize chassis and auton selector
-	chassis.initialize(3900, "/usd/rengoku.gif");
+	chassis.initialize(3900, "/usd/yoriichi.gif");
 	ez::as::initialize("/usd/jellyblackoutmenuglitch.gif", "/usd/rengokujellydragon.gif");
 
 	// Set intake brake mode to hold to improve roller consistency
@@ -209,12 +209,10 @@ void opcontrol() {
 		// R1 is intake, R2 is outtake
 		if (new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
 			flywheel.full_voltage(false);
-			pressure_bar.set_value(false);
 			intake = 127; // Intake at full speed
 		}
 		else if (new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
 			flywheel.full_voltage(true);
-			pressure_bar.set_value(true);
 			intake = -127; // Outtake at full speed
 		}
 		else if (!master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
@@ -251,9 +249,9 @@ void opcontrol() {
 			master.clear();
 		}
 
-		// Pneumatic shoot (B)
+		// Single shot (B)
 		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {
-			fire();
+			//fire();
 		}
 
 		pros::delay(ez::util::DELAY_TIME); // Used for timing calculations and reasonable loop speeds
