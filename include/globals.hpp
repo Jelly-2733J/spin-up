@@ -11,12 +11,13 @@
 extern FlywheelController flywheel;
 
 // Ports
-extern pros::Motor intake;				// 16
-extern pros::Motor fly;				    // 15
+extern pros::Motor intake;				    // 16
+extern pros::Motor fly;				        // 15
 
 // 3-Wire
-extern pros::ADIDigitalOut endgame;     // A
-extern pros::ADIDigitalOut blooper;     // B
+extern pros::ADIDigitalOut actuated_intake; // A
+extern pros::ADIDigitalOut blooper;         // B
+extern pros::ADIDigitalOut endgame;         // C
 
 // Controller
 extern pros::Controller master;

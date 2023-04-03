@@ -168,15 +168,16 @@ void opcontrol() {
 	// Set blooper to up
 	blooper.set_value(true);
 
-	// 2150 RPM is the default flywheel speed
+	// 2050 RPM is the default flywheel speed
 	// It is optimal for ripple shots right at the goal
-	flywheel.set_target_RPM(2150);
+	flywheel.set_target_RPM(2050);
 
 	chassis.set_drive_brake(pros::E_MOTOR_BRAKE_COAST);
 	chassis.set_active_brake(0.0); // Sets the active brake kP to 0.0.  This disables active braking.
 
 	bool endgame_state = false;
 	bool blooper_state = true;
+	bool actuated_state = false;
 	bool new_press = true;
 
 	// Keep track of when teleop starts to prevent early expansion
@@ -228,30 +229,38 @@ void opcontrol() {
 			intake = 0;
 		}
 
-		// L1 is blooper (deflector) toggle and RPM change
-		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
-			blooper_state = !blooper_state;
-			blooper.set_value(blooper_state);
+		// L1 is blooper (deflector) hold
+		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
 			
-			// If blooper is up, set flywheel to 2150 RPM for ripple shots
-			if (blooper_state) {
-				flywheel.set_target_RPM(2150);
+			// If blooper is down, set flywheel to 2550 RPM for corner shots
+			if (blooper_state != false) {
+				blooper.set_value(false);
+				flywheel.set_target_RPM(2550);
 			}
-			// If blooper is down, set flywheel to 2350 RPM for corner shots
-			else {
-				flywheel.set_target_RPM(2350);
+
+			blooper_state = false;
+		}
+		else {
+			
+			// If blooper is up, set flywheel to 2050 RPM for ripple shots
+			if (blooper_state != true) {
+				blooper.set_value(true);
+				flywheel.set_target_RPM(2050);
 			}
+
+			blooper_state = true;
+		}
+
+		// B is actuated intake hold
+		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {
+			actuated_state = !actuated_state;
+			actuated_intake.set_value(actuated_state);
 		}
 
 		// Toggle flywheel (Left)
 		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)) {
 			flywheel.set_active(!flywheel.is_active());
 			master.clear();
-		}
-
-		// Single shot (B)
-		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {
-			//fire();
 		}
 
 		pros::delay(ez::util::DELAY_TIME); // Used for timing calculations and reasonable loop speeds
