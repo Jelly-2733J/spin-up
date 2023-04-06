@@ -33,8 +33,8 @@ class FlywheelController {
 		void full_voltage(bool state);
 		// Check if set to full voltage
 		bool is_full();
-		// Check to see if a disc is properly indexed and ready to shoot
-		bool disc_indexed();
+		// Dumbshoot a number of discs
+		void dumbshoot(int num_discs, int current_discs = 3);
 		// Shoot a number of discs
 		void shoot(int num_discs, int timeout = 3000, int rpm_accuracy = 50);
 		// Flywheel task

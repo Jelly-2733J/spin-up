@@ -84,11 +84,43 @@ bool FlywheelController::is_full() {
 	full_guard.give();
 	return to_return;
 };
-// Check to see if a disc is properly indexed and ready to shoot
-bool FlywheelController::disc_indexed() {
-	// return optical.get_proximity() > 235;
-	return true;
-};
+// Dumbshoot a number of discs
+void FlywheelController::dumbshoot(int num_discs, int current_discs) {
+
+	full_voltage(true);
+
+	// If 3 discs
+	if (current_discs == 3 && num_discs > 0) {
+		intake = -80;
+		pros::delay(60);
+		intake = 0;
+		pros::delay(400);
+		current_discs--;
+		num_discs--;
+	}
+
+	// If 2 discs
+	if (current_discs == 2 && num_discs > 0) {
+		intake = -80;
+		pros::delay(100);
+		intake = 0;
+		pros::delay(400);
+		current_discs--;
+		num_discs--;
+	}
+
+	// If 1 disc
+	if (current_discs == 1 && num_discs > 0) {
+		intake = -80;
+		pros::delay(200);
+		intake = 0;
+		pros::delay(400);
+		current_discs--;
+		num_discs--;
+	}
+
+	full_voltage(false);
+}
 // Shoot a number of discs
 void FlywheelController::shoot(int num_discs, int timeout, int rpm_accuracy) {
 	int count = 0;
