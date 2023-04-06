@@ -94,7 +94,7 @@ void FlywheelController::dumbshoot(int num_discs, int current_discs) {
 		intake = -80;
 		pros::delay(60);
 		intake = 0;
-		pros::delay(400);
+		pros::delay(650);
 		current_discs--;
 		num_discs--;
 	}
@@ -102,19 +102,19 @@ void FlywheelController::dumbshoot(int num_discs, int current_discs) {
 	// If 2 discs
 	if (current_discs == 2 && num_discs > 0) {
 		intake = -80;
-		pros::delay(100);
+		pros::delay(80);
 		intake = 0;
-		pros::delay(400);
+		pros::delay(500);
 		current_discs--;
 		num_discs--;
 	}
 
 	// If 1 disc
 	if (current_discs == 1 && num_discs > 0) {
-		intake = -80;
+		intake = -127;
 		pros::delay(200);
 		intake = 0;
-		pros::delay(400);
+		pros::delay(240);
 		current_discs--;
 		num_discs--;
 	}
