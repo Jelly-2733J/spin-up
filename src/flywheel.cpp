@@ -123,7 +123,8 @@ void FlywheelController::shoot(int num_discs, int timeout, int rpm_accuracy) {
 		// Wait for optical sensor to detect a shot
 		while (optical.get_proximity() < 70) {
 			// If the timeout is reached, exit
-			if (count >= timeout) {
+			// If optical reads less than 50, there are no more discs to shoot, exit
+			if (count >= timeout || optical.get_proximity() < 40) {
 				intake = 0;
 				full_voltage(false);
 				return;

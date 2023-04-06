@@ -263,6 +263,11 @@ void opcontrol() {
 			master.clear();
 		}
 
+		// Shoot 3 (X)
+        if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
+            flywheel.shoot(3);
+        }
+
 		pros::delay(ez::util::DELAY_TIME); // Used for timing calculations and reasonable loop speeds
 
 	}
