@@ -103,7 +103,7 @@ void FlywheelController::shoot(int num_discs, int timeout, int rpm_accuracy) {
 		while (abs(flywheel.target_RPM() - flywheel.RPM()) > rpm_accuracy) {
 			// If the timeout is reached, exit
 			if (count >= timeout) {
-				intake = 100;
+				intake = 0;
 				full_voltage(false);
 				return;
 			}
@@ -240,6 +240,7 @@ void FlywheelController::fly_control() {
 		}
 
 		printf("%.2f %d %d\n", voltage, (int) RPM(), (int) target_RPM());
+		std::cout << optical.get_proximity() << std::endl;
 
 		if (count == 300) {
 			master.print(2, 0, "TEMP: %d C", (int) fly.get_temperature());

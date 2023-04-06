@@ -91,6 +91,9 @@ void initialize() {
 	// Set intake brake mode to hold to improve roller consistency
 	intake.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 
+	// Turn on optical sensor light
+	optical.set_led_pwm(100);
+
 	// Clear the LCD for the auton selector
 	pros::screen::erase();
 
