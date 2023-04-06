@@ -13,6 +13,7 @@ extern FlywheelController flywheel;
 // Ports
 extern pros::Motor intake;				    // 16
 extern pros::Motor fly;				        // 15
+extern pros::Optical optical;               // 14
 
 // 3-Wire
 extern pros::ADIDigitalOut actuated_intake; // A

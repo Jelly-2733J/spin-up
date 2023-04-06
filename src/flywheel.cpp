@@ -91,38 +91,65 @@ bool FlywheelController::disc_indexed() {
 };
 // Shoot a number of discs
 void FlywheelController::shoot(int num_discs, int timeout, int rpm_accuracy) {
-	
 	int count = 0;
 
 	// Shoot number of times specified
 	for (int i = 0; i < num_discs; i++) {
 
-		printf("WAITING FOR RPM\n");
+		// Full voltage for best RPM recovery and fastest possible shooting
+		full_voltage(true);
 
-		// Wait for RPM to be within accuracy and a disc to be in the proper indexing position
-		while (!(abs(flywheel.target_RPM() - flywheel.RPM()) < rpm_accuracy)) {
+		// Wait for RPM to be within accuracy
+		while (abs(flywheel.target_RPM() - flywheel.RPM()) > rpm_accuracy) {
+			// If the timeout is reached, exit
+			if (count >= timeout) {
+				intake = 100;
+				full_voltage(false);
+				return;
+			}
+			// If flywheel RPM is above the target, disable full voltage so that it can decrease
+			if (flywheel.RPM() > flywheel.target_RPM()) {
+				full_voltage(false);
+				fly.move_voltage(0);
+			}
+			count += 10;
+			pros::delay(10);
+		}
+
+		// Outtake to shoot
+		intake = -80;
+		full_voltage(true);
+
+		// Wait for optical sensor to detect a shot
+		while (optical.get_proximity() < 70) {
 			// If the timeout is reached, exit
 			if (count >= timeout) {
 				intake = 0;
+				full_voltage(false);
 				return;
 			}
 			count += 10;
 			pros::delay(10);
 		}
 
-		intake = -127;
-		
-		// Fire disc
-		pros::delay(250);
+		// Intake at full to reduce the chance of an accidental double shot
+		intake = 127;
 
-		intake = 0;
-
-		// Wait 300 ms for next disc to fall into proper indexing position
-		pros::delay(300);
-
+		// Wait for optical sensor to detect that there isn't a disc being currently shot
+		while (optical.get_proximity() > 70) {
+			// If the timeout is reached, exit
+			if (count >= timeout) {
+				intake = 0;
+				full_voltage(false);
+				return;
+			}
+			count += 10;
+			pros::delay(10);
+		}
 	}
 
-	intake = 0;
+	// Disable full voltage mode after shooting is complete.
+	full_voltage(false);
 }
 // Flywheel task
 void FlywheelController::fly_control() {
