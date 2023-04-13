@@ -84,17 +84,31 @@ bool FlywheelController::is_full() {
 	full_guard.give();
 	return to_return;
 };
+// Wait for the flywheel to reach the target RPM
+void FlywheelController::wait_for_target_RPM(int timeout) {
+	int time = 0;
+	while (target_RPM() > RPM() && time < timeout) {
+		pros::delay(10);
+		time += 10;
+	}
+	if (time >= timeout) {
+		printf("Target of %f not reached in %d ms", target_RPM(), time);
+	}
+	else {
+		printf("Target of %f reached in %d ms", target_RPM(), time);
+	}
+};
 // Dumbshoot a number of discs
-void FlywheelController::dumbshoot(int num_discs, int current_discs) {
+void FlywheelController::dumbshoot(int num_discs, int current_discs, int delay3, int delay2) {
 
 	full_voltage(true);
 
 	// If 3 discs
 	if (current_discs == 3 && num_discs > 0) {
 		intake = -80;
-		pros::delay(60);
-		intake = 0;
-		pros::delay(650);
+		pros::delay(80);
+		intake = 127;
+		pros::delay(delay3);
 		current_discs--;
 		num_discs--;
 	}
@@ -102,9 +116,9 @@ void FlywheelController::dumbshoot(int num_discs, int current_discs) {
 	// If 2 discs
 	if (current_discs == 2 && num_discs > 0) {
 		intake = -80;
-		pros::delay(80);
-		intake = 0;
-		pros::delay(500);
+		pros::delay(100);
+		intake = 127;
+		pros::delay(delay2);
 		current_discs--;
 		num_discs--;
 	}
@@ -112,16 +126,15 @@ void FlywheelController::dumbshoot(int num_discs, int current_discs) {
 	// If 1 disc
 	if (current_discs == 1 && num_discs > 0) {
 		intake = -127;
-		pros::delay(200);
-		intake = 0;
-		pros::delay(240);
+		pros::delay(220);
+		intake = 127;
 		current_discs--;
 		num_discs--;
 	}
 
 	full_voltage(false);
 }
-// Shoot a number of discs
+/*// Shoot a number of discs
 void FlywheelController::shoot(int num_discs, int timeout, int rpm_accuracy) {
 	int count = 0;
 
@@ -186,7 +199,7 @@ void FlywheelController::shoot(int num_discs, int timeout, int rpm_accuracy) {
 
 	// Disable full voltage mode after shooting is complete.
 	full_voltage(false);
-}
+}*/
 // Flywheel task
 void FlywheelController::fly_control() {
 
@@ -271,8 +284,7 @@ void FlywheelController::fly_control() {
 			fly.move_voltage(voltage);
 		}
 
-		printf("%.2f %d %d\n", voltage, (int) RPM(), (int) target_RPM());
-		std::cout << optical.get_proximity() << std::endl;
+		// printf("%.2f %d %d\n", voltage, (int) RPM(), (int) target_RPM());
 
 		if (count == 300) {
 			master.print(2, 0, "TEMP: %d C", (int) fly.get_temperature());

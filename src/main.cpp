@@ -91,9 +91,6 @@ void initialize() {
 	// Set intake brake mode to hold to improve roller consistency
 	intake.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 
-	// Turn on optical sensor light
-	optical.set_led_pwm(100);
-
 	// Clear the LCD for the auton selector
 	pros::screen::erase();
 
@@ -265,16 +262,6 @@ void opcontrol() {
 			flywheel.set_active(!flywheel.is_active());
 			master.clear();
 		}
-
-		// Shoot 3 (X)
-        if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
-            flywheel.shoot(3);
-        }
-
-		// Dumbshoot 3 (Y)
-        if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
-            flywheel.dumbshoot(3);
-        }
 
 		pros::delay(ez::util::DELAY_TIME); // Used for timing calculations and reasonable loop speeds
 

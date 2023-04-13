@@ -33,8 +33,10 @@ class FlywheelController {
 		void full_voltage(bool state);
 		// Check if set to full voltage
 		bool is_full();
+		// Wait for the flywheel to reach the target RPM
+		void wait_for_target_RPM(int timeout = 3000);
 		// Dumbshoot a number of discs
-		void dumbshoot(int num_discs, int current_discs = 3);
+		void dumbshoot(int num_discs, int current_discs = 3, int delay3 = 650, int delay2 = 500);
 		// Shoot a number of discs
 		void shoot(int num_discs, int timeout = 3000, int rpm_accuracy = 50);
 		// Flywheel task
