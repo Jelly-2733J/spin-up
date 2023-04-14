@@ -85,8 +85,8 @@ void initialize() {
 
 
 	// Initialize chassis and auton selector
-	chassis.initialize(3900, "/usd/yoriichi.gif");
-	ez::as::initialize("/usd/jellyblackoutmenuglitch.gif", "/usd/rengokujellydragon.gif");
+	chassis.initialize(2250, "/usd/tanjirobootup.gif");
+	ez::as::initialize("/usd/jellyblackoutmenuglitch.gif", "/usd/tanjirosword.gif");
 
 	// Set intake brake mode to hold to improve roller consistency
 	intake.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);

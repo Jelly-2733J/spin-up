@@ -212,7 +212,7 @@ void left_winpoint() {
 
 	flywheel.dumbshoot(3, 3, 950, 700);
 
-	chassis.set_drive_pid(-35, 127, true);
+	chassis.set_drive_pid(-20, 127, true);
 	chassis.wait_drive();
 
 }
