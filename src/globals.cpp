@@ -1,5 +1,6 @@
 #include "api.h"
 #include "globals.hpp"
+#include "pros/adi.hpp"
 #include <strings.h>
 
 // Classes
@@ -14,7 +15,14 @@ pros::Motor fly (11, pros::E_MOTOR_GEARSET_06, true, pros::E_MOTOR_ENCODER_DEGRE
 // 3-Wire
 pros::ADIDigitalOut actuated_intake ('A', false);
 pros::ADIDigitalOut blooper ('B', false);
-pros::ADIDigitalOut endgame ('C', false);
+pros::ADIDigitalOut front_endgame ('G', false);
+pros::ADIDigitalOut side_endgame ('H', false);
 
 // Controller
 pros::Controller master(pros::E_CONTROLLER_MASTER);
+
+// Functions
+void endgame(bool state) {
+    front_endgame.set_value(state);
+    side_endgame.set_value(state);
+}
