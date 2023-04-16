@@ -4,8 +4,8 @@ License, v. 2.0. If a copy of the MPL was not distributed with this
 file, You can obtain one at http://mozilla.org/MPL/2.0/.
 */
 
-#include "display/lv_objx/lv_ddlist.h"
 #include "main.h"
+#include "gif-pros/gifclass.hpp"
 
 // LVGL SETUP
 lv_obj_t * skills;
@@ -94,7 +94,6 @@ lv_res_t ddlist_action(lv_obj_t * ddlist) {
   uint8_t id = lv_obj_get_free_num(ddlist);
   char sel_str[32];
   lv_ddlist_get_selected_str(ddlist, sel_str);
-  printf("ID %d: %s\n", id, sel_str);
   return LV_RES_OK;
 }
 
@@ -202,7 +201,6 @@ void AutonSelector::create() {
   while (auton == -1) {
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) && master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
       auton = 0;
-
       printf("Auton: %d\n", auton);
       break;
     }
