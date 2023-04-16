@@ -77,15 +77,21 @@ void initialize() {
 	ez::as::auton_selector.add_autons({
 		Auton("No Auton              ", no_auton),
 		Auton("Right Winpoint", right_winpoint),
+		Auton("Right R", right_rush),
 		Auton("Left Winpoint", left_winpoint),
 		Auton("Solo Winpoint", solo_winpoint),
 		Auton("Nerfed Skills", nerfed_skills),
 		Auton("Skills", auton_skills),
 	});
 
+	master.clear();
+	pros::delay(50);
+	master.set_text(0, 0, "      YOU HAVE");
+	pros::delay(50);
+	master.set_text(1, 0, "     NO ENEMIES");
 
 	// Initialize chassis and auton selector
-	chassis.initialize(2250, "/usd/tanjirobootup.gif");
+	chassis.initialize(3000, "/usd/tanjirobootup.gif");
 	ez::as::initialize("/usd/jellyblackoutmenuglitch.gif", "/usd/tanjirosword.gif");
 
 	// Set intake brake mode to hold to improve roller consistency
@@ -94,13 +100,12 @@ void initialize() {
 	// Clear the LCD for the auton selector
 	pros::screen::erase();
 
+	master.clear();
+
 	pros::delay(250); // Wait for auton selector to finish
 
 	// Create the flywheel control task
 	pros::Task flywheel_control([&]{ flywheel.fly_control(); });
-
-	// Create the odometry task
-	// pros::Task odometry_task([&]{ odom.odometry(); });
 	
 }
 
@@ -189,12 +194,12 @@ void opcontrol() {
 		//chassis.tank();
 
 		// Endgame
-		if (new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) && master.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && master.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+		if (new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
 			endgame_state = !endgame_state;
 			endgame(endgame_state);
 			new_press = false;
 		}
-		else if (!master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) && !master.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && !master.get_digital(pros::E_CONTROLLER_DIGITAL_R1) && !master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+		else if (!master.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && !master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
 			new_press = true;
 		}
 
@@ -261,6 +266,11 @@ void opcontrol() {
 		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)) {
 			flywheel.set_active(!flywheel.is_active());
 			master.clear();
+		}
+
+		// Dumbshoot (Y)
+		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
+			flywheel.dumbshoot(3, 3, 950, 950);
 		}
 
 		pros::delay(ez::util::DELAY_TIME); // Used for timing calculations and reasonable loop speeds

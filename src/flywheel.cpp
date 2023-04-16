@@ -31,24 +31,21 @@ void FlywheelController::set_target_RPM(int rpm) {
 	flywheel_target_RPM = (double) rpm;
 	flywheel_target_RPM_guard.give();
 };
-// Read the current RPM using a simple moving average
+// Read the current RPM using an Exponential Moving Average
 double FlywheelController::RPM() {
 
 	// Get the current flywheel RPM
 	double current_RPM = fly.get_actual_velocity() * 6.0;
 
-	// Update the SMA array
+	// Update the previous RPMs array
 	for (int i = 0; i < 4; i++) {
 		prev_RPMs[i] = prev_RPMs[i + 1];
 	}
 	prev_RPMs[4] = current_RPM;
 
-	// Calculate the SMA
-	double sum = 0.0;
-	for (int i = 0; i < 5; i++) {
-		sum += prev_RPMs[i];
-	}
-	return sum / 5.0;
+	// Calculate the Exponential Moving Average
+	return prev_RPMs[4] * 0.5 + prev_RPMs[3] * 0.25 + prev_RPMs[2] * 0.125 + prev_RPMs[1] * 0.0625 + prev_RPMs[0] * 0.0625;
+	
 	
 };
 // Read the current target RPM
@@ -92,10 +89,10 @@ void FlywheelController::wait_for_target_RPM(int timeout) {
 		time += 10;
 	}
 	if (time >= timeout) {
-		printf("Target of %f not reached in %d ms", target_RPM(), time);
+		printf("Target of %f not reached in %d ms\n", target_RPM(), time);
 	}
 	else {
-		printf("Target of %f reached in %d ms", target_RPM(), time);
+		printf("Target of %f reached in %d ms\n", target_RPM(), time);
 	}
 };
 // Dumbshoot a number of discs
@@ -106,9 +103,10 @@ void FlywheelController::dumbshoot(int num_discs, int current_discs, int delay3,
 	// If 3 discs
 	if (current_discs == 3 && num_discs > 0) {
 		intake = -80;
-		pros::delay(80);
+		pros::delay(100);
 		intake = 127;
-		pros::delay(delay3);
+		pros::delay(300);
+		flywheel.wait_for_target_RPM(delay3 - 300);
 		current_discs--;
 		num_discs--;
 	}
@@ -118,7 +116,8 @@ void FlywheelController::dumbshoot(int num_discs, int current_discs, int delay3,
 		intake = -80;
 		pros::delay(100);
 		intake = 127;
-		pros::delay(delay2);
+		pros::delay(300);
+		flywheel.wait_for_target_RPM(delay2 - 300);
 		current_discs--;
 		num_discs--;
 	}
@@ -207,7 +206,7 @@ void FlywheelController::fly_control() {
 	// This is used to ensure consistent loop intervals with pros::Task::delay_until
 	uint32_t t = pros::millis();
 
-	double gain = 0.095;
+	double gain = 0.9;
 	double takeback = 0.0;
 	double tbv = 0.0;
 	bool first_cross = false;
@@ -243,16 +242,21 @@ void FlywheelController::fly_control() {
 			continue;
 		}
 		
+		// Bang-bang control for full voltage
 		if (is_full()) {
-			// If we're shooting, we want full power for best recovery
-			fly.move_voltage(12000);
+			if (RPM() < target_RPM()) {
+				fly.move_voltage(12000);
+			}
+			else {
+				fly.move_voltage(target_RPM() / 4000.0 * 12000.0);
+			}
 		}
 		else {
 			// Calculate error
 			error = target_RPM() - RPM();
 
 			// Calculate variable take back
-			tbv = 0.496 + (target_RPM() - 2100.0) / 300000.0;
+			tbv = 0.498 + (target_RPM() - 2100.0) / 300000.0;
 
 			// Integrate
 			voltage += gain * error;

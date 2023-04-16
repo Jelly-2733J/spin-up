@@ -6,6 +6,7 @@ extern Drive chassis;
 
 void no_auton();
 void right_winpoint();
+void right_rush();
 void left_winpoint();
 void auton_skills();
 void nerfed_skills();

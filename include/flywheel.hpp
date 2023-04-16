@@ -21,7 +21,7 @@ class FlywheelController {
 		FlywheelController();
 		// Set target RPM
 		void set_target_RPM(int rpm);
-		// Read the current RPM using a simple moving average
+		// Read the current RPM using an Exponential Moving Average
 		double RPM();
 		// Read the current target RPM
 		double target_RPM();
