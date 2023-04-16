@@ -70,15 +70,30 @@ bool FlywheelController::is_active() {
 };
 // Toggle going full voltage on the flywheel
 void FlywheelController::full_voltage(bool state) {
+	bang_bang(false);
 	full_guard.take();
 	full = state;
 	full_guard.give();
 };
 // Check if set to full voltage
-bool FlywheelController::is_full() {
+bool FlywheelController::is_full_voltage() {
 	full_guard.take();
 	bool to_return = full;
 	full_guard.give();
+	return to_return;
+};
+// Set the flywheel controller to bang-bang mode
+void FlywheelController::bang_bang(bool state) {
+	full_voltage(false);
+	bangbang_guard.take();
+	bangbang = state;
+	bangbang_guard.give();
+};
+// Check if the flywheel controller is in bang-bang mode
+bool FlywheelController::is_bang_bang() {
+	bangbang_guard.take();
+	bool to_return = bangbang;
+	bangbang_guard.give();
 	return to_return;
 };
 // Wait for the flywheel to reach the target RPM
@@ -98,7 +113,7 @@ void FlywheelController::wait_for_target_RPM(int timeout) {
 // Dumbshoot a number of discs
 void FlywheelController::dumbshoot(int num_discs, int current_discs, int delay3, int delay2) {
 
-	full_voltage(true);
+	bang_bang(true);
 
 	// If 3 discs
 	if (current_discs == 3 && num_discs > 0) {
@@ -131,7 +146,7 @@ void FlywheelController::dumbshoot(int num_discs, int current_discs, int delay3,
 		num_discs--;
 	}
 
-	full_voltage(false);
+	bang_bang(false);
 }
 /*// Shoot a number of discs
 void FlywheelController::shoot(int num_discs, int timeout, int rpm_accuracy) {
@@ -242,8 +257,12 @@ void FlywheelController::fly_control() {
 			continue;
 		}
 		
-		// Bang-bang control for full voltage
-		if (is_full()) {
+		// Full voltage
+		if (is_full_voltage()) {
+			fly.move_voltage(12000);
+		}
+		// Bang-bang control
+		else if (is_bang_bang()) {
 			if (RPM() < target_RPM()) {
 				fly.move_voltage(12000);
 			}
@@ -251,6 +270,7 @@ void FlywheelController::fly_control() {
 				fly.move_voltage(target_RPM() / 4000.0 * 12000.0);
 			}
 		}
+		// Take-back-variable control
 		else {
 			// Calculate error
 			error = target_RPM() - RPM();

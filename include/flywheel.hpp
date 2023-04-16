@@ -12,6 +12,8 @@ class FlywheelController {
 		pros::Mutex active_guard;
 		bool full = false;
 		pros::Mutex full_guard;
+		bool bangbang = false;
+		pros::Mutex bangbang_guard;
 		// Convert degrees to radians
 		static double rads(double deg);
 		// Check the sign of a number
@@ -32,7 +34,11 @@ class FlywheelController {
 		// Toggle going full voltage on the flywheel
 		void full_voltage(bool state);
 		// Check if set to full voltage
-		bool is_full();
+		bool is_full_voltage();
+		// Set the flywheel controller to bang-bang mode
+		void bang_bang(bool state);
+		// Check if the flywheel is set to bang-bang mode
+		bool is_bang_bang();
 		// Wait for the flywheel to reach the target RPM
 		void wait_for_target_RPM(int timeout = 3000);
 		// Dumbshoot a number of discs
