@@ -161,7 +161,7 @@ void right_winpoint() {
 void right_rush() {
 
 	flywheel.set_active(true);
-	flywheel.full_voltage(true);
+	flywheel.set_control_mode(2);
 	flywheel.set_target_RPM(3050);
 
 	intake = 127;
@@ -290,7 +290,7 @@ void left_winpoint() {
 ///
 void solo_winpoint() {
 	flywheel.set_active(true);
-	flywheel.full_voltage(true);
+	flywheel.set_control_mode(2);
 	flywheel.set_target_RPM(3150);
 
 	get_roller(-2, 200);
@@ -352,21 +352,21 @@ void solo_winpoint() {
 
 void ripple() {
 	intake = -127;
-	flywheel.full_voltage(true);
+	flywheel.set_control_mode(2);
 	pros::delay(750);
-	flywheel.full_voltage(false);
+	flywheel.set_control_mode(0);
 	intake = 0;
 }
 
 void triple_tap() {
 	intake = -80;
-	flywheel.full_voltage(true);
+	flywheel.set_control_mode(2);
 	pros::delay(300);
 	intake = 127;
 	pros::delay(350);
 	intake = -80;
 	pros::delay(500);
-	flywheel.full_voltage(false);
+	flywheel.set_control_mode(0);
 	intake = 0;
 }
 

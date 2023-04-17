@@ -472,8 +472,10 @@ class Drive {
   /**
    * Calibrates the IMU, reccomended to run in initialize().
    *
-   * \param run_loading_animation
-   *        bool for running loading animation
+   * \param gif_length
+            length of gif in milliseconds
+   * \param gif_path
+            path to gif
    */
   bool imu_calibrate(int gif_length, std::string gif_path);
 

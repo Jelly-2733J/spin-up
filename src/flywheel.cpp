@@ -68,32 +68,20 @@ bool FlywheelController::is_active() {
 	active_guard.give();
 	return to_return;
 };
-// Toggle going full voltage on the flywheel
-void FlywheelController::full_voltage(bool state) {
-	bang_bang(false);
-	full_guard.take();
-	full = state;
-	full_guard.give();
+// Set flywheel control mode
+// 0: TBV
+// 1: Bang-bang
+// 2: Full voltage
+void FlywheelController::set_control_mode(int mode) {
+	controlmode_guard.take();
+	controlmode = mode;
+	controlmode_guard.give();
 };
-// Check if set to full voltage
-bool FlywheelController::is_full_voltage() {
-	full_guard.take();
-	bool to_return = full;
-	full_guard.give();
-	return to_return;
-};
-// Set the flywheel controller to bang-bang mode
-void FlywheelController::bang_bang(bool state) {
-	full_voltage(false);
-	bangbang_guard.take();
-	bangbang = state;
-	bangbang_guard.give();
-};
-// Check if the flywheel controller is in bang-bang mode
-bool FlywheelController::is_bang_bang() {
-	bangbang_guard.take();
-	bool to_return = bangbang;
-	bangbang_guard.give();
+// Check flywheel control mode
+int FlywheelController::control_mode() {
+	controlmode_guard.take();
+	int to_return = controlmode;
+	controlmode_guard.give();
 	return to_return;
 };
 // Wait for the flywheel to reach the target RPM
@@ -113,7 +101,8 @@ void FlywheelController::wait_for_target_RPM(int timeout) {
 // Dumbshoot a number of discs
 void FlywheelController::dumbshoot(int num_discs, int current_discs, int delay3, int delay2) {
 
-	bang_bang(true);
+	// Set flywheel to bang-bang mode
+	set_control_mode(1);
 
 	// If 3 discs
 	if (current_discs == 3 && num_discs > 0) {
@@ -146,7 +135,8 @@ void FlywheelController::dumbshoot(int num_discs, int current_discs, int delay3,
 		num_discs--;
 	}
 
-	bang_bang(false);
+	// Set flywheel to TBV mode
+	set_control_mode(0);
 }
 /*// Shoot a number of discs
 void FlywheelController::shoot(int num_discs, int timeout, int rpm_accuracy) {
@@ -156,19 +146,19 @@ void FlywheelController::shoot(int num_discs, int timeout, int rpm_accuracy) {
 	for (int i = 0; i < num_discs; i++) {
 
 		// Full voltage for best RPM recovery and fastest possible shooting
-		full_voltage(true);
+		set_control_mode(2);
 
 		// Wait for RPM to be within accuracy
 		while (abs(flywheel.target_RPM() - flywheel.RPM()) > rpm_accuracy) {
 			// If the timeout is reached, exit
 			if (count >= timeout) {
 				intake = 0;
-				full_voltage(false);
+				set_control_mode(0);
 				return;
 			}
 			// If flywheel RPM is above the target, disable full voltage so that it can decrease
 			if (flywheel.RPM() > flywheel.target_RPM()) {
-				full_voltage(false);
+				set_control_mode(0);
 				fly.move_voltage(0);
 			}
 			count += 10;
@@ -177,7 +167,7 @@ void FlywheelController::shoot(int num_discs, int timeout, int rpm_accuracy) {
 
 		// Outtake to shoot
 		intake = -100;
-		full_voltage(true);
+		set_control_mode(2);
 
 		pros::delay(20);
 		count += 20;
@@ -188,7 +178,7 @@ void FlywheelController::shoot(int num_discs, int timeout, int rpm_accuracy) {
 			// If optical reads less than 30, there are no more discs to shoot, exit
 			if (count >= timeout || optical.get_proximity() < 30) {
 				intake = 0;
-				full_voltage(false);
+				set_control_mode(0);
 				return;
 			}
 			count += 10;
@@ -203,7 +193,7 @@ void FlywheelController::shoot(int num_discs, int timeout, int rpm_accuracy) {
 			// If the timeout is reached, exit
 			if (count >= timeout) {
 				intake = 0;
-				full_voltage(false);
+				set_control_mode(0);
 				return;
 			}
 			count += 10;
@@ -212,7 +202,7 @@ void FlywheelController::shoot(int num_discs, int timeout, int rpm_accuracy) {
 	}
 
 	// Disable full voltage mode after shooting is complete.
-	full_voltage(false);
+	set_control_mode(0);
 }*/
 // Flywheel task
 void FlywheelController::fly_control() {
@@ -258,11 +248,11 @@ void FlywheelController::fly_control() {
 		}
 		
 		// Full voltage
-		if (is_full_voltage()) {
+		if (control_mode() == 2) {
 			fly.move_voltage(12000);
 		}
 		// Bang-bang control
-		else if (is_bang_bang()) {
+		else if (control_mode() == 1) {
 			if (RPM() < target_RPM()) {
 				fly.move_voltage(12000);
 			}
