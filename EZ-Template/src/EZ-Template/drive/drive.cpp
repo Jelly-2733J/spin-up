@@ -258,19 +258,22 @@ bool Drive::imu_calibrate(int gif_length, std::string gif_path) {
   int iter = 0;
   static Gif gif(const_cast<char*>(gif_path.c_str()), lv_scr_act());
   while (true) {
-    if (iter >= gif_length && !(imu.get_status() & pros::c::E_IMU_STATUS_CALIBRATING)) {
-      printf("IMU is done calibrating (took %d ms)\n", iter);
-      break;
-    }
-    else if (iter >= gif_length + 1000) {
-      printf("No IMU plugged in, (took %d ms to realize that)\n", iter);
-      break;
+    if (iter >= gif_length) {
+      if (!(imu.get_status() & pros::c::E_IMU_STATUS_CALIBRATING)) {
+        break;
+      }
+      else if (iter >= gif_length + 1000) {
+        printf("No IMU plugged in, (took %d ms to realize that)\n", iter);
+        gif.clean();
+        return false;
+      }
     }
     iter += util::DELAY_TIME;
     pros::delay(util::DELAY_TIME);
   }
   gif.clean();
   master.rumble(".");
+  printf("IMU is done calibrating (took %d ms)\n", iter);
   return true;
 }
 
