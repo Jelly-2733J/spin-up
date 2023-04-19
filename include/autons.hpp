@@ -5,18 +5,15 @@
 extern Drive chassis;
 
 void no_auton();
-void right_winpoint();
-void right_rush();
-void left_winpoint();
-void auton_skills();
+void right_max();
+void right_ni();
+void right_r();
+void left_max();
+void left_ni();
+void left_r();
+void solo_wp();
 void nerfed_skills();
-void jerk_test();
-void three_stack();
-void solo_winpoint();
-void wait_until_change_speed();
-void swing_example();
-void combining_movements();
-void interfered_example();
+void auton_skills();
 
 void default_constants();
 void one_mogo_constants();
