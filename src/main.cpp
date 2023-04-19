@@ -1,4 +1,5 @@
 #include "main.h"
+#include "EZ-Template/auton.hpp"
 #include "EZ-Template/sdcard.hpp"
 #include "autons.hpp"
 #include "globals.hpp"
@@ -76,10 +77,13 @@ void initialize() {
 	// Autonomous Selector using LVGL
 	ez::as::auton_selector.add_autons({
 		Auton("No Auton              ", no_auton),
-		Auton("Right Winpoint", right_winpoint),
-		Auton("Right R", right_rush),
-		Auton("Left Winpoint", left_winpoint),
-		Auton("Solo Winpoint", solo_winpoint),
+		Auton("Right Max", right_max),
+		Auton("Right NI", right_ni),
+		Auton("Right R", right_r),
+		Auton("Left Max", left_max),
+		Auton("Left NI", left_ni),
+		Auton("Left R", left_r),
+		Auton("Solo WP", solo_wp),
 		Auton("Nerfed Skills", nerfed_skills),
 		Auton("Skills", auton_skills),
 	});
@@ -101,8 +105,10 @@ void initialize() {
 	pros::screen::erase();
 
 	master.clear();
+	pros::delay(50);
+	master.set_text(0, 0, ez::as::auton_selector.Autons[ez::as::auton_selector.selected_auton].Name);
 
-	pros::delay(250); // Wait for auton selector to finish
+	pros::delay(200); // Wait for auton selector to finish
 
 	// Create the flywheel control task
 	pros::Task flywheel_control([&]{ flywheel.fly_control(); });
@@ -184,6 +190,9 @@ void opcontrol() {
 	bool blooper_state = true;
 	bool actuated_state = false;
 	bool new_press = true;
+
+	master.clear();
+	pros::delay(50);
 
 	// Keep track of when teleop starts to prevent early expansion
 	uint32_t driver_start = pros::millis();
