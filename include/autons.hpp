@@ -6,11 +6,11 @@ extern Drive chassis;
 
 void no_auton();
 void right_max();
-void right_ni();
-void right_r();
+void right_safe();
+void right_rush();
 void left_max();
-void left_ni();
-void left_r();
+void left_safe();
+void left_rush();
 void solo_wp();
 void nerfed_skills();
 void auton_skills();

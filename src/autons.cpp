@@ -136,16 +136,16 @@ void right_max() {
 }
 
 ///
-// Right No Interaction
+// Right Safe
 ///
-void right_ni() {
+void right_safe() {
 
 }
 
 ///
 // Right Rush
 ///
-void right_r() {
+void right_rush() {
 
 	flywheel.set_active(true);
 	flywheel.set_control_mode(2);
@@ -273,16 +273,16 @@ void left_max() {
 }
 
 ///
-// Left No Interaction
+// Left Safe
 ///
-void left_ni() {
+void left_safe() {
 
 }
 
 ///
 // Left Rush
 ///
-void left_r() {
+void left_rush() {
 
 }
 
