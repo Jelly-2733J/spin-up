@@ -187,7 +187,7 @@ void AutonSelector::create() {
   // Auton Dropdown
   autonDD = lv_ddlist_create(lv_scr_act(), NULL);
   lv_ddlist_set_options(autonDD, generateAutonList());
-  lv_ddlist_set_sb_mode(autonDD, LV_SB_MODE_AUTO);
+  lv_ddlist_set_sb_mode(autonDD, LV_SB_MODE_ON);
   lv_ddlist_set_fix_height(autonDD, 200);
   lv_obj_align(autonDD, NULL, LV_ALIGN_IN_TOP_RIGHT, -10, 10);
   lv_obj_set_free_num(autonDD, 3);

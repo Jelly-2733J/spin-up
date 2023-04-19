@@ -5,7 +5,7 @@
         "target": "v5",
         "templates": {
             "EZ-Template": {
-                "location": "/Users/william/Library/Application Support/PROS/templates/EZ-Template@2.2.1",
+                "location": "/Users/william/Library/Application Support/PROS/templates/EZ-Template@2.2.2",
                 "metadata": {
                     "origin": "local"
                 },
@@ -14,17 +14,17 @@
                 "supported_kernels": "^3.5.4",
                 "system_files": [
                     "include/EZ-Template/auton.hpp",
-                    "include/EZ-Template/sdcard.hpp",
-                    "include/EZ-Template/api.hpp",
-                    "include/EZ-Template/auton_selector.hpp",
-                    "include/EZ-Template/drive/drive.hpp",
                     "firmware/EZ-Template.a",
+                    "include/EZ-Template/drive/drive.hpp",
+                    "include/EZ-Template/sdcard.hpp",
                     "include/EZ-Template/util.hpp",
-                    "include/EZ-Template/PID.hpp"
+                    "include/EZ-Template/api.hpp",
+                    "include/EZ-Template/PID.hpp",
+                    "include/EZ-Template/auton_selector.hpp"
                 ],
                 "target": "v5",
                 "user_files": [],
-                "version": "2.2.1"
+                "version": "2.2.2"
             },
             "gif-pros": {
                 "location": "/Users/william/Library/Application Support/PROS/templates/gif-pros@2.1.1",
