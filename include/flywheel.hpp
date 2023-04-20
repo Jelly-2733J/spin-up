@@ -30,6 +30,9 @@ class FlywheelController {
 		// Check if the flywheel control task is active
 		bool is_active();
 		// Set flywheel control mode
+		// 0: TBV
+		// 1: Bang-bang
+		// 2: Full voltage
 		void set_control_mode(int mode);
 		// Check flywheel control mode
 		int control_mode();
