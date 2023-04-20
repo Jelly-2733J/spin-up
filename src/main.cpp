@@ -78,10 +78,10 @@ void initialize() {
 	ez::as::auton_selector.add_autons({
 		Auton("No Auton              ", no_auton),
 		Auton("Right Max", right_max),
-		Auton("Right NI", right_safe),
+		Auton("Right S", right_safe),
 		Auton("Right R", right_rush),
 		Auton("Left Max", left_max),
-		Auton("Left NI", left_safe),
+		Auton("Left S", left_safe),
 		Auton("Left R", left_rush),
 		Auton("Solo WP", solo_wp),
 		Auton("Nerfed Skills", nerfed_skills),
@@ -179,9 +179,9 @@ void opcontrol() {
 	// Set blooper to up
 	blooper.set_value(true);
 
-	// 2050 RPM is the default flywheel speed
+	// 1950 RPM is the default flywheel speed
 	// It is optimal for ripple shots right at the goal
-	flywheel.set_target_RPM(2050);
+	flywheel.set_target_RPM(1950);
 
 	chassis.set_drive_brake(pros::E_MOTOR_BRAKE_COAST);
 	chassis.set_active_brake(0.0); // Sets the active brake kP to 0.0.  This disables active braking.
@@ -256,10 +256,10 @@ void opcontrol() {
 		}
 		else {
 			
-			// If blooper is up, set flywheel to 2050 RPM for ripple shots
+			// If blooper is up, set flywheel to 1950 RPM for ripple shots
 			if (blooper_state != true) {
 				blooper.set_value(true);
-				flywheel.set_target_RPM(2050);
+				flywheel.set_target_RPM(1950);
 			}
 
 			blooper_state = true;
