@@ -84,7 +84,6 @@ void initialize() {
 		Auton("Left S", left_safe),
 		Auton("Left R", left_rush),
 		Auton("Solo WP", solo_wp),
-		Auton("Nerfed Skills", nerfed_skills),
 		Auton("Skills", auton_skills),
 	});
 
@@ -200,10 +199,9 @@ void opcontrol() {
 	while (true) {
 
 		chassis.arcade_standard(ez::SPLIT); // Split Arcade (left stick controls forward/backward, right stick controls turning)
-		//chassis.tank();
 
 		// Endgame
-		if (new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+		if (new_press && (pros::millis() - driver_start > 95000 || master.get_digital(pros::E_CONTROLLER_DIGITAL_Y))  && master.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
 			endgame_state = !endgame_state;
 			endgame(endgame_state);
 			new_press = false;

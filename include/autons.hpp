@@ -12,7 +12,6 @@ void left_max();
 void left_safe();
 void left_rush();
 void solo_wp();
-void nerfed_skills();
 void auton_skills();
 
 void default_constants();
