@@ -24,4 +24,4 @@ extern pros::ADIDigitalOut front_endgame;    // H
 extern pros::Controller master;
 
 // Functions
-void endgame(bool state = true);
+bool endgame(bool state = true, int driver_start = 0);
