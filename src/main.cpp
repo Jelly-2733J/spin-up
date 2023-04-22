@@ -201,9 +201,8 @@ void opcontrol() {
 		chassis.arcade_standard(ez::SPLIT); // Split Arcade (left stick controls forward/backward, right stick controls turning)
 
 		// Endgame
-		if (new_press && (pros::millis() - driver_start > 95000 || master.get_digital(pros::E_CONTROLLER_DIGITAL_Y))  && master.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
-			endgame_state = !endgame_state;
-			endgame(endgame_state);
+		if (new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+			endgame_state = endgame(!endgame_state, driver_start);
 			new_press = false;
 		}
 		else if (!master.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && !master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
