@@ -43,7 +43,7 @@ bool endgame(bool state, int driver_start) {
     else {
         std::string auton_name = ez::as::auton_selector.Autons[ez::as::auton_selector.selected_auton].Name;
         // If we are in skills or no auton, this is driver skills or practice, so we allow endgame after 50 seconds or if the Y override is pressed
-        if ((auton_name == "Skills" || auton_name == "No Auton              ") && (pros::millis() - driver_start > 50000 || master.get_digital(pros::E_CONTROLLER_DIGITAL_Y))) {
+        if ((auton_name == "Skills" || auton_name == "No Autonomous") && (pros::millis() - driver_start > 50000 || master.get_digital(pros::E_CONTROLLER_DIGITAL_Y))) {
             side_endgame.set_value(state);
             front_endgame.set_value(state);
             output = state;
