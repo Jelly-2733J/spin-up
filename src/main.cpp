@@ -81,7 +81,7 @@ void initialize() {
 		Auton("Right S", right_safe),
 		Auton("Right R", right_rush),
 		Auton("Left Max", left_max),
-		Auton("Left S", left_safe),
+		//Auton("Left S", left_safe),
 		Auton("Left R", left_rush),
 		Auton("Solo WP", solo_wp),
 		Auton("Skills", auton_skills),
