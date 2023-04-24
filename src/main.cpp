@@ -10,7 +10,7 @@
 Drive chassis (
 	// Left Chassis Ports (negative port will reverse it!)
 	//   the first port is the sensored port (when trackers are not used!)
-	{-1, -2, 3}
+	{-4, -2, 3}
 
 	// Right Chassis Ports (negative port will reverse it!)
 	//   the first port is the sensored port (when trackers are not used!)
@@ -76,7 +76,7 @@ void initialize() {
 
 	// Autonomous Selector using LVGL
 	ez::as::auton_selector.add_autons({
-		Auton("No Auton              ", no_auton),
+		Auton("No Autonomous", no_auton),
 		Auton("Right Max", right_max),
 		Auton("Right S", right_safe),
 		Auton("Right R", right_rush),
@@ -201,9 +201,8 @@ void opcontrol() {
 		chassis.arcade_standard(ez::SPLIT); // Split Arcade (left stick controls forward/backward, right stick controls turning)
 
 		// Endgame
-		if (new_press && (pros::millis() - driver_start > 95000 || master.get_digital(pros::E_CONTROLLER_DIGITAL_Y))  && master.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
-			endgame_state = !endgame_state;
-			endgame(endgame_state);
+		if (new_press && master.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+			endgame_state = endgame(!endgame_state, driver_start);
 			new_press = false;
 		}
 		else if (!master.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && !master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
@@ -273,11 +272,6 @@ void opcontrol() {
 		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)) {
 			flywheel.set_active(!flywheel.is_active());
 			master.clear();
-		}
-
-		// Dumbshoot (Y)
-		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
-			flywheel.dumbshoot(3, 3, 950, 950);
 		}
 
 		pros::delay(ez::util::DELAY_TIME); // Used for timing calculations and reasonable loop speeds

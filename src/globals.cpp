@@ -1,6 +1,8 @@
+#include "EZ-Template/sdcard.hpp"
 #include "api.h"
 #include "globals.hpp"
 #include "pros/adi.hpp"
+#include "pros/misc.hpp"
 #include <strings.h>
 
 // Classes
@@ -22,8 +24,38 @@ pros::ADIDigitalOut front_endgame ('H', false);
 pros::Controller master(pros::E_CONTROLLER_MASTER);
 
 // Functions
-void endgame(bool state) {
-    side_endgame.set_value(state);
-    front_endgame.set_value(state);
-    printf("Endgame state: %d", state);
+bool endgame(bool state, int driver_start) {
+
+    bool output = false;
+
+    // If false, set endgame to false because that doesn't do any harm
+    if (!state) {
+        side_endgame.set_value(false);
+        front_endgame.set_value(false);
+    }
+    // Else if in auto, I'm not goofy enough to fire endgame when I don't want to, trust the given state
+    else if (pros::competition::is_autonomous()) {
+        side_endgame.set_value(state);
+        front_endgame.set_value(state);
+        output = state;
+    }
+    // Else we are in driver control
+    else {
+        std::string auton_name = ez::as::auton_selector.Autons[ez::as::auton_selector.selected_auton].Name;
+        // If we are in skills or no auton, this is driver skills or practice, so we allow endgame after 50 seconds or if the Y override is pressed
+        if ((auton_name == "Skills" || auton_name == "No Autonomous") && (pros::millis() - driver_start > 50000 || master.get_digital(pros::E_CONTROLLER_DIGITAL_Y))) {
+            side_endgame.set_value(state);
+            front_endgame.set_value(state);
+            output = state;
+        }
+        // Else we are in a match, so we allow endgame after 95 seconds or if the Y override is pressed
+        else if (pros::millis() - driver_start > 95000 || master.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) {
+            side_endgame.set_value(state);
+            front_endgame.set_value(state);
+            output = state;
+        }
+    }
+
+    printf("Endgame %s", state ? "fired" : "off");
+    return output;
 }
