@@ -98,8 +98,8 @@ void FlywheelController::wait_for_target_RPM(int timeout) {
 		printf("Target of %f reached in %d ms\n", target_RPM(), time);
 	}
 };
-// Dumbshoot a number of discs
-void FlywheelController::dumbshoot(int num_discs, int current_discs, int delay3, int delay2) {
+// Shoot a number of discs
+void FlywheelController::shoot(int num_discs, int current_discs, int delay3, int delay2) {
 
 	// Set flywheel to bang-bang mode
 	set_control_mode(1);
@@ -138,72 +138,6 @@ void FlywheelController::dumbshoot(int num_discs, int current_discs, int delay3,
 	// Set flywheel to TBV mode
 	set_control_mode(0);
 }
-/*// Shoot a number of discs
-void FlywheelController::shoot(int num_discs, int timeout, int rpm_accuracy) {
-	int count = 0;
-
-	// Shoot number of times specified
-	for (int i = 0; i < num_discs; i++) {
-
-		// Full voltage for best RPM recovery and fastest possible shooting
-		set_control_mode(2);
-
-		// Wait for RPM to be within accuracy
-		while (abs(flywheel.target_RPM() - flywheel.RPM()) > rpm_accuracy) {
-			// If the timeout is reached, exit
-			if (count >= timeout) {
-				intake = 0;
-				set_control_mode(0);
-				return;
-			}
-			// If flywheel RPM is above the target, disable full voltage so that it can decrease
-			if (flywheel.RPM() > flywheel.target_RPM()) {
-				set_control_mode(0);
-				fly.move_voltage(0);
-			}
-			count += 10;
-			pros::delay(10);
-		}
-
-		// Outtake to shoot
-		intake = -100;
-		set_control_mode(2);
-
-		pros::delay(20);
-		count += 20;
-
-		// Wait for optical sensor to detect a shot
-		while (optical.get_proximity() < 70) {
-			// If the timeout is reached, exit
-			// If optical reads less than 30, there are no more discs to shoot, exit
-			if (count >= timeout || optical.get_proximity() < 30) {
-				intake = 0;
-				set_control_mode(0);
-				return;
-			}
-			count += 10;
-			pros::delay(10);
-		}
-
-		// Intake at full to reduce the chance of an accidental double shot
-		intake = 127;
-
-		// Wait for optical sensor to detect that there isn't a disc being currently shot
-		while (optical.get_proximity() > 70) {
-			// If the timeout is reached, exit
-			if (count >= timeout) {
-				intake = 0;
-				set_control_mode(0);
-				return;
-			}
-			count += 10;
-			pros::delay(10);
-		}
-	}
-
-	// Disable full voltage mode after shooting is complete.
-	set_control_mode(0);
-}*/
 // Flywheel task
 void FlywheelController::fly_control() {
 

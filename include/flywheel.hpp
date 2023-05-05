@@ -38,10 +38,8 @@ class FlywheelController {
 		int control_mode();
 		// Wait for the flywheel to reach the target RPM
 		void wait_for_target_RPM(int timeout = 3000);
-		// Dumbshoot a number of discs
-		void dumbshoot(int num_discs, int current_discs = 3, int delay3 = 650, int delay2 = 500);
 		// Shoot a number of discs
-		void shoot(int num_discs, int timeout = 3000, int rpm_accuracy = 50);
+		void shoot(int num_discs, int current_discs = 3, int delay3 = 650, int delay2 = 500);
 		// Flywheel task
 		void fly_control();
 };
